@@ -1,0 +1,116 @@
+.row {
+    background: #fff;
+    height: 100%;
+    padding: 20px;
+}
+
+.qrCode {
+    text-align: right;
+    img {
+        max-height: 20%;
+        max-width: 20%;
+    }
+}
+
+ul {
+    padding-left: 25px;
+}
+
+.label {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    text-align: justify;
+    &:after {
+        content: '';
+        display: inline-block;
+        height: 0;
+        overflow: hidden;
+        width: 100%;
+    }
+}
+
+.content {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: 10px;
+}
+
+.leftCol {
+    border: 1px solid #000;
+    height: 70%;
+    margin-top: 10%;
+    .productName {
+        font-size: 18px;
+        margin-top: 20px;
+        text-align: center;
+        text-decoration: underline;
+    }
+    .leftList {
+        li {
+            height: 30px;
+            line-height: 30px;
+            list-style-type: none;
+        }
+    }
+    .label {
+        width: 30%;
+    }
+    .content {
+        border-bottom: 1px solid #000;
+        text-align: center;
+        width: 60%;
+    }
+    .qrCode {
+        margin: 30px 20px 45px 0;
+    }
+}
+
+.rightCol {
+    .infoWrap {
+        display: flex;
+    }
+    .rightList {
+        flex: 5;
+        li {
+            list-style-type: none;
+            width: 100%;
+        }
+        .label {
+            width: 35%;
+        }
+        .content {
+            width: 55%
+        }
+    }
+    .name {
+        font-size: 18px;
+        margin-bottom: 45px;
+        text-align: center;
+        text-decoration: underline;
+        .title {
+            margin-right: 5px;
+        }
+    }
+    .qrCode {
+        flex: 1;
+        margin-right: 29px;
+        padding-top: 19px;
+        img {
+            max-height: 60%;
+            max-width: 60%;
+        }
+    }
+    .table {
+        margin: 0 auto 10px;
+        width: 95%;
+    }
+    .resultLevel {
+        display: inline-block;
+        text-align: center;
+        border-bottom: 1px solid #999;
+        width: 50px;
+    }
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>益材</title>
+  <link rel="icon" href="../public/favicon.png" type="image/x-icon">
+  <script>
+    /* 如果是扫描二维码的页面，则不展示title */
+    var pathname = document.location.pathname
+    if (pathname.indexOf('/scanResult') > -1) {
+      document.title = "扫描结果"
+    }
+    /* 如果是查看合格证的页面，则不展示title */
+    var pathname = document.location.pathname
+    if (pathname.indexOf('/report') > -1) {
+      document.title = "合格证"
+    }
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+</html>
