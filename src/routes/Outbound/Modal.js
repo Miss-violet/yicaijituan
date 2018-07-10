@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button } from 'antd'
-import * as moment from 'moment'
-import styles from './outbound.less'
-import commonStyles from '../../assets/style/common.less'
+import React, { Component } from 'react';
+import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button } from 'antd';
+import * as moment from 'moment';
+import styles from './outbound.less';
+import commonStyles from '../../assets/style/common.less';
 
-const FormItem = Form.Item
-const Option = Select.Option
+const FormItem = Form.Item;
+const Option = Select.Option;
 
 class EditModal extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       visible: false,
       confirmLoading: false,
@@ -18,34 +18,47 @@ class EditModal extends Component {
       standardsData: [],
       levelSelected: '',
       resultOk: this.props.resultOk || false,
-      productName: '',            /* 选中的产品名称 */
-      distributorName: '',        /* 选中的客户名称 */
-      supplierName: '',           /* 选中的生厂商名称 */
-    }
+      productName: '' /* 选中的产品名称 */,
+      distributorName: '' /* 选中的客户名称 */,
+      supplierName: '' /* 选中的生厂商名称 */,
+      remark: '' /* 打印备注 */,
+    };
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.visible !== nextProps.visible) {
       this.setState({
         visible: nextProps.visible,
-      })
+      });
     }
 
     /* 设置检验结果的初始值 */
     if (this.props.standardsInitial !== nextProps.standardsInitial) {
       this.setState({
         standardsData: nextProps.standardsInitial,
-      })
+      });
     }
 
+    if (this.props.remark !== nextProps.remark) {
+      this.setState({
+        remark: nextProps.remark,
+      });
+    }
   }
 
   /* 出厂合格证 */
   getCertificateFields = () => {
     const { getFieldDecorator, setFields } = this.props.form;
-    const { manufacturerSelectList, companySelectList, productSelectList, selectedDetail, disabled, type } = this.props
-    const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0)
-    const companyEnabled = companySelectList.filter(item => item.status === 0)
-    const productEnabled = productSelectList.filter(item => item.status === 0)
+    const {
+      manufacturerSelectList,
+      companySelectList,
+      productSelectList,
+      selectedDetail,
+      disabled,
+      type,
+    } = this.props;
+    const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
+    const companyEnabled = companySelectList.filter(item => item.status === 0);
+    const productEnabled = productSelectList.filter(item => item.status === 0);
 
     const formItemLayout = {
       labelCol: {
@@ -64,24 +77,24 @@ class EditModal extends Component {
       sm: { span: 8 },
       md: { span: 8 },
       lg: { span: 6 },
-    }
+    };
     /**
      * 产品下拉框变化事件：
      * 1、加载产品对应的标准
      * 2、查询出对应的产品名称
      */
-    const handleProductChange = (productId) => {
-      const proSelected = productSelectList.filter(item => item.id === productId)
+    const handleProductChange = productId => {
+      const proSelected = productSelectList.filter(item => item.id === productId);
       /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
       if (type === 'add') {
         proSelected[0].standards = proSelected[0].standards.map(item => {
-          item.parameter = ''
-          return item
-        })
+          item.parameter = '';
+          return item;
+        });
       }
-      const productName = proSelected[0].name
-      const printName = proSelected[0].printName
-      console.info('printName->', printName)
+      const productName = proSelected[0].name;
+      const remark = proSelected[0].remark;
+      const printName = proSelected[0].printName;
       setFields({
         title: {
           value: printName,
@@ -90,141 +103,146 @@ class EditModal extends Component {
       this.setState({
         standardsData: proSelected[0].standards,
         productName,
-      })
-    }
+        remark,
+      });
+    };
 
     /**
      * 级别下拉框变化事件：
      * 查询出当前选中的值，用于后续的判断
-    */
-    const handleLevelChange = (levelSelected) => {
+     */
+    const handleLevelChange = levelSelected => {
       this.setState({
         levelSelected,
-      })
-    }
+      });
+    };
 
     /**
      * 客户名称下拉框变化事件：
      * 查询出当前选中的名称，用于保存
-    */
-    const handleDistributorChange = (distributorId) => {
-      let distributorName
+     */
+    const handleDistributorChange = distributorId => {
+      let distributorName;
       companySelectList.map(item => {
         if (item.id === distributorId) {
-          distributorName = item.name
+          distributorName = item.name;
         }
-        return item
-      })
+        return item;
+      });
       this.setState({
         distributorName,
-      })
-    }
+      });
+    };
 
     /**
      * 生产厂家下拉框变化事件：
      * 查询出当前选中的名称，用于保存
-    */
-    const handleSupplierChange = (supplierId) => {
-      let supplierName
+     */
+    const handleSupplierChange = supplierId => {
+      let supplierName;
       manufacturerSelectList.map(item => {
         if (item.id === supplierId) {
-          supplierName = item.name
+          supplierName = item.name;
         }
-      })
+      });
       this.setState({
         supplierName,
-      })
-    }
+      });
+    };
     /* 车牌 */
     let timeout;
     const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
-    const fetch = (value) => {
+    const fetch = value => {
       if (timeout) {
         clearTimeout(timeout);
         timeout = null;
       }
 
       const fake = () => {
-        const { cars } = this.props
-        const data = []
+        const { cars } = this.props;
+        const data = [];
 
         cars.map(carItem => {
-          const reg = new RegExp(value)
+          const reg = new RegExp(value);
           if (carItem.match(reg)) {
-            data.push(carItem)
+            data.push(carItem);
           }
-          return carItem
-        })
-        this.setState({ carData: data })
-      }
+          return carItem;
+        });
+        this.setState({ carData: data });
+      };
 
       timeout = setTimeout(fake, 300);
-    }
-    const handleChange = (value) => {
+    };
+    const handleChange = value => {
       this.setState({ value });
       fetch(value);
-    }
+    };
     return (
       <div>
         <fieldset>
           <legend> 出厂合格证</legend>
           <Row gutter={8}>
             <Col {...formColLayout}>
-              <FormItem label='品名' {...formItemLayout}>
+              <FormItem label="品名" {...formItemLayout}>
                 {getFieldDecorator('productId', {
-                  rules: [{
-                    required: true,
-                    message: '请选择品名',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择品名',
+                    },
+                  ],
                   initialValue: selectedDetail.productId,
                 })(
                   <Select onChange={handleProductChange} disabled={disabled}>
-                    {
-                      productEnabled && productEnabled.map(item =>
-                        <Option value={item.id}>{item.name}</Option>
-                      )
-                    }
+                    {productEnabled &&
+                      productEnabled.map(item => <Option value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='级别' {...formItemLayout}>
+              <FormItem label="级别" {...formItemLayout}>
                 {getFieldDecorator('level', {
-                  rules: [{
-                    required: true,
-                    message: '请选择级别',
-                  }],
-                  initialValue: selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择级别',
+                    },
+                  ],
+                  initialValue:
+                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     <Option value="0">I级</Option>
                     <Option value="1">II级</Option>
                     <Option value="2">III级</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='公司抬头' {...formItemLayout}>
+              <FormItem label="公司抬头" {...formItemLayout}>
                 {getFieldDecorator('title', {
-                  rules: [{
-                    required: true,
-                    message: '请填写公司抬头',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写公司抬头',
+                    },
+                  ],
                   initialValue: selectedDetail.title,
-                })(
-                  <Input placeholder="请填写公司抬头" disabled={disabled} />
-                  )}
+                })(<Input placeholder="请填写公司抬头" disabled={disabled} />)}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='出厂时间' {...formItemLayout}>
+              <FormItem label="出厂时间" {...formItemLayout}>
                 {getFieldDecorator('createTime', {
-                  rules: [{
-                    required: true,
-                    message: '请选择出厂时间',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择出厂时间',
+                    },
+                  ],
                   initialValue: moment(selectedDetail.createTime),
                 })(
                   <DatePicker
@@ -234,17 +252,21 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='生产日期' {...formItemLayout}>
+              <FormItem label="生产日期" {...formItemLayout}>
                 {getFieldDecorator('deliveryTime', {
-                  rules: [{
-                    required: true,
-                    message: '请选择生产日期',
-                  }],
-                  initialValue: selectedDetail.deliveryTime ? moment(selectedDetail.deliveryTime) : '',
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择生产日期',
+                    },
+                  ],
+                  initialValue: selectedDetail.deliveryTime
+                    ? moment(selectedDetail.deliveryTime)
+                    : '',
                 })(
                   <DatePicker
                     showTime
@@ -253,50 +275,53 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='生产厂家' {...formItemLayout}>
+              <FormItem label="生产厂家" {...formItemLayout}>
                 {getFieldDecorator('supplierId', {
-                  rules: [{
-                    required: true,
-                    message: '请选择生产厂家',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择生产厂家',
+                    },
+                  ],
                   initialValue: selectedDetail.supplierId,
                 })(
                   <Select onChange={handleSupplierChange} disabled={disabled}>
-                    {
-                      manufacturerEnabled && manufacturerEnabled.map(item =>
-                        <Option value={item.id}>{item.name}</Option>
-                      )
-                    }
+                    {manufacturerEnabled &&
+                      manufacturerEnabled.map(item => <Option value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='工艺' {...formItemLayout}>
+              <FormItem label="工艺" {...formItemLayout}>
                 {getFieldDecorator('techno', {
-                  rules: [{
-                    required: true,
-                    message: '请选择工艺',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择工艺',
+                    },
+                  ],
                   initialValue: selectedDetail.techno === 0 ? '0' : '',
                 })(
                   <Select disabled={disabled}>
-                    <Option value='0'>分选</Option>
+                    <Option value="0">分选</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='运输车号' {...formItemLayout}>
+              <FormItem label="运输车号" {...formItemLayout}>
                 {getFieldDecorator('carNo', {
-                  rules: [{
-                    required: true,
-                    message: '请填写运输车号',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写运输车号',
+                    },
+                  ],
                   initialValue: selectedDetail.carNo,
                 })(
                   <Select
@@ -312,102 +337,111 @@ class EditModal extends Component {
                   >
                     {options}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='公司名称' {...formItemLayout}>
+              <FormItem label="公司名称" {...formItemLayout}>
                 {getFieldDecorator('distributorId', {
-                  rules: [{
-                    required: true,
-                    message: '请填写公司名称',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写公司名称',
+                    },
+                  ],
                   initialValue: selectedDetail.distributorId,
                 })(
                   <Select onChange={handleDistributorChange} disabled={disabled}>
-                    {
-                      companyEnabled && companyEnabled.map(item =>
-                        <Option value={item.id}>{item.name}</Option>
-                      )
-                    }
+                    {companyEnabled &&
+                      companyEnabled.map(item => <Option value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
-              <FormItem label='客户名称' {...formItemLayout}>
+              <FormItem label="客户名称" {...formItemLayout}>
                 {getFieldDecorator('customer', {
-                  rules: [{
-                    required: true,
-                    message: '请填写客户名称',
-                  }],
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写客户名称',
+                    },
+                  ],
                   initialValue: selectedDetail.customer,
-                })(
-                  <Input placeholder="请填写客户名称" disabled={disabled} />
-                  )}
+                })(<Input placeholder="请填写客户名称" disabled={disabled} />)}
               </FormItem>
             </Col>
           </Row>
         </fieldset>
       </div>
-    )
-  }
-
+    );
+  };
 
   /* 检查结果 */
   getResult = () => {
-    const { standardsData, levelSelected, resultOk } = this.state
-    const { disabled } = this.props
-    const { getFieldDecorator } = this.props.form
-    const { level } = this.props.selectedDetail
+    const { standardsData, levelSelected, resultOk, remark } = this.state;
+    const { disabled, selectedDetail } = this.props;
+    const { getFieldDecorator } = this.props.form;
+    const { level } = selectedDetail;
 
     const tableColLayout = {
       xs: { offset: 0 },
       sm: { offset: 0 },
       md: { offset: 2 },
-    }
+    };
     const inputOnBlur = (event, item) => {
       window.event.cancelBubble = true;
-      let standards = ''
+      let standards = '';
       switch (Number(levelSelected || level)) {
         case 0:
-          standards = item.oneLevel
+          standards = item.oneLevel;
           break;
         case 1:
-          standards = item.twoLevel
+          standards = item.twoLevel;
           break;
         case 2:
-          standards = item.threeLevel
+          standards = item.threeLevel;
           break;
         default:
           break;
       }
-      if (item.type === 0 && event.target.value && event.target.value < standards) {
+      /**
+       *  item.type===1：大于等于
+       *  item.type===0：小于等于
+       */
+      if (item.type === 1 && event.target.value && event.target.value < standards) {
         this.setState({
           resultOk: false,
-        })
+        });
         Modal.warning({
           title: '警告',
-          content: `${item.name}的检验结果小于国家标准值`,
+          content: `${item.name}的检验结果须大于等于国家标准值`,
           okText: '知道了',
         });
-      } else if (item.type === 1 && event.target.value && event.target.value > standards) {
+      } else if (item.type === 0 && event.target.value && event.target.value > standards) {
         this.setState({
           resultOk: false,
-        })
+        });
         Modal.warning({
           title: '警告',
-          content: `${item.name}的检验结果大于国家标准值`,
+          content: `${item.name}的检验结果须小于等于国家标准值`,
           okText: '知道了',
         });
       } else {
         this.setState({
           resultOk: true,
-        })
+        });
       }
-    }
-    let levelInitial = Number(levelSelected || level)
-    levelInitial = (levelInitial !== undefined) ? (levelInitial === 0 ? 'I' : (levelInitial === 1 ? 'II' : 'III')) : ''
+    };
+    let levelInitial = Number(levelSelected || level);
+    levelInitial =
+      levelInitial !== undefined
+        ? levelInitial === 0
+          ? 'I'
+          : levelInitial === 1
+            ? 'II'
+            : 'III'
+        : '';
 
     return (
       <div>
@@ -430,60 +464,62 @@ class EditModal extends Component {
                 </tr>
               </thead>
               <tbody>
-                {
-                  standardsData && standardsData.map(item => {
+                {standardsData &&
+                  standardsData.map(item => {
                     return (
                       <tr>
-                        <td>
-                          {item.name}
+                        <td>{item.name}</td>
+                        <td className={commonStyles.alignRight}>
+                          {item.type === 0 ? '≤' : '≥'}
+                          {item.oneLevel}
                         </td>
                         <td className={commonStyles.alignRight}>
-                          {item.type === 1 ? '≤' : '≥'}{item.oneLevel}
+                          {item.type === 0 ? '≤' : '≥'}
+                          {item.twoLevel}
                         </td>
                         <td className={commonStyles.alignRight}>
-                          {item.type === 1 ? '≤' : '≥'}{item.twoLevel}
-                        </td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 1 ? '≤' : '≥'}{item.threeLevel}
+                          {item.type === 0 ? '≤' : '≥'}
+                          {item.threeLevel}
                         </td>
                         <td>
                           <FormItem>
                             {getFieldDecorator(`${item.id}`, {
-                              rules: [{
-                                required: true,
-                                message: `填写检验结果`,
-                              }, {
-                                validator: (rule, value, callback) => this.validateParameter(rule, value, callback, item),
-                              },
+                              rules: [
+                                {
+                                  required: true,
+                                  message: `填写检验结果`,
+                                },
+                                {
+                                  validator: (rule, value, callback) =>
+                                    this.validateParameter(rule, value, callback, item),
+                                },
                               ],
                               initialValue: item.parameter,
                             })(
-                              <InputNumber className={styles.inputNumber} step={0.01} onBlur={(e) => inputOnBlur(e, item)} disabled={disabled} />
-                              )}
+                              <InputNumber
+                                className={styles.inputNumber}
+                                step={0.01}
+                                onBlur={e => inputOnBlur(e, item)}
+                                disabled={disabled}
+                              />
+                            )}
                           </FormItem>
                         </td>
                       </tr>
-                    )
-                  })
-                }
+                    );
+                  })}
               </tbody>
               <tfoot>
                 <tr>
-                  <td>
-                    结果评定
-                  </td>
+                  <td>结果评定</td>
                   <td colSpan="4">
                     <div>
-                      {
-                        resultOk ? '符合' : '不符合'
-                      }
-                      GB/T 1596-2017 国家标准F类
-                      <span className={styles.resultLevel}>
-                        {
-                          levelInitial || ''
-                        }
-                      </span>级技术要求。
-                    强度活性指数监测报告待发
+                      <p>
+                        {resultOk ? '符合' : '不符合'}
+                        GB/T 1596-2017 国家标准F类
+                        <span className={styles.resultLevel}>{levelInitial || ''}</span>级技术要求。
+                      </p>
+                      <p>{remark}</p>
                     </div>
                   </td>
                 </tr>
@@ -492,13 +528,13 @@ class EditModal extends Component {
           </Col>
         </Row>
       </div>
-    )
-  }
+    );
+  };
 
   /* 相关信息 */
   getInfo = () => {
     const { getFieldDecorator } = this.props.form;
-    const { selectedDetail, disabled } = this.props
+    const { selectedDetail, disabled } = this.props;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -516,7 +552,7 @@ class EditModal extends Component {
       sm: { span: 8 },
       md: { span: 8 },
       lg: { span: 6 },
-    }
+    };
     return (
       <div>
         <fieldset>
@@ -524,142 +560,166 @@ class EditModal extends Component {
         </fieldset>
         <Row gutter={8}>
           <Col {...formColLayout}>
-            <FormItem label='毛重（kg）' {...formItemLayout}>
+            <FormItem label="毛重（kg）" {...formItemLayout}>
               {getFieldDecorator('grossWeight', {
-                rules: [{
-                  required: true,
-                  message: '请填写毛重',
-                }],
+                rules: [
+                  {
+                    required: true,
+                    message: '请填写毛重',
+                  },
+                ],
                 initialValue: selectedDetail.grossWeight,
               })(
-                <InputNumber className={styles.inputNumber} step={0.01} disabled={disabled} style={{ width: '100%' }} />
-                )}
+                <InputNumber
+                  className={styles.inputNumber}
+                  step={0.01}
+                  disabled={disabled}
+                  style={{ width: '100%' }}
+                />
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label='皮重（kg）' {...formItemLayout}>
+            <FormItem label="皮重（kg）" {...formItemLayout}>
               {getFieldDecorator('tareWeight', {
-                rules: [{
-                  required: true,
-                  message: '请填写皮重',
-                }],
+                rules: [
+                  {
+                    required: true,
+                    message: '请填写皮重',
+                  },
+                ],
                 initialValue: selectedDetail.tareWeight,
               })(
-                <InputNumber className={styles.inputNumber} step={0.01} disabled={disabled} style={{ width: '100%' }} />
-                )}
+                <InputNumber
+                  className={styles.inputNumber}
+                  step={0.01}
+                  disabled={disabled}
+                  style={{ width: '100%' }}
+                />
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label='净重（kg）' {...formItemLayout}>
+            <FormItem label="净重（kg）" {...formItemLayout}>
               {getFieldDecorator('netWeight', {
-                rules: [{
-                  required: true,
-                  message: '请填写净重',
-                }],
+                rules: [
+                  {
+                    required: true,
+                    message: '请填写净重',
+                  },
+                ],
                 initialValue: selectedDetail.netWeight,
               })(
-                <InputNumber className={styles.inputNumber} step={0.01} disabled={disabled} style={{ width: '100%' }} />
-                )}
+                <InputNumber
+                  className={styles.inputNumber}
+                  step={0.01}
+                  disabled={disabled}
+                  style={{ width: '100%' }}
+                />
+              )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={8}>
           <Col {...formColLayout}>
-            <FormItem label='检验员' {...formItemLayout}>
+            <FormItem label="检验员" {...formItemLayout}>
               {getFieldDecorator('checker', {
-                rules: [{
-                  required: true,
-                  message: '请填写检验员',
-                }],
+                rules: [
+                  {
+                    required: true,
+                    message: '请填写检验员',
+                  },
+                ],
                 initialValue: selectedDetail.checker,
-              })(
-                <Input disabled={disabled} />
-                )}
+              })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label='审核' {...formItemLayout}>
+            <FormItem label="审核" {...formItemLayout}>
               {getFieldDecorator('auditor', {
-                rules: [{
-                  required: true,
-                  message: '请填写审核人',
-                }],
+                rules: [
+                  {
+                    required: true,
+                    message: '请填写审核人',
+                  },
+                ],
                 initialValue: selectedDetail.auditor,
-              })(
-                <Input placeholder="请填写审核人" disabled={disabled} />
-                )}
+              })(<Input placeholder="请填写审核人" disabled={disabled} />)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label='出厂批号' {...formItemLayout}>
+            <FormItem label="出厂批号" {...formItemLayout}>
               {getFieldDecorator('batchNo', {
-                rules: [{
-                  required: true,
-                  message: '请填写出厂批号',
-                }],
+                rules: [
+                  {
+                    required: true,
+                    message: '请填写出厂批号',
+                  },
+                ],
                 initialValue: selectedDetail.batchNo,
-              })(
-                <Input disabled={disabled} />
-                )}
+              })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
         </Row>
       </div>
-    )
-  }
+    );
+  };
 
   validateParameter = (rule, value, callback, item) => {
-    let standards = ''
-    const { levelSelected } = this.state
-    const { level } = this.props.selectedDetail
+    let standards = '';
+    const { levelSelected } = this.state;
+    const { level } = this.props.selectedDetail;
     switch (Number(levelSelected || level)) {
       case 0:
-        standards = item.oneLevel
+        standards = item.oneLevel;
         break;
       case 1:
-        standards = item.twoLevel
+        standards = item.twoLevel;
         break;
       case 2:
-        standards = item.threeLevel
+        standards = item.threeLevel;
         break;
       default:
         break;
     }
-    if (item.type === 0 && value < standards) {
-      callback({ message: '检验结果须大于国家标准值' })
-      return
-    } else if (item.type === 1 && value > standards) {
-      callback({ message: '检验结果须小于国家标准值' })
-      return
+    /**
+     *  item.type===1：大于等于
+     *  item.type===0：小于等于
+     */
+    if (item.type === 1 && value < standards) {
+      callback({ message: '检验结果须大于等于国家标准值' });
+      return;
+    } else if (item.type === 0 && value > standards) {
+      callback({ message: '检验结果须小于等于国家标准值' });
+      return;
     }
-    callback()
-  }
+    callback();
+  };
 
   /* 保存按钮事件 */
   handleSubmit = () => {
-    const { productName, distributorName, supplierName } = this.state
+    const { productName, distributorName, supplierName } = this.state;
     this.setState({
       confirmLoading: true,
     });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let standardsData = []
+        let standardsData = [];
         /* 日期格式转化 */
-        values.deliveryTime = moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss')
-        values.createTime = moment(values.createTime).format('YYYY-MM-DD HH:mm:ss')
-
+        values.deliveryTime = moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss');
+        values.createTime = moment(values.createTime).format('YYYY-MM-DD HH:mm:ss');
 
         /* 字段名称转换 */
         for (const i in values) {
           if (Number(i)) {
             standardsData = this.state.standardsData.map(item => {
               if (item.id === Number(i)) {
-                item.parameter = String(values[i])
-                item.standardId = item.id
-                item.standardName = item.name
+                item.parameter = String(values[i]);
+                item.standardId = item.id;
+                item.standardName = item.name;
               }
-              return item
-            })
+              return item;
+            });
           }
         }
         if (this.props.type === 'add') {
@@ -672,7 +732,7 @@ class EditModal extends Component {
               distributorName,
               supplierName,
             },
-          })
+          });
         } else if (this.props.type === 'edit') {
           this.props.dispatch({
             type: 'outbound/edit',
@@ -684,29 +744,28 @@ class EditModal extends Component {
               supplierName,
               id: this.props.selectedDetail.id,
             },
-          })
+          });
         }
 
         setTimeout(() => {
           this.setState({
             confirmLoading: false,
           });
-          this.props.closeModal()
-        }, 0)
-      }
-      else {
+          this.props.closeModal();
+        }, 0);
+      } else {
         Modal.warning({
           title: '警告',
           content: '请按照提示修改填写内容后再保存',
           okText: '知道了',
         });
       }
-    })
-  }
+    });
+  };
 
   render() {
     const { visible, confirmLoading } = this.state;
-    const { closeModal, title, type } = this.props
+    const { closeModal, title, type } = this.props;
     return (
       <div>
         <Modal
@@ -719,24 +778,29 @@ class EditModal extends Component {
           footer={null}
           destroyOnClose
         >
-          <Form
-            className={styles.fm}
-          >
+          <Form className={styles.fm}>
             {this.getCertificateFields()}
             {this.getResult()}
             {this.getInfo()}
             <FormItem className={styles.fmBtn}>
-              <Button type="default" onClick={closeModal} className={styles.backBtn}>返回</Button>
-              {
-                type !== 'check' && (
-                  <Button type="primary" htmlType="submit" className={styles.submitBtn} onClick={() => this.handleSubmit()}>保存</Button>
-                )
-              }
+              <Button type="default" onClick={closeModal} className={styles.backBtn}>
+                返回
+              </Button>
+              {type !== 'check' && (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className={styles.submitBtn}
+                  onClick={() => this.handleSubmit()}
+                >
+                  保存
+                </Button>
+              )}
             </FormItem>
           </Form>
         </Modal>
       </div>
-    )
+    );
   }
 }
-export default Form.create()(EditModal)
+export default Form.create()(EditModal);
