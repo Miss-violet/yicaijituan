@@ -49,8 +49,19 @@ export default function request(url, options) {
   let cookie = '';
   let token = '';
   if (document.cookie) {
-    cookie = document.cookie.split('&&');
-    token = cookie && cookie[0];
+    // cookie = document.cookie.split('&&');
+    if (cookie && cookie.indexOf(';') > -1) {
+      console.info(';;;');
+      cookie = cookie[0].split(';');
+      cookie = cookie && cookie[cookie.length];
+      console.info(';;;->', cookie);
+      cookie = cookie.split('&&');
+      token = cookie && cookie[0];
+    } else {
+      cookie = document.cookie.split('&&');
+      token = cookie && cookie[0];
+    }
+    console.info('ddd-token->', token);
   } else {
     cookie = sessionStorage.getItem('cookie');
 
@@ -67,6 +78,7 @@ export default function request(url, options) {
     newOptions.method === 'PUT' ||
     newOptions.method === 'DELETE'
   ) {
+    console.info('token->', token);
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
         Accept: 'application/json',

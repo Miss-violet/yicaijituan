@@ -13,6 +13,7 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
+      console.info('response->', response);
       // Login successfully
       if (response.code === 0) {
         yield put({
@@ -27,7 +28,7 @@ export default {
       }
     },
     *logout({ payload }, { call, put, select }) {
-      const res = yield call(fakeAccountLogout, payload)
+      const res = yield call(fakeAccountLogout, payload);
       try {
         // get location pathname
         const urlParams = new URL(window.location.href);
@@ -52,12 +53,15 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
-        document.cookie = `${payload.data.token}&&${payload.data.role}`
-        sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`)
-      }
-      else {
-        document.cookie = ''
-        sessionStorage.setItem('cookie', '')
+        console.info('payload->', payload);
+        console.info('token->', payload.data.token);
+        document.cookie = `${payload.data.token}&&${payload.data.role}`;
+        sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`);
+        console.info('document.cookie->', document.cookie);
+        console.info('session->', sessionStorage.getItem('cookie'));
+      } else {
+        document.cookie = '';
+        sessionStorage.setItem('cookie', '');
       }
       setAuthority(payload.currentAuthority);
       return {
