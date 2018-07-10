@@ -82,10 +82,10 @@ class Outbound extends Component {
                 return selectedItem
               })
 
-              const { pointNum } = item
-              item.oneLevel = toDecimal(item.oneLevel, pointNum)
-              item.twoLevel = toDecimal(item.oneLevel, pointNum)
-              item.threeLevel = toDecimal(item.oneLevel, pointNum)
+              // const { pointNum } = item
+              // item.oneLevel = toDecimal(item.oneLevel, pointNum)
+              // item.twoLevel = toDecimal(item.oneLevel, pointNum)
+              // item.threeLevel = toDecimal(item.oneLevel, pointNum)
               return item
             })
             this.setState({
