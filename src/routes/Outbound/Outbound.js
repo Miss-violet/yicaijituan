@@ -10,7 +10,8 @@ class Outbound extends Component {
   constructor() {
     super()
     this.state = {
-      role: (document.cookie && document.cookie.split('&&')[1]) || (sessionStorage.getItem('cookie') && sessionStorage.getItem('cookie').split('&&')[1]),   // 当前用户的角色
+      // role: (document.cookie && document.cookie.split('&&')[1]) || (sessionStorage.getItem('cookie') && sessionStorage.getItem('cookie').split('&&')[1]),   // 当前用户的角色
+      role: (sessionStorage.getItem('cookie') && sessionStorage.getItem('cookie').split('&&')[1]),
       modalVisible: false,
       disabled: false,
       title: '',

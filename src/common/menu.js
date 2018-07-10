@@ -44,15 +44,19 @@ function formatter(data, parentPath = '/', parentAuthority) {
   // const role = cookie[1]
   let cookie = ''
   let role = ''
-  if (document.cookie) {
-    cookie = document.cookie.split('&&')
-    role = cookie && cookie[1]
-  } else {
-    cookie = sessionStorage.getItem('cookie')
+  // if (document.cookie) {
+  //   cookie = document.cookie.split('&&')
+  //   role = cookie && cookie[1]
+  // } else {
+  //   cookie = sessionStorage.getItem('cookie')
 
-    cookie = cookie && cookie.split('&&')
-    role = cookie && cookie[1]
-  }
+  //   cookie = cookie && cookie.split('&&')
+  //   role = cookie && cookie[1]
+  // }
+  cookie = sessionStorage.getItem('cookie')
+  cookie = cookie && cookie.split('&&')
+  role = cookie && cookie[1]
+
   return data.map(item => {
     let { path } = item;
     if (!isUrl(path)) {

@@ -48,26 +48,27 @@ export default function request(url, options) {
 
   let cookie = '';
   let token = '';
-  if (document.cookie) {
-    // cookie = document.cookie.split('&&');
-    if (cookie && cookie.indexOf(';') > -1) {
-      console.info(';;;');
-      cookie = cookie[0].split(';');
-      cookie = cookie && cookie[cookie.length];
-      console.info(';;;->', cookie);
-      cookie = cookie.split('&&');
-      token = cookie && cookie[0];
-    } else {
-      cookie = document.cookie.split('&&');
-      token = cookie && cookie[0];
-    }
-    console.info('ddd-token->', token);
-  } else {
-    cookie = sessionStorage.getItem('cookie');
+  // if (document.cookie) {
+  //   // cookie = document.cookie.split('&&');
+  //   if (cookie && cookie.indexOf(';') > -1) {
+  //     cookie = cookie[0].split(';');
+  //     cookie = cookie && cookie[cookie.length];
+  //     cookie = cookie.split('&&');
+  //     token = cookie && cookie[0];
+  //   } else {
+  //     cookie = document.cookie.split('&&');
+  //     token = cookie && cookie[0];
+  //   }
+  // } else {
+  //   cookie = sessionStorage.getItem('cookie');
 
-    cookie = cookie && cookie.split('&&');
-    token = cookie && cookie[0];
-  }
+  //   cookie = cookie && cookie.split('&&');
+  //   token = cookie && cookie[0];
+  // }
+  cookie = sessionStorage.getItem('cookie');
+
+  cookie = cookie && cookie.split('&&');
+  token = cookie && cookie[0];
 
   const defaultOptions = {
     credentials: 'include',
@@ -78,7 +79,6 @@ export default function request(url, options) {
     newOptions.method === 'PUT' ||
     newOptions.method === 'DELETE'
   ) {
-    console.info('token->', token);
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
         Accept: 'application/json',
@@ -119,7 +119,7 @@ export default function request(url, options) {
           responseData.code === 4001 ||
           responseData.code === 4002
         ) {
-          document.cookie = '';
+          // document.cookie = '';
           sessionStorage.setItem('cookie', '');
           store.dispatch(routerRedux.push('/user/login'));
         }

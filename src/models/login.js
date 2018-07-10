@@ -13,7 +13,6 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
-      console.info('response->', response);
       // Login successfully
       if (response.code === 0) {
         yield put({
@@ -53,14 +52,10 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
-        console.info('payload->', payload);
-        console.info('token->', payload.data.token);
-        document.cookie = `${payload.data.token}&&${payload.data.role}`;
+        // document.cookie = `${payload.data.token}&&${payload.data.role}`;
         sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`);
-        console.info('document.cookie->', document.cookie);
-        console.info('session->', sessionStorage.getItem('cookie'));
       } else {
-        document.cookie = '';
+        // document.cookie = '';
         sessionStorage.setItem('cookie', '');
       }
       setAuthority(payload.currentAuthority);

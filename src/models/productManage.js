@@ -13,7 +13,8 @@ export default {
     setup({ dispatch, history }) {
       return history.listen((location) => {
         if (location.pathname === '/productManage') {
-          if (!document.cookie && sessionStorage.getItem('cookie') === '') {
+          // if (!document.cookie && sessionStorage.getItem('cookie') === '') {
+          if (sessionStorage.getItem('cookie') === '') {
             dispatch(routerRedux.push({
               pathname: '/user/login',
             }))
