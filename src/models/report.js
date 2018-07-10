@@ -32,8 +32,8 @@ export default {
         res.data.standards.map(standardsItem => {
           const { pointNum } = standardsItem
           standardsItem.oneLevel = toDecimal(standardsItem.oneLevel, pointNum)
-          standardsItem.twoLevel = toDecimal(standardsItem.oneLevel, pointNum)
-          standardsItem.threeLevel = toDecimal(standardsItem.oneLevel, pointNum)
+          standardsItem.twoLevel = toDecimal(standardsItem.twoLevel, pointNum)
+          standardsItem.threeLevel = toDecimal(standardsItem.threeLevel, pointNum)
           return standardsItem
         })
         yield put({

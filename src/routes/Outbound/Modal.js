@@ -15,7 +15,7 @@ class EditModal extends Component {
       confirmLoading: false,
       carData: [],
       value: '',
-      standardsData: [],
+      standardsData: props.selectedDetail.standards,
       levelSelected: '',
       resultOk: this.props.resultOk || false,
       productName: '',                  /* 选中的产品名称 */
@@ -32,9 +32,9 @@ class EditModal extends Component {
     }
 
     /* 设置检验结果的初始值 */
-    if (this.props.standardsInitial !== nextProps.standardsInitial) {
+    if (this.props.selectedDetail !== nextProps.selectedDetail) {
       this.setState({
-        standardsData: nextProps.standardsInitial,
+        standardsData: nextProps.selectedDetail.standards,
       });
     }
 
@@ -379,7 +379,7 @@ class EditModal extends Component {
 
   /* 检查结果 */
   getResult = () => {
-    const { standardsData, levelSelected, resultOk, remark } = this.state;
+    const { levelSelected, resultOk, remark, standardsData } = this.state;
     const { disabled, selectedDetail } = this.props;
     const { getFieldDecorator } = this.props.form;
     const { level } = selectedDetail;
@@ -391,16 +391,16 @@ class EditModal extends Component {
     };
     const inputOnBlur = (event, item) => {
       window.event.cancelBubble = true;
-      let standards = '';
+      let levelStandards = '';
       switch (Number(levelSelected || level)) {
         case 0:
-          standards = item.oneLevel;
+          levelStandards = item.oneLevel;
           break;
         case 1:
-          standards = item.twoLevel;
+          levelStandards = item.twoLevel;
           break;
         case 2:
-          standards = item.threeLevel;
+          levelStandards = item.threeLevel;
           break;
         default:
           break;
@@ -409,7 +409,7 @@ class EditModal extends Component {
        *  item.type===1：大于等于
        *  item.type===0：小于等于
        */
-      if (item.type === 1 && event.target.value && event.target.value < standards) {
+      if (item.type === 1 && event.target.value && event.target.value < levelStandards) {
         this.setState({
           resultOk: false,
         });
@@ -418,7 +418,7 @@ class EditModal extends Component {
           content: `${item.name}的检验结果须大于等于国家标准值`,
           okText: '知道了',
         });
-      } else if (item.type === 0 && event.target.value && event.target.value > standards) {
+      } else if (item.type === 0 && event.target.value && event.target.value > levelStandards) {
         this.setState({
           resultOk: false,
         });
@@ -496,7 +496,7 @@ class EditModal extends Component {
                               ],
                               initialValue: item.parameter,
                             })(
-                              <InputNumber
+                              <Input
                                 className={styles.inputNumber}
                                 onBlur={e => inputOnBlur(e, item)}
                                 disabled={disabled}
@@ -685,10 +685,10 @@ class EditModal extends Component {
      *  item.type===1：大于等于
      *  item.type===0：小于等于
      */
-    if (item.type === 1 && value < standards) {
+    if (item.type === 1 && Number(value) < standards) {
       callback({ message: '检验结果须大于等于国家标准值' });
       return;
-    } else if (item.type === 0 && value > standards) {
+    } else if (item.type === 0 && Number(value) > standards) {
       callback({ message: '检验结果须小于等于国家标准值' });
       return;
     }
@@ -703,7 +703,8 @@ class EditModal extends Component {
     });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let standardsData = [];
+
+        let {standardsData} = this.state;
         /* 日期格式转化 */
         values.deliveryTime = moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss');
         values.createTime = moment(values.createTime).format('YYYY-MM-DD HH:mm:ss');
@@ -711,7 +712,7 @@ class EditModal extends Component {
         /* 字段名称转换 */
         for (const i in values) {
           if (Number(i)) {
-            standardsData = this.state.standardsData.map(item => {
+            standardsData = standardsData.map(item => {
               if (item.id === Number(i)) {
                 item.parameter = String(values[i]);
                 item.standardId = item.id;
@@ -721,6 +722,7 @@ class EditModal extends Component {
             });
           }
         }
+
         if (this.props.type === 'add') {
           this.props.dispatch({
             type: 'outbound/create',

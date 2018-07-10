@@ -24,15 +24,19 @@ class EditableCell extends React.Component {
       this.props.onChange(event.target.value);
     }
   }
+
   render() {
     const { value } = this.state;
     const { getFieldDecorator, name } = this.props.form
+    const {validatorNum} = this.props
     if (this.props.type === 'input') {
       return (
         <div className="editable-cell">
           <FormItem>
             {getFieldDecorator(`${name}`, {
-              rules: [{ required: true, message: '此项必填' }],
+              rules: [{ required: true, message: '此项必填' }, {
+                // validator: validatorNum,
+              }],
               initialValue: value,
             })(
               <Input

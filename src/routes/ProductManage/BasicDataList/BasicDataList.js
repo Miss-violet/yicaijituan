@@ -50,7 +50,7 @@ class BasicDataList extends Component {
       {
         title: '项目名称',
         dataIndex: 'name',
-        width: '16%',
+        width: '36%',
         render: (text, record) => {
           return (
             <EditableCell
@@ -78,7 +78,7 @@ class BasicDataList extends Component {
                   <Option value="0">≤（小于等于）</Option>
                   <Option value="1">≥（大于等于）</Option>
                 </Select>
-              )}
+                )}
             </FormItem>
           );
         },
@@ -86,12 +86,12 @@ class BasicDataList extends Component {
       {
         title: 'I级指标',
         dataIndex: 'oneLevel',
-        width: '14%',
+        width: '10%',
         render: (text, record) => (
           <EditableCell
             value={text}
             onChange={this.onCellChange(record.key, 'oneLevel')}
-            type="numberInput"
+            type="input"
             disabled={this.state.modalType === 'check'}
             name={`oneLevel_${record.key}`}
           />
@@ -100,12 +100,12 @@ class BasicDataList extends Component {
       {
         title: 'II级指标',
         dataIndex: 'twoLevel',
-        width: '14%',
+        width: '10%',
         render: (text, record) => (
           <EditableCell
             value={text}
             onChange={this.onCellChange(record.key, 'twoLevel')}
-            type="numberInput"
+            type="input"
             disabled={this.state.modalType === 'check'}
             name={`twoLevel_${record.key}`}
           />
@@ -114,12 +114,12 @@ class BasicDataList extends Component {
       {
         title: 'III级指标',
         dataIndex: 'threeLevel',
-        width: '14%',
+        width: '10%',
         render: (text, record) => (
           <EditableCell
             value={text}
             onChange={this.onCellChange(record.key, 'threeLevel')}
-            type="numberInput"
+            type="input"
             disabled={this.state.modalType === 'check'}
             name={`threeLevel_${record.key}`}
           />
@@ -128,7 +128,7 @@ class BasicDataList extends Component {
       {
         title: '保留小数点位数',
         dataIndex: 'pointNum',
-        width: '14%',
+        width: '10%',
         render: (text, record) => (
           <EditableCell
             value={text}
@@ -145,7 +145,7 @@ class BasicDataList extends Component {
       {
         title: '操作',
         dataIndex: 'operation',
-        width: '14%',
+        width: '10%',
         render: (text, record) => {
           return this.state.dataSource.length > 1 && this.state.modalType !== 'check' ? (
             <Popconfirm title="确定要删除这条数据吗?" onConfirm={() => this.onDelete(record.key)}>
@@ -156,7 +156,6 @@ class BasicDataList extends Component {
       },
     ];
   }
-
   onCellChange = (key, dataIndex) => {
     return value => {
       const dataSource = [...this.state.dataSource];
@@ -209,7 +208,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -232,7 +231,7 @@ class BasicDataList extends Component {
                         <Option value={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -255,7 +254,7 @@ class BasicDataList extends Component {
                         <Radio value={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -277,7 +276,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -298,7 +297,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
             </div>
@@ -322,7 +321,7 @@ class BasicDataList extends Component {
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -332,6 +331,15 @@ class BasicDataList extends Component {
     });
     return fmItem;
   };
+
+  // validatorNum = (rule, value, callback) => {
+  //   if (isNaN(Number(value))) {
+  //     callback('请输入数字');
+  //   } else {
+  //     this.setState({})
+  //   }
+  //   callback()
+  // }
   handleCancel = () => {
     this.setState({
       visible: false,
@@ -442,6 +450,8 @@ class BasicDataList extends Component {
       });
       return;
     }
+    /* 判断标准是否填写了数字 */
+
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const dataSource = [...this.state.dataSource];
@@ -493,7 +503,7 @@ class BasicDataList extends Component {
       onOk: () => {
         this.props.handleDelete(this.state.selectedCompanyId);
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
   rowOnChange = (selectedRowKeys, selectedRows) => {

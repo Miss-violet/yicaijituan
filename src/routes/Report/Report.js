@@ -22,7 +22,7 @@ class Report extends Component {
         <Col span={8} className={styles.leftCol}>
           <h1 className={styles.productName}>
             {detail.title}
-            <span className={styles.name}>出厂合格证</span>
+            <p className={styles.name}>出厂合格证</p>
           </h1>
           <div className={styles.qrCode}>
             <img src={`http://www.yicaijituan.cn:8090/images/${detail.id}.jpg`} alt="qrCode" />
