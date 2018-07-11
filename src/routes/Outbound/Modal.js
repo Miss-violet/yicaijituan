@@ -199,6 +199,13 @@ class EditModal extends Component {
       this.setState({ value });
       fetch(value);
     };
+    const handleFocus = () => {
+      const {cars} = this.props
+      this.setState({
+        value: cars,
+        carData: cars,
+      })
+    }
     return (
       <div>
         <fieldset>
@@ -232,7 +239,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                  selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     <Option value="0">I级</Option>
@@ -354,6 +361,7 @@ class EditModal extends Component {
                     showArrow={false}
                     filterOption={false}
                     onChange={handleChange}
+                    onFocus={handleFocus}
                     disabled={disabled}
                   >
                     {options}

@@ -67,6 +67,13 @@ class OutboundFilter extends Component {
       this.setState({ value });
       fetch(value);
     }
+    const handleFocus = () => {
+      const {cars} = this.props
+      this.setState({
+        value: cars,
+        carData: cars,
+      })
+    }
 
     return (
       <Row gutter={32} className={styles.form}>
@@ -86,7 +93,7 @@ class OutboundFilter extends Component {
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                />
+                  />
               )}
             </FormItem>
           </Col>
@@ -102,7 +109,8 @@ class OutboundFilter extends Component {
                   showArrow={false}
                   filterOption={false}
                   onChange={handleChange}
-                >
+                  onFocus={handleFocus}
+                  >
                   {options}
                 </Select>
               )}
@@ -170,15 +178,15 @@ class OutboundFilter extends Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      const { deliveryTime, ...rest } = values
+      const { createTime, ...rest } = values
       let startTime
       let endTime
-      if (deliveryTime === undefined || deliveryTime.length < 1) {
+      if (createTime === undefined || createTime.length < 1) {
         startTime = ''
         endTime = ''
       } else {
-        startTime = moment(values.deliveryTime[0]).format('YYYY-MM-DD HH:mm:ss')
-        endTime = moment(values.deliveryTime[1]).format('YYYY-MM-DD HH:mm:ss')
+        startTime = moment(values.createTime[0]).format('YYYY-MM-DD HH:mm:ss')
+        endTime = moment(values.createTime[1]).format('YYYY-MM-DD HH:mm:ss')
       }
       this.props.handleSearch(
         {
@@ -219,7 +227,7 @@ class OutboundFilter extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-        >
+          >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>

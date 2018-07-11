@@ -34,6 +34,7 @@ export default {
           standardsItem.oneLevel = toDecimal(standardsItem.oneLevel, pointNum)
           standardsItem.twoLevel = toDecimal(standardsItem.twoLevel, pointNum)
           standardsItem.threeLevel = toDecimal(standardsItem.threeLevel, pointNum)
+          standardsItem.parameter = toDecimal(standardsItem.threeLevel, pointNum)
           return standardsItem
         })
         yield put({
