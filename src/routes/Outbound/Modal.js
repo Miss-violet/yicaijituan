@@ -59,6 +59,7 @@ class EditModal extends Component {
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companySelectList.filter(item => item.status === 0);
     const productEnabled = productSelectList.filter(item => item.status === 0);
+    console.info('productEnabled->', productEnabled)
 
     const formItemLayout = {
       labelCol: {
@@ -84,7 +85,9 @@ class EditModal extends Component {
      * 2、查询出对应的产品名称
      */
     const handleProductChange = productId => {
-      const proSelected = productSelectList.filter(item => item.id === productId);
+      console.info('productSelectList->', productSelectList)
+      const proSelected = productEnabled.filter(item => item.id === productId);
+      console.info('proSelected[0]->', proSelected[0])
       /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
       if (type === 'add') {
         proSelected[0].standards = proSelected[0].standards.map(item => {
@@ -93,15 +96,18 @@ class EditModal extends Component {
         });
       }
       const productName = proSelected[0].name;
-      const remark = proSelected[0].remark;
-      const printName = proSelected[0].printName;
+      const { remark } = proSelected[0];
+      const { printName } = proSelected[0];
+      const { standards } = proSelected[0]
+
+      console.info('standards->', standards)
       setFields({
         title: {
           value: printName,
         },
       });
       this.setState({
-        standardsData: proSelected[0].standards,
+        standardsData: standards,
         productName,
         remark,
       });
@@ -409,7 +415,7 @@ class EditModal extends Component {
        *  item.type===1：大于等于
        *  item.type===0：小于等于
        */
-      if (item.type === 1 && event.target.value && event.target.value < levelStandards) {
+      if (item.type === 1 && event.target.value && Number(event.target.value) < levelStandards) {
         this.setState({
           resultOk: false,
         });
@@ -418,7 +424,7 @@ class EditModal extends Component {
           content: `${item.name}的检验结果须大于等于国家标准值`,
           okText: '知道了',
         });
-      } else if (item.type === 0 && event.target.value && event.target.value > levelStandards) {
+      } else if (item.type === 0 && event.target.value && Number(event.target.value) > levelStandards) {
         this.setState({
           resultOk: false,
         });
@@ -467,7 +473,7 @@ class EditModal extends Component {
                   standardsData.map(item => {
                     return (
                       <tr>
-                        <td>{item.name}</td>
+                        <td>{item.name || item.standardName}</td>
                         <td className={commonStyles.alignRight}>
                           {item.type === 0 ? '≤' : '≥'}
                           {item.oneLevel}
@@ -719,7 +725,7 @@ class EditModal extends Component {
               if (item.id === Number(i)) {
                 item.parameter = String(values[i]);
                 item.standardId = item.id;
-                item.standardName = item.name;
+                item.standardName = item.standardName || item.name;
               }
               return item;
             });

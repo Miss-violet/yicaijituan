@@ -469,17 +469,16 @@ class BasicDataList extends Component {
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const dataSource = [...this.state.dataSource];
-        for (const i in values) {
-          if (!isNaN(Number(i))) {
-            dataSource.map((item, index) => {
-              if (index === Number(i)) {
-                item.type = Number(values[i]);
-              }
-              return item;
-            });
+        let standards = this.state.dataSource
+        standards = standards.map(item => {
+          for (const i in values) {
+            if (!isNaN(Number(i)) && i == item.key) {
+              item.type = values[i]
+              return item
+            }
           }
-        }
+          return item
+        })
         if (modalType === 'add') {
           this.props.handleCreate({
             ...values,
@@ -489,7 +488,7 @@ class BasicDataList extends Component {
           this.props.handleEdit({
             ...values,
             id: this.state.selectedCompanyId,
-            standards: [...this.state.dataSource],
+            standards,
           });
         }
         this.setState({

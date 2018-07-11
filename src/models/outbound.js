@@ -45,7 +45,7 @@ export default {
   },
 
   effects: {
-    *queryCars({payload}, {call, put}) {
+    *queryCars({ payload }, { call, put }) {
       const carsRes = yield call(cars, payload)
       if (carsRes.code === 0) {
         yield put({
@@ -82,6 +82,7 @@ export default {
       /* 产品下拉列表 */
       const productRes = yield call(productList, payload)
       if (productRes.code === 0) {
+        console.info('productRes.data->', productRes.data)
         yield put({
           type: 'success',
           payload: {
