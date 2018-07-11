@@ -56,10 +56,11 @@ class EditModal extends Component {
       disabled,
       type,
     } = this.props;
+
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companySelectList.filter(item => item.status === 0);
     const productEnabled = productSelectList.filter(item => item.status === 0);
-    console.info('productEnabled->', productEnabled)
+
 
     const formItemLayout = {
       labelCol: {
@@ -85,22 +86,35 @@ class EditModal extends Component {
      * 2、查询出对应的产品名称
      */
     const handleProductChange = productId => {
-      console.info('productSelectList->', productSelectList)
       const proSelected = productEnabled.filter(item => item.id === productId);
-      console.info('proSelected[0]->', proSelected[0])
-      /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
+      let { standards } = proSelected[0]
+
       if (type === 'add') {
-        proSelected[0].standards = proSelected[0].standards.map(item => {
-          item.parameter = '';
-          return item;
+        standards = standards.map(item => {
+          /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
+          return {
+            ...item,
+            parameter: '',
+          }
         });
       }
+      standards = standards.map(item => {
+        /* 如果不进行拷贝，则在修改id时，会将 standardId 也一起改掉 */
+        const copyItem = { ...item }
+        /* 每次切换产品的时候，把查询产品列表后的标准 id 和 name 分别赋给standardId 和 standardName */
+        /* 由于是新的标准，提交给后端保存的标准 id 应该 null */
+        return {
+          ...item,
+          standardId: copyItem.id,
+          standardName: copyItem.name,
+          id: null,
+        }
+      })
+
       const productName = proSelected[0].name;
       const { remark } = proSelected[0];
       const { printName } = proSelected[0];
-      const { standards } = proSelected[0]
 
-      console.info('standards->', standards)
       setFields({
         title: {
           value: printName,
@@ -150,6 +164,7 @@ class EditModal extends Component {
         if (item.id === supplierId) {
           supplierName = item.name;
         }
+        return item
       });
       this.setState({
         supplierName,
@@ -202,7 +217,7 @@ class EditModal extends Component {
                 })(
                   <Select onChange={handleProductChange} disabled={disabled}>
                     {productEnabled &&
-                      productEnabled.map(item => <Option value={item.id}>{item.name}</Option>)}
+                      productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
                   )}
               </FormItem>
@@ -297,7 +312,7 @@ class EditModal extends Component {
                 })(
                   <Select onChange={handleSupplierChange} disabled={disabled}>
                     {manufacturerEnabled &&
-                      manufacturerEnabled.map(item => <Option value={item.id}>{item.name}</Option>)}
+                      manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
                   )}
               </FormItem>
@@ -359,7 +374,7 @@ class EditModal extends Component {
                 })(
                   <Select onChange={handleDistributorChange} disabled={disabled}>
                     {companyEnabled &&
-                      companyEnabled.map(item => <Option value={item.id}>{item.name}</Option>)}
+                      companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
                   )}
               </FormItem>
@@ -472,7 +487,7 @@ class EditModal extends Component {
                 {standardsData &&
                   standardsData.map(item => {
                     return (
-                      <tr>
+                      <tr key={item.standardId}>
                         <td>{item.name || item.standardName}</td>
                         <td className={commonStyles.alignRight}>
                           {item.type === 0 ? '≤' : '≥'}
@@ -488,7 +503,7 @@ class EditModal extends Component {
                         </td>
                         <td>
                           <FormItem>
-                            {getFieldDecorator(`${item.id}`, {
+                            {getFieldDecorator(`${item.standardId}`, {
                               rules: [
                                 {
                                   required: true,
@@ -715,24 +730,27 @@ class EditModal extends Component {
 
         let { standardsData } = this.state;
         /* 日期格式转化 */
-        values.deliveryTime = moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss');
-        values.createTime = moment(values.createTime).format('YYYY-MM-DD HH:mm:ss');
-
-        /* 字段名称转换 */
+        values = {
+          ...values,
+          deliveryTime: moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
+          createTime: moment(values.createTime).format('YYYY-MM-DD HH:mm:ss'),
+        }
+        /* 把填写的检验结果值填入，传给后端 */
         for (const i in values) {
           if (Number(i)) {
             standardsData = standardsData.map(item => {
-              if (item.id === Number(i)) {
-                item.parameter = String(values[i]);
-                item.standardId = item.id;
-                item.standardName = item.standardName || item.name;
+              if (item.standardId === Number(i)) {
+                return {
+                  ...item,
+                  parameter: String(values[i]),
+                }
               }
-              return item;
+              return item
             });
           }
         }
-
         if (this.props.type === 'add') {
+
           this.props.dispatch({
             type: 'outbound/create',
             payload: {

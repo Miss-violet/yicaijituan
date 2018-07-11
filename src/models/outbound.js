@@ -82,7 +82,6 @@ export default {
       /* 产品下拉列表 */
       const productRes = yield call(productList, payload)
       if (productRes.code === 0) {
-        console.info('productRes.data->', productRes.data)
         yield put({
           type: 'success',
           payload: {
