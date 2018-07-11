@@ -4,7 +4,6 @@ import { message } from 'antd'
 import OutboundFilter from './Filter'
 import List from './List'
 import EditModal from './Modal'
-import { toDecimal } from '../../utils/utils'
 
 class Outbound extends Component {
   constructor() {

@@ -86,7 +86,7 @@ class OutboundFilter extends Component {
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                  />
+                />
               )}
             </FormItem>
           </Col>
@@ -102,7 +102,7 @@ class OutboundFilter extends Component {
                   showArrow={false}
                   filterOption={false}
                   onChange={handleChange}
-                  >
+                >
                   {options}
                 </Select>
               )}
@@ -118,7 +118,7 @@ class OutboundFilter extends Component {
                     <Select allowClear>
                       {
                         companySelectList && companySelectList.map(item =>
-                          <Option value={item.id}>{item.name}</Option>
+                          <Option key={item.id} value={item.id}>{item.name}</Option>
                         )
                       }
                     </Select>
@@ -131,7 +131,7 @@ class OutboundFilter extends Component {
                     <Select allowClear>
                       {
                         manufacturerSelectList && manufacturerSelectList.map(item =>
-                          <Option value={item.id}>{item.name}</Option>
+                          <Option key={item.id} value={item.id}>{item.name}</Option>
                         )
                       }
                     </Select>
@@ -144,7 +144,7 @@ class OutboundFilter extends Component {
                     <Select allowClear>
                       {
                         productSelectList && productSelectList.map(item =>
-                          <Option value={item.id}>{item.name}</Option>
+                          <Option key={item.id} value={item.id}>{item.name}</Option>
                         )
                       }
                     </Select>
@@ -155,8 +155,8 @@ class OutboundFilter extends Component {
                 <FormItem label='状态' {...formItemLayout} className={styles.formItem}>
                   {getFieldDecorator('status')(
                     <Select allowClear>
-                      <Option value='0'> 启用</Option>
-                      <Option value='1'> 停用</Option>
+                      <Option value='0' key='0'> 启用</Option>
+                      <Option value='1' key='1'> 停用</Option>
                     </Select>
                   )}
                 </FormItem>
@@ -219,7 +219,7 @@ class OutboundFilter extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>
