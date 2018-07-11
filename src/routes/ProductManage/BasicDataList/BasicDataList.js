@@ -50,7 +50,7 @@ class BasicDataList extends Component {
       {
         title: '项目名称',
         dataIndex: 'name',
-        width: '36%',
+        width: '30%',
         render: (text, record) => {
           return (
             <EditableCell
@@ -86,7 +86,7 @@ class BasicDataList extends Component {
       {
         title: 'I级指标',
         dataIndex: 'oneLevel',
-        width: '10%',
+        width: '12%',
         render: (text, record) => (
           <EditableCell
             value={text}
@@ -94,13 +94,14 @@ class BasicDataList extends Component {
             type="input"
             disabled={this.state.modalType === 'check'}
             name={`oneLevel_${record.key}`}
+            validatorNum={this.validatorNum}
           />
         ),
       },
       {
         title: 'II级指标',
         dataIndex: 'twoLevel',
-        width: '10%',
+        width: '12%',
         render: (text, record) => (
           <EditableCell
             value={text}
@@ -108,13 +109,14 @@ class BasicDataList extends Component {
             type="input"
             disabled={this.state.modalType === 'check'}
             name={`twoLevel_${record.key}`}
+            validatorNum={this.validatorNum}
           />
         ),
       },
       {
         title: 'III级指标',
         dataIndex: 'threeLevel',
-        width: '10%',
+        width: '12%',
         render: (text, record) => (
           <EditableCell
             value={text}
@@ -122,6 +124,7 @@ class BasicDataList extends Component {
             type="input"
             disabled={this.state.modalType === 'check'}
             name={`threeLevel_${record.key}`}
+            validatorNum={this.validatorNum}
           />
         ),
       },
@@ -332,14 +335,14 @@ class BasicDataList extends Component {
     return fmItem;
   };
 
-  // validatorNum = (rule, value, callback) => {
-  //   if (isNaN(Number(value))) {
-  //     callback('请输入数字');
-  //   } else {
-  //     this.setState({})
-  //   }
-  //   callback()
-  // }
+  validatorNum = (rule, value, callback) => {
+    if (isNaN(Number(value))) {
+      callback('请输入数字');
+    } else {
+      this.setState({})
+    }
+    callback()
+  }
   handleCancel = () => {
     this.setState({
       visible: false,
@@ -430,7 +433,7 @@ class BasicDataList extends Component {
   handleSubmit = modalType => {
     /* 判断标准是否填写完整 */
     const itemIsNull = [];
-    const isErr = this.state.dataSource.some(item => {
+    const isNullErr = this.state.dataSource.some(item => {
       for (const i in item) {
         if (i !== 'id' && i !== 'type') {
           /* 如果 item[i] 为空，则 塞进itemIsNull */
@@ -442,7 +445,7 @@ class BasicDataList extends Component {
       if (itemIsNull.length > 0) return true;
       else return false;
     });
-    if (isErr) {
+    if (isNullErr) {
       Modal.warning({
         title: '警告',
         content: '标准的各个指标不能为空，请填写完整后再保存',
@@ -451,6 +454,18 @@ class BasicDataList extends Component {
       return;
     }
     /* 判断标准是否填写了数字 */
+    let isNaNErr = false
+    isNaNErr = this.state.dataSource.some(item =>
+      isNaN(Number(item.oneLevel)) || isNaN(Number(item.twoLevel)) || isNaN(Number(item.threeLevel))
+    )
+    if (isNaNErr) {
+      Modal.warning({
+        title: '警告',
+        content: '标准的各个指标只能是数字，请修改后再保存',
+        okText: '知道了',
+      });
+      return;
+    }
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {

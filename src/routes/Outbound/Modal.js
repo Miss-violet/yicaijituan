@@ -211,7 +211,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                  selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     <Option value="0">I级</Option>
@@ -442,7 +442,6 @@ class EditModal extends Component {
             ? 'II'
             : 'III'
         : '';
-
     return (
       <div>
         <fieldset>
@@ -665,6 +664,10 @@ class EditModal extends Component {
   };
 
   validateParameter = (rule, value, callback, item) => {
+    if (isNaN(Number(value))) {
+      callback('请输入数字')
+      return
+    }
     let standards = '';
     const { levelSelected } = this.state;
     const { level } = this.props.selectedDetail;
@@ -704,7 +707,7 @@ class EditModal extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
 
-        let {standardsData} = this.state;
+        let { standardsData } = this.state;
         /* 日期格式转化 */
         values.deliveryTime = moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss');
         values.createTime = moment(values.createTime).format('YYYY-MM-DD HH:mm:ss');
