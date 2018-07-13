@@ -421,6 +421,7 @@ class EditModal extends Component {
     const inputOnBlur = (event, item) => {
       window.event.cancelBubble = true;
       let levelStandards = '';
+      const value = event.target.value
       switch (Number(levelSelected || level)) {
         case 0:
           levelStandards = item.oneLevel;
@@ -434,26 +435,43 @@ class EditModal extends Component {
         default:
           break;
       }
+      /* 检验是否为空 */
+      if(value==='') {
+        this.setState({
+          resultOk: false,
+        });
+        Modal.warning({
+          title: '警告',
+          content: `${item.name||item.standardName}的检验结果不能为空值`,
+          okText: '知道了',
+        });
+      }
       /**
        *  item.type===1：大于等于
        *  item.type===0：小于等于
        */
-      if (item.type === 1 && event.target.value && Number(event.target.value) < levelStandards) {
+      else if (item.type === 1 && value && Number(value) < levelStandards) {
         this.setState({
           resultOk: false,
         });
         Modal.warning({
           title: '警告',
-          content: `${item.name}的检验结果须大于等于国家标准值`,
+          content: `${item.name||item.standardName}的检验结果须大于等于国家标准值`,
           okText: '知道了',
         });
-      } else if (item.type === 0 && event.target.value && Number(event.target.value) > levelStandards) {
+      } else if (item.type === 0 && value && Number(value) > levelStandards) {
         this.setState({
           resultOk: false,
         });
         Modal.warning({
           title: '警告',
-          content: `${item.name}的检验结果须小于等于国家标准值`,
+          content: `${item.name||item.standardName}的检验结果须小于等于国家标准值`,
+          okText: '知道了',
+        });
+      } else if(value.length-value.indexOf('.')-1!==item.pointNum){
+        Modal.warning({
+          title: '警告',
+          content: `${item.name||item.standardName}的小数位与产品设置不符合，请检查`,
           okText: '知道了',
         });
       } else {
@@ -713,6 +731,11 @@ class EditModal extends Component {
       default:
         break;
     }
+    /* 校验是否为空 */
+    if(value===''){
+      callback({ message: '检验结果不能为空值' });
+      return;
+    }
     /**
      *  item.type===1：大于等于
      *  item.type===0：小于等于
@@ -723,6 +746,11 @@ class EditModal extends Component {
     } else if (item.type === 0 && Number(value) > standards) {
       callback({ message: '检验结果须小于等于国家标准值' });
       return;
+    }
+    /* 校验小数位 */
+    if(value.length-value.indexOf('.')-1!==item.pointNum){
+      callback({message: '小数位与产品设置不符合，请检查'})
+      return
     }
     callback();
   };
