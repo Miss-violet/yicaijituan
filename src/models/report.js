@@ -29,14 +29,11 @@ export default {
     *info({ payload }, { call, put }) {
       const res = yield call(info, payload.id)
       if (res.code === 0) {
-        res.data.standards.map(standardsItem => {
-          const { pointNum } = standardsItem
-          standardsItem.oneLevel = toDecimal(standardsItem.oneLevel, pointNum)
-          standardsItem.twoLevel = toDecimal(standardsItem.twoLevel, pointNum)
-          standardsItem.threeLevel = toDecimal(standardsItem.threeLevel, pointNum)
-          standardsItem.parameter = toDecimal(standardsItem.parameter, pointNum)
-          return standardsItem
-        })
+        // res.data.standards.map(standardsItem => {
+        //   const { pointNum } = standardsItem
+        //   standardsItem.parameter = toDecimal(standardsItem.parameter, pointNum)
+        //   return standardsItem
+        // })
         yield put({
           type: 'success',
           payload: {

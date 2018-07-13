@@ -1,6 +1,5 @@
 import { routerRedux } from 'dva/router';
 import { create, update, del, productList } from '../services/productManage'
-import { toDecimal } from '../utils/utils'
 
 export default {
   namespace: 'productManage',
@@ -73,17 +72,6 @@ export default {
     *queryList({ payload }, { call, put }) {
       const res = yield call(productList, payload)
       if (res.code === 0) {
-        // res.data.map(item => {
-        //   item.standards.map(standardsItem => {
-        //     const { pointNum } = standardsItem
-        //     standardsItem.oneLevel = toDecimal(standardsItem.oneLevel, pointNum)
-        //     standardsItem.twoLevel = toDecimal(standardsItem.twoLevel, pointNum)
-        //     standardsItem.threeLevel = toDecimal(standardsItem.threeLevel, pointNum)
-        //     return standardsItem
-        //   })
-        //   return item
-        // })
-
         yield put({
           type: 'success',
           payload: {

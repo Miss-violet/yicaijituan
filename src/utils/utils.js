@@ -175,11 +175,13 @@ export function toDecimal(number, pointNum) {
   const numberRound = Math.round(number * 100) / 100;
   let numberToString = numberRound.toString();
   let pointLastIndex = numberToString.lastIndexOf('.')
+  /* 如果 number 是个整数，则添加小数点（.） */
   if (pointLastIndex < 0 && pointNum > 0) {
     numberToString += '.';
     pointLastIndex = numberToString.length;
   }
-  if (pointLastIndex > 0 && pointLastIndex < pointNum) {
+  /* 如果 number 带小数 */
+  if (pointLastIndex > 0 && pointLastIndex+1 < pointNum) {
     pointLastIndex = numberToString.length - 1
   }
   while (numberToString.length < pointLastIndex + pointNum) {
