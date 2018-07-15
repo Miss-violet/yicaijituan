@@ -111,7 +111,10 @@ class Outbound extends Component {
     })
   }
   render() {
-    const { manufacturerSelectList, companySelectList, productSelectList, listData, total, cars } = this.props.outbound
+    const { manufacturerSelectList, companySelectList, productSelectList, listData, total, cars, sumNetweight, totalRecords } = this.props.outbound
+    console.info('sumNetweight->', sumNetweight)
+    console.info('totalRecords->', totalRecords)
+
     const { title, modalVisible, type, selectedRowKeys, selectedDetail, selectedStatus, role } = this.state
     const filterProps = {
       companySelectList,
@@ -132,6 +135,9 @@ class Outbound extends Component {
       role,
       showModal: this.showModal,
       listData,
+      total,
+      sumNetweight,
+      totalRecords,
       selectedStatus,
       selectedId: this.state.selectedRows.id,
       rowSelection: {

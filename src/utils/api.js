@@ -5,6 +5,7 @@ module.exports = {
             create: `/api/delivery/create`,
             update: `/api/delivery/update`,
             cars: `api/delivery/cars`,
+            statistics: `/api/delivery/statistics`,
         },
         userManage: {
             create: `/api/user/create`,
@@ -29,7 +30,7 @@ module.exports = {
             update: `/api/mft/update`,
         },
         journal: {
-            list:`/api/log/list`,
+            list: `/api/log/list`,
         },
     },
 }
