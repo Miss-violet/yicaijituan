@@ -34,7 +34,16 @@ export default {
           } else {
             dispatch({
               type: 'queryList',
-              payload: {},
+              payload: {
+                "pageIndex": 0,
+                "pageSize": 20,
+                "sortField": null,
+                "sortOrder": null,
+                "params": {
+                  startTime: null,
+                  endTime: null,
+                },
+              },
             })
             /* 加载下拉框选项 */
             dispatch({
@@ -102,7 +111,6 @@ export default {
     *queryList({ payload }, { call, put }) {
       const queryRes = yield call(outboundList, payload)
       const statisticsRes = yield call(statistics, payload)
-      console.info('statisticsRes->', statisticsRes)
       if (queryRes.code === 0) {
         yield put({
           type: 'success',

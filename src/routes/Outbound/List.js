@@ -53,7 +53,7 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                  <span>
+                <span>
                     <Icon type="check" />启用
                   </span>
                 )}
@@ -77,9 +77,10 @@ class List extends Component {
           </span>
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>
-          <span>共 <span style={{ color: '#f5222d' }}>{total}条 </span>出库单；</span>
-          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : sumNetweight}kg </span>；</span>
+          <span>共 <span style={{ color: '#f5222d' }}>{total} </span>条出库单；</span>
+          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : sumNetweight} </span>kg；</span>
           <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : totalRecords} </span>。</span>
+          <span>【请根据出厂日期筛选统计】</span>
         </div>
       </div>
     );
@@ -197,7 +198,7 @@ class List extends Component {
           pagination={this.state.pagination}
           onChange={handleTableChange}
           scroll={{ x: 2700 }}
-          />
+        />
       </div>
     );
   }
