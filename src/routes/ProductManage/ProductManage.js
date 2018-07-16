@@ -53,6 +53,10 @@ class ProductManage extends Component {
         dataIndex: 'printName',
       },
       {
+        title: '打印备注',
+        dataIndex: 'remark',
+      },
+      {
         title: '类型',
         dataIndex: 'type',
         render: text => (text === 1 ? '铁路运输' : '粉煤灰'),
@@ -214,13 +218,13 @@ class ProductManage extends Component {
               确定
             </Button>,
           ]}
-        >
+          >
           <Table
             columns={standardsColumns}
             dataSource={standardsData}
             pagination={false}
             bordered
-          />
+            />
         </Modal>
       </div>
     );

@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router'
-import { outboundList, create, update, status, info, cars } from '../services/outbound'
+import { outboundList, create, update, status, info, cars, statistics } from '../services/outbound'
 
 import { manufacturerList } from '../services/manufacturerManage'
 import { companyList } from '../services/companyManage'
@@ -12,11 +12,14 @@ export default {
 
   state: {
     listData: [],
+    total: '',
     manufacturerSelectList: [],
     companySelectList: [],
     productSelectList: [],
     selectedDetail: {},
     cars: [],
+    sumNetweight: '',
+    totalRecords: '',
   },
 
   subscriptions: {
@@ -31,7 +34,16 @@ export default {
           } else {
             dispatch({
               type: 'queryList',
-              payload: {},
+              payload: {
+                "pageIndex": 0,
+                "pageSize": 20,
+                "sortField": null,
+                "sortOrder": null,
+                "params": {
+                  startTime: null,
+                  endTime: null,
+                },
+              },
             })
             /* 加载下拉框选项 */
             dispatch({
@@ -97,17 +109,29 @@ export default {
       })
     },
     *queryList({ payload }, { call, put }) {
-      const res = yield call(outboundList, payload)
-      if (res.code === 0) {
+      const queryRes = yield call(outboundList, payload)
+      const statisticsRes = yield call(statistics, payload)
+      if (queryRes.code === 0) {
         yield put({
           type: 'success',
           payload: {
-            listData: res.data.rows,
+            listData: queryRes.data.rows,
+            total: queryRes.data.total,
           },
         })
         yield put({
           type: 'queryCars',
           payload: {},
+        })
+      }
+      if (statisticsRes.code === 0) {
+        const {sumNetweight, totalRecords} = statisticsRes.data
+        yield put({
+          type: 'success',
+          payload: {
+            sumNetweight,
+            totalRecords,
+          },
         })
       }
     },

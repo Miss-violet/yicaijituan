@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, Tooltip, Badge, Icon } from 'antd';
+import { Button, Table, Tooltip, Badge, Icon, Spin } from 'antd';
 import * as moment from 'moment';
 import { Link } from 'dva/router';
 import styles from './outbound.less';
@@ -26,6 +26,9 @@ class List extends Component {
   render() {
     const {
       listData,
+      total,
+      sumNetweight,
+      totalRecords,
       rowSelection,
       handleTableChange,
       showModal,
@@ -51,9 +54,9 @@ class List extends Component {
                 </span>
               ) : (
                 <span>
-                  <Icon type="check" />启用
-                </span>
-              )}
+                    <Icon type="check" />启用
+                  </span>
+                )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
               <Icon type="eye-o" />查看
@@ -65,14 +68,20 @@ class List extends Component {
                 </span>
               </Tooltip>
             ) : (
-              selectedStatus === 0 && (
-                <Link target="_blank" to={`/report/${selectedId}`} className={styles.btn}>
-                  <Icon type="printer" /> 查看合格证
-                </Link>
-              )
-            )}
+                selectedStatus === 0 && (
+                  <Link target="_blank" to={`/report/${selectedId}`} className={styles.btn}>
+                    <Icon type="printer" /> 查看合格证
+                  </Link>
+                )
+              )}
           </span>
         )}
+        <div style={{ marginLeft: '5px', marginTop: '10px' }}>
+          <span>共 <span style={{ color: '#f5222d' }}>{total} </span>条出库单；</span>
+          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : sumNetweight} </span>kg；</span>
+          <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : totalRecords} </span>。</span>
+          <span>【请根据出厂日期筛选统计】</span>
+        </div>
       </div>
     );
     const columns = [

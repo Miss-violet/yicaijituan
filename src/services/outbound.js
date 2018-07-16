@@ -78,3 +78,10 @@ export async function scanResult(id) {
     body: id,
   });
 }
+
+export async function statistics(params) {
+  return request(outbound.statistics, {
+    method: 'POST',
+    body: params,
+  });
+}
