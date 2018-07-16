@@ -155,7 +155,7 @@ class UserManage extends Component {
               break;
           }
           return roleData
-        } (),
+        }(),
       },
       {
         key: 5,
@@ -259,10 +259,12 @@ class UserManage extends Component {
         })
       },
       handleEdit: (values) => {
+        const { birth, ...rest } = values
         this.props.dispatch({
           type: 'userManage/edit',
           payload: {
-            ...values,
+            ...rest,
+            birth: moment(birth).format('YYYY-MM-DD'),
           },
         })
       },
