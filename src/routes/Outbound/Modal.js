@@ -445,12 +445,13 @@ class EditModal extends Component {
           content: `${item.name||item.standardName}的检验结果不能为空值`,
           okText: '知道了',
         });
+        return
       }
       /**
        *  item.type===1：大于等于
        *  item.type===0：小于等于
        */
-      else if (item.type === 1 && value && Number(value) < levelStandards) {
+      if (item.type === 1 && value && Number(value) < levelStandards) {
         this.setState({
           resultOk: false,
         });
@@ -459,7 +460,9 @@ class EditModal extends Component {
           content: `${item.name||item.standardName}的检验结果须大于等于国家标准值`,
           okText: '知道了',
         });
-      } else if (item.type === 0 && value && Number(value) > levelStandards) {
+        return
+      }
+      if (item.type === 0 && value && Number(value) > levelStandards) {
         this.setState({
           resultOk: false,
         });
@@ -468,17 +471,44 @@ class EditModal extends Component {
           content: `${item.name||item.standardName}的检验结果须小于等于国家标准值`,
           okText: '知道了',
         });
-      } else if(value.length-value.indexOf('.')-1!==item.pointNum){
+        return
+      }
+      if(item.pointNum===0&&value.indexOf('.')!==-1){
+        this.setState({
+          resultOk: false,
+        });
         Modal.warning({
           title: '警告',
-          content: `${item.name||item.standardName}的小数位与产品设置不符合，请检查`,
+          content: `${item.name||item.standardName}的小数位与产品设置不符合，请填写整数`,
           okText: '知道了',
         });
-      } else {
-        this.setState({
-          resultOk: true,
-        });
+        return
       }
+      if(item.pointNum>0&&value.indexOf('.')===-1){
+        this.setState({
+          resultOk: false,
+        });
+          Modal.warning({
+            title: '警告',
+            content: `${item.name||item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+            okText: '知道了',
+          });
+          return 
+      }
+      if(item.pointNum>0&&value.length-value.indexOf('.')-1!==item.pointNum){
+        this.setState({
+          resultOk: false,
+        });
+          Modal.warning({
+            title: '警告',
+            content: `${item.name||item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+            okText: '知道了',
+          });
+          return 
+      } 
+      this.setState({
+        resultOk: true,
+      });
     };
     let levelInitial = Number(levelSelected || level);
     levelInitial =
@@ -748,8 +778,16 @@ class EditModal extends Component {
       return;
     }
     /* 校验小数位 */
-    if(value.length-value.indexOf('.')-1!==item.pointNum){
-      callback({message: '小数位与产品设置不符合，请检查'})
+    if(item.pointNum === 0&&value.indexOf('.')!==-1) {
+      callback({message: `请填写整数`})
+      return
+    }
+    if(item.pointNum>0&&value.indexOf('.')===-1){
+      callback({message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`})
+      return
+    }
+    if(item.pointNum>0&&value.length-value.indexOf('.')-1!==item.pointNum){
+      callback({message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`})
       return
     }
     callback();
