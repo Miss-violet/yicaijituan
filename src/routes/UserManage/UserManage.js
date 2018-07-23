@@ -14,7 +14,12 @@ class UserManage extends Component {
   }
 
   render() {
-    const { data, total } = this.props.userManage
+    const { total } = this.props.userManage
+    let { data } = this.props.userManage
+    data = data.map((item, index) => {
+      item.key = index
+      return item
+    })
     const columns = [
       {
         title: '登录名',

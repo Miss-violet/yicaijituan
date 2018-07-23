@@ -40,7 +40,6 @@ class EditableCell extends React.Component {
               initialValue: value,
             })(
               <Input
-                value={value}
                 onChange={this.handleChange}
                 onBlur={this.check}
                 disabled={this.props.disabled}
@@ -58,7 +57,6 @@ class EditableCell extends React.Component {
               initialValue: value,
             })(
               <InputNumber
-                defaultValue={value}
                 onBlur={this.inputNumberCheck}
                 disabled={this.props.disabled}
                 step={this.props.step}

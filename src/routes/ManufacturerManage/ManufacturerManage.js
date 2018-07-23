@@ -31,7 +31,11 @@ class ManufacturerManage extends Component {
         render: text => (text === 0 ? <span>启用</span> : <span className={commonStyles.disableState}>停用</span>),
       },
     ]
-    const { data } = this.props.manufacturerManage
+    let { data } = this.props.manufacturerManage
+    data = data.map((item, index) => {
+      item.key = index
+      return item
+    })
     const fmFields = [{
       key: 1,
       label: '名称',

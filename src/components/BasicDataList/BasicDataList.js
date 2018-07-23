@@ -35,9 +35,6 @@ class BasicDataList extends Component {
       }, 0)
     }
   }
-  validator = (rule, value, callback) => {
-
-  }
 
   getFields = () => {
     const { fmFields } = this.props
@@ -141,7 +138,7 @@ class BasicDataList extends Component {
                 })(
                   <Select disabled={disabled}>
                     {
-                      item.data && item.data.map(selectItem => <Option value={selectItem.id}>{selectItem.name}</Option>)
+                      item.data && item.data.map(selectItem => <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>)
                     }
                   </Select>
                   )}
@@ -161,7 +158,7 @@ class BasicDataList extends Component {
                 })(
                   <RadioGroup name={item.name} disabled={disabled}>
                     {
-                      item.data && item.data.map(radioItem => <Radio value={radioItem.id}>{radioItem.name}</Radio>)
+                      item.data && item.data.map(radioItem => <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>)
                     }
                   </RadioGroup>
                   )}

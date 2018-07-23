@@ -231,7 +231,7 @@ class BasicDataList extends Component {
                   <Select disabled={disabled}>
                     {item.data &&
                       item.data.map(selectItem => (
-                        <Option value={selectItem.id}>{selectItem.name}</Option>
+                        <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
                   )}
@@ -254,7 +254,7 @@ class BasicDataList extends Component {
                   <RadioGroup name={item.name} disabled={disabled}>
                     {item.data &&
                       item.data.map(radioItem => (
-                        <Radio value={radioItem.id}>{radioItem.name}</Radio>
+                        <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
                   )}
@@ -368,6 +368,7 @@ class BasicDataList extends Component {
           modalType: 'add',
           dataSource: [
             {
+              key: new Date().getTime(),
               id: '',
               name: '',
               oneLevel: '',

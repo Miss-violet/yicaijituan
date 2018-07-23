@@ -77,7 +77,11 @@ class ProductManage extends Component {
         ),
       },
     ];
-    const { data } = this.props.productManage;
+    let { data } = this.props.productManage;
+    data = data.map((item, index) => {
+      item.key = index
+      return item
+    })
     const standardsColumns = [
       {
         title: '项目名称',
@@ -218,13 +222,13 @@ class ProductManage extends Component {
               确定
             </Button>,
           ]}
-          >
+        >
           <Table
             columns={standardsColumns}
             dataSource={standardsData}
             pagination={false}
             bordered
-            />
+          />
         </Modal>
       </div>
     );
