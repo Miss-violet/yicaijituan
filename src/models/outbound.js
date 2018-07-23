@@ -2,7 +2,7 @@ import { routerRedux } from 'dva/router'
 import { outboundList, create, update, status, info, cars, statistics } from '../services/outbound'
 
 import { manufacturerList } from '../services/manufacturerManage'
-import { companyList } from '../services/companyManage'
+import { companyListAll } from '../services/companyManage'
 import { productList } from '../services/productManage'
 
 
@@ -14,7 +14,7 @@ export default {
     listData: [],
     total: '',
     manufacturerSelectList: [],
-    companySelectList: [],
+    companyAllSelectList: [],
     productSelectList: [],
     selectedDetail: {},
     cars: [],
@@ -81,12 +81,12 @@ export default {
       }
 
       /* 公司下拉列表 */
-      const companyRes = yield call(companyList, payload)
-      if (companyRes.code === 0) {
+      const companyAllRes = yield call(companyListAll, payload)
+      if (companyAllRes.code === 0) {
         yield put({
           type: 'success',
           payload: {
-            companySelectList: companyRes.data.rows,
+            companyAllSelectList: companyAllRes.data,
           },
         })
       }
@@ -125,7 +125,7 @@ export default {
         })
       }
       if (statisticsRes.code === 0) {
-        const {sumNetweight, totalRecords} = statisticsRes.data
+        const { sumNetweight, totalRecords } = statisticsRes.data
         yield put({
           type: 'success',
           payload: {

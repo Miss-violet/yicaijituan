@@ -111,7 +111,7 @@ class Outbound extends Component {
     })
   }
   render() {
-    const { manufacturerSelectList, companySelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
+    const { manufacturerSelectList, companySelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
 
     let { listData } = this.props.outbound
 
@@ -122,7 +122,7 @@ class Outbound extends Component {
 
     const { title, modalVisible, type, selectedRowKeys, selectedDetail, selectedStatus, role } = this.state
     const filterProps = {
-      companySelectList,
+      companyAllSelectList,
       manufacturerSelectList,
       productSelectList,
       cars,
@@ -184,7 +184,7 @@ class Outbound extends Component {
       visible: modalVisible,
       title,
       type,
-      companySelectList,
+      companyAllSelectList,
       manufacturerSelectList,
       productSelectList,
       resultOk: true,

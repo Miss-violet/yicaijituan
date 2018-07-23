@@ -15,6 +15,7 @@ module.exports = {
         },
         companyManage: {
             list: `/api/company/list`,
+            listAll: `/api/company/listAll`,
             create: `/api/company/create`,
             update: `/api/company/update`,
             vaildateCompanyName: `/api/company/vaildate`,

@@ -17,7 +17,7 @@ class OutboundFilter extends Component {
 
   getFields() {
     const { getFieldDecorator } = this.props.form;
-    const { companySelectList, manufacturerSelectList, productSelectList, role } = this.props
+    const { companyAllSelectList, manufacturerSelectList, productSelectList, role } = this.props
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -64,7 +64,6 @@ class OutboundFilter extends Component {
       timeout = setTimeout(fake, 300);
     }
     const handleChange = (value) => {
-      // this.setState({ value });
       this.props.form.setFieldsValue({
         carNo: value,
       });
@@ -77,7 +76,6 @@ class OutboundFilter extends Component {
         carData: cars,
       })
     }
-
     return (
       <Row gutter={32} className={styles.form}>
         <span style={{ padding: 0 }}>
@@ -105,7 +103,6 @@ class OutboundFilter extends Component {
               {getFieldDecorator('carNo')(
                 <Select
                   mode="combobox"
-                  // value={this.state.value}
                   placeholder={this.props.placeholder}
                   style={this.props.style}
                   defaultActiveFirstOption={false}
@@ -126,9 +123,9 @@ class OutboundFilter extends Component {
               <Col {...filterFormLayout}>
                 <FormItem label='公司名称' {...formItemLayout} className={styles.formItem}>
                   {getFieldDecorator('distributorId')(
-                    <Select allowClear>
+                    <Select allowClear showSearch optionFilterProp="children">
                       {
-                        companySelectList && companySelectList.map(item =>
+                        companyAllSelectList && companyAllSelectList.map(item =>
                           <Option key={item.id} value={item.id}>{item.name}</Option>
                         )
                       }
