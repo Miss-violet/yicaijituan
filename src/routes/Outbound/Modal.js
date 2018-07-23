@@ -14,7 +14,7 @@ class EditModal extends Component {
       visible: false,
       confirmLoading: false,
       carData: [],
-      value: '',
+      // value: '',
       standardsData: props.selectedDetail.standards,
       levelSelected: '',
       resultOk: this.props.resultOk || false,
@@ -196,13 +196,16 @@ class EditModal extends Component {
       timeout = setTimeout(fake, 300);
     };
     const handleChange = value => {
-      this.setState({ value });
+      // this.setState({ value });
+      this.props.form.setFieldsValue({
+        carNo: value,
+      });
       fetch(value);
     };
     const handleFocus = () => {
-      const {cars} = this.props
+      const { cars } = this.props
       this.setState({
-        value: cars,
+        // value: cars,
         carData: cars,
       })
     }
@@ -239,7 +242,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                  selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     <Option value="0">I级</Option>
@@ -292,7 +295,7 @@ class EditModal extends Component {
                       message: '请选择生产日期',
                     },
                   ],
-                  initialValue: selectedDetail.deliveryTime
+                  initialValue: type !== 'add'
                     ? moment(selectedDetail.deliveryTime)
                     : '',
                 })(
@@ -354,7 +357,7 @@ class EditModal extends Component {
                 })(
                   <Select
                     mode="combobox"
-                    value={this.state.value}
+                    // value={this.state.value}
                     placeholder={this.props.placeholder}
                     style={this.props.style}
                     defaultActiveFirstOption={false}
@@ -436,13 +439,13 @@ class EditModal extends Component {
           break;
       }
       /* 检验是否为空 */
-      if(value==='') {
+      if (value === '') {
         this.setState({
           resultOk: false,
         });
         Modal.warning({
           title: '警告',
-          content: `${item.name||item.standardName}的检验结果不能为空值`,
+          content: `${item.name || item.standardName}的检验结果不能为空值`,
           okText: '知道了',
         });
         return
@@ -457,7 +460,7 @@ class EditModal extends Component {
         });
         Modal.warning({
           title: '警告',
-          content: `${item.name||item.standardName}的检验结果须大于等于国家标准值`,
+          content: `${item.name || item.standardName}的检验结果须大于等于国家标准值`,
           okText: '知道了',
         });
         return
@@ -468,44 +471,44 @@ class EditModal extends Component {
         });
         Modal.warning({
           title: '警告',
-          content: `${item.name||item.standardName}的检验结果须小于等于国家标准值`,
+          content: `${item.name || item.standardName}的检验结果须小于等于国家标准值`,
           okText: '知道了',
         });
         return
       }
-      if(item.pointNum===0&&value.indexOf('.')!==-1){
+      if (item.pointNum === 0 && value.indexOf('.') !== -1) {
         this.setState({
           resultOk: false,
         });
         Modal.warning({
           title: '警告',
-          content: `${item.name||item.standardName}的小数位与产品设置不符合，请填写整数`,
+          content: `${item.name || item.standardName}的小数位与产品设置不符合，请填写整数`,
           okText: '知道了',
         });
         return
       }
-      if(item.pointNum>0&&value.indexOf('.')===-1){
+      if (item.pointNum > 0 && value.indexOf('.') === -1) {
         this.setState({
           resultOk: false,
         });
-          Modal.warning({
-            title: '警告',
-            content: `${item.name||item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
-            okText: '知道了',
-          });
-          return 
+        Modal.warning({
+          title: '警告',
+          content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+          okText: '知道了',
+        });
+        return
       }
-      if(item.pointNum>0&&value.length-value.indexOf('.')-1!==item.pointNum){
+      if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
         this.setState({
           resultOk: false,
         });
-          Modal.warning({
-            title: '警告',
-            content: `${item.name||item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
-            okText: '知道了',
-          });
-          return 
-      } 
+        Modal.warning({
+          title: '警告',
+          content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+          okText: '知道了',
+        });
+        return
+      }
       this.setState({
         resultOk: true,
       });
@@ -762,7 +765,7 @@ class EditModal extends Component {
         break;
     }
     /* 校验是否为空 */
-    if(value===''){
+    if (value === '') {
       callback({ message: '检验结果不能为空值' });
       return;
     }
@@ -778,16 +781,16 @@ class EditModal extends Component {
       return;
     }
     /* 校验小数位 */
-    if(item.pointNum === 0&&value.indexOf('.')!==-1) {
-      callback({message: `请填写整数`})
+    if (item.pointNum === 0 && value.indexOf('.') !== -1) {
+      callback({ message: `请填写整数` })
       return
     }
-    if(item.pointNum>0&&value.indexOf('.')===-1){
-      callback({message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`})
+    if (item.pointNum > 0 && value.indexOf('.') === -1) {
+      callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
       return
     }
-    if(item.pointNum>0&&value.length-value.indexOf('.')-1!==item.pointNum){
-      callback({message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`})
+    if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
+      callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
       return
     }
     callback();

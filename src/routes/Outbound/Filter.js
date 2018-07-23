@@ -64,13 +64,16 @@ class OutboundFilter extends Component {
       timeout = setTimeout(fake, 300);
     }
     const handleChange = (value) => {
-      this.setState({ value });
+      // this.setState({ value });
+      this.props.form.setFieldsValue({
+        carNo: value,
+      });
       fetch(value);
     }
     const handleFocus = () => {
-      const {cars} = this.props
+      const { cars } = this.props
       this.setState({
-        value: cars,
+        // value: cars,
         carData: cars,
       })
     }
@@ -102,7 +105,7 @@ class OutboundFilter extends Component {
               {getFieldDecorator('carNo')(
                 <Select
                   mode="combobox"
-                  value={this.state.value}
+                  // value={this.state.value}
                   placeholder={this.props.placeholder}
                   style={this.props.style}
                   defaultActiveFirstOption={false}
@@ -227,7 +230,6 @@ class OutboundFilter extends Component {
       if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}`
       else url = `/api/file/delivery/export`
       document.getElementById("ifile").src = url;
-
     })
   }
 
@@ -253,7 +255,7 @@ class OutboundFilter extends Component {
                     <a className={styles.exportBtn} onClick={this.handleExport}>
                       <Icon type="export" /> 导出
                     </a>
-                    <iframe id="ifile" style={{ display: 'none' }} />
+                    <iframe title="ifile" id="ifile" style={{ display: 'none' }} />
                   </span>
                 )
               }

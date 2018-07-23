@@ -111,7 +111,14 @@ class Outbound extends Component {
     })
   }
   render() {
-    const { manufacturerSelectList, companySelectList, productSelectList, listData, total, cars, sumNetweight, totalRecords } = this.props.outbound
+    const { manufacturerSelectList, companySelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
+
+    let { listData } = this.props.outbound
+
+    listData = listData.map((item, index) => {
+      item.key = index
+      return item
+    })
 
     const { title, modalVisible, type, selectedRowKeys, selectedDetail, selectedStatus, role } = this.state
     const filterProps = {

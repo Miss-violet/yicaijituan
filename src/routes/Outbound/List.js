@@ -53,9 +53,9 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                <span>
+                  <span>
                     <Icon type="check" />启用
-                  </span>
+                </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -114,7 +114,7 @@ class List extends Component {
         dataIndex: 'deliveryTime',
         render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         width: 200,
-        className: role === '2' && 'hidden',
+        className: role === '2' ? 'hidden' : '',
       },
       {
         title: '运输车号',
