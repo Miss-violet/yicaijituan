@@ -35,9 +35,6 @@ class BasicDataList extends Component {
       }, 0)
     }
   }
-  validator = (rule, value, callback) => {
-
-  }
 
   getFields = () => {
     const { fmFields } = this.props
@@ -57,6 +54,14 @@ class BasicDataList extends Component {
     };
     const Option = Select.Option;
     const RadioGroup = Radio.Group;
+
+    const validatePSW = (rule, value, callback) => {
+      const regx = new RegExp(/^[A-Za-z0-9]{6,}$/)
+      if (value && !regx.test(value)) {
+        callback('请输入至少6位由字母或数字组成的密码')
+      }
+      callback();
+    }
 
     const compareToFirstPassword = (rule, value, callback) => {
       if (value && value !== getFieldValue('password')) {
@@ -115,7 +120,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={(item.name === 'loginName') ? itemDisabled(`${item.name}`) : disabled}
                     onChange={(event) => handleChange(event, item)}
-                    />
+                  />
                   )}
               </FormItem>
             </Col>
@@ -133,7 +138,7 @@ class BasicDataList extends Component {
                 })(
                   <Select disabled={disabled}>
                     {
-                      item.data && item.data.map(selectItem => <Option value={selectItem.id}>{selectItem.name}</Option>)
+                      item.data && item.data.map(selectItem => <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>)
                     }
                   </Select>
                   )}
@@ -153,7 +158,7 @@ class BasicDataList extends Component {
                 })(
                   <RadioGroup name={item.name} disabled={disabled}>
                     {
-                      item.data && item.data.map(radioItem => <Radio value={radioItem.id}>{radioItem.name}</Radio>)
+                      item.data && item.data.map(radioItem => <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>)
                     }
                   </RadioGroup>
                   )}
@@ -183,6 +188,9 @@ class BasicDataList extends Component {
                           rules: [{
                             required: modalType === 'add' ? true : this.state.changeCode,
                             message: '请输入密码',
+                          },
+                          {
+                            validator: validatePSW,
                           }],
                         })(
                           <Input type="password" placeholder={modalType === 'check' ? '' : '请输入密码'} disabled={disabled} />
@@ -258,7 +266,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请选择${item.label}`}
                     disabled={disabled}
                     style={{ width: '100%' }}
-                    />
+                  />
                   )}
               </FormItem>
             </Col>
@@ -448,7 +456,7 @@ class BasicDataList extends Component {
           pagination={pagination}
           onChange={handleTableChange}
           scroll={{ x: scrollX }}
-          />
+        />
 
         <Modal
           title={title}
@@ -458,7 +466,7 @@ class BasicDataList extends Component {
           footer={null}
           width="60%"
           destroyOnClose
-          >
+        >
           <Form className={styles.fm}>
             <Row gutter={24}>{this.getFields()}</Row>
             <FormItem className={styles.fmBtn}>

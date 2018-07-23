@@ -1,43 +1,46 @@
 .modal {
+  :global {
+    .ant-modal-body {
+      padding-top: 10px;
+    }
+  }
+  .fm {
     :global {
-        .ant-modal-body {
-            padding-top: 10px;
-        }
+      legend {
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+      }
+      .ant-form-item {
+        margin-bottom: 10px;
+      }
+      .ant-form-item-control {
+        line-height: 1.5;
+      }
     }
-    .fm {
-        :global {
-            legend {
-                margin-bottom: 10px;
-                padding-bottom: 5px;
-            }
-            .ant-form-item {
-                margin-bottom: 10px;
-            }
-            .ant-form-item-control {
-                line-height: 1.5;
-            }
-        }
-        .fmBtn {
-            display: flex;
-            justify-content: flex-end;
-            .backBtn {
-                margin-right: 10px;
-            }
-        }
+    .fmBtn {
+      display: flex;
+      justify-content: flex-end;
+      .backBtn {
+        margin-right: 10px;
+      }
     }
-    .resultLevel {
-        display: inline-block;
-        text-align: center;
-        border-bottom: 1px solid #999;
-        width: 80px;
-    }
+  }
+  .resultLevel {
+    display: inline-block;
+    text-align: center;
+    border-bottom: 1px solid #999;
+    width: 80px;
+  }
+  p {
+    margin-bottom: 0;
+  }
 }
 
 .datepicker {
-    width: 100% !important;
-    /* !important 给带 起始/终止的时间文本框 使用 */
+  width: 100% !important;
+  /* !important 给带 起始/终止的时间文本框 使用 */
 }
 
 .inputNumber {
-    width: 100%;
+  width: 100%;
 }

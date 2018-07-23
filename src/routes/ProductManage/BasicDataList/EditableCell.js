@@ -24,19 +24,22 @@ class EditableCell extends React.Component {
       this.props.onChange(event.target.value);
     }
   }
+
   render() {
     const { value } = this.state;
     const { getFieldDecorator, name } = this.props.form
+    const { validatorNum } = this.props
     if (this.props.type === 'input') {
       return (
         <div className="editable-cell">
           <FormItem>
             {getFieldDecorator(`${name}`, {
-              rules: [{ required: true, message: '此项必填' }],
+              rules: [{ required: true, message: '此项必填' }, {
+                validator: validatorNum,
+              }],
               initialValue: value,
             })(
               <Input
-                value={value}
                 onChange={this.handleChange}
                 onBlur={this.check}
                 disabled={this.props.disabled}
@@ -54,7 +57,6 @@ class EditableCell extends React.Component {
               initialValue: value,
             })(
               <InputNumber
-                defaultValue={value}
                 onBlur={this.inputNumberCheck}
                 disabled={this.props.disabled}
                 step={this.props.step}

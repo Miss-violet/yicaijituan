@@ -27,7 +27,7 @@ export default {
       }
     },
     *logout({ payload }, { call, put, select }) {
-      const res = yield call(fakeAccountLogout, payload)
+      const res = yield call(fakeAccountLogout, payload);
       try {
         // get location pathname
         const urlParams = new URL(window.location.href);
@@ -52,12 +52,11 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
-        document.cookie = `${payload.data.token}&&${payload.data.role}`
-        sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`)
-      }
-      else {
-        document.cookie = ''
-        sessionStorage.setItem('cookie', '')
+        // document.cookie = `${payload.data.token}&&${payload.data.role}`;
+        sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`);
+      } else {
+        // document.cookie = '';
+        sessionStorage.setItem('cookie', '');
       }
       setAuthority(payload.currentAuthority);
       return {

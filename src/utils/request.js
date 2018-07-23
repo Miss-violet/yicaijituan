@@ -46,23 +46,39 @@ export default function request(url, options) {
   // const cookie = document.cookie.split('&&')
   // const token = cookie[0]
 
-  let cookie = ''
-  let token = ''
-  if (document.cookie) {
-    cookie = document.cookie.split('&&')
-    token = cookie && cookie[0]
-  } else {
-    cookie = sessionStorage.getItem('cookie')
+  let cookie = '';
+  let token = '';
+  // if (document.cookie) {
+  //   // cookie = document.cookie.split('&&');
+  //   if (cookie && cookie.indexOf(';') > -1) {
+  //     cookie = cookie[0].split(';');
+  //     cookie = cookie && cookie[cookie.length];
+  //     cookie = cookie.split('&&');
+  //     token = cookie && cookie[0];
+  //   } else {
+  //     cookie = document.cookie.split('&&');
+  //     token = cookie && cookie[0];
+  //   }
+  // } else {
+  //   cookie = sessionStorage.getItem('cookie');
 
-    cookie = cookie && cookie.split('&&')
-    token = cookie && cookie[0]
-  }
+  //   cookie = cookie && cookie.split('&&');
+  //   token = cookie && cookie[0];
+  // }
+  cookie = sessionStorage.getItem('cookie');
+
+  cookie = cookie && cookie.split('&&');
+  token = cookie && cookie[0];
 
   const defaultOptions = {
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
-  if (newOptions.method === 'POST' || newOptions.method === 'PUT' || newOptions.method === 'DELETE') {
+  if (
+    newOptions.method === 'POST' ||
+    newOptions.method === 'PUT' ||
+    newOptions.method === 'DELETE'
+  ) {
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
         Accept: 'application/json',
@@ -79,14 +95,13 @@ export default function request(url, options) {
         ...newOptions.headers,
       };
     }
-  }
-  else if (newOptions.method === 'GET') {
+  } else if (newOptions.method === 'GET') {
     newOptions.headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       token,
       ...newOptions.headers,
-    }
+    };
   }
   return fetch(url, newOptions)
     .then(checkStatus)
@@ -96,16 +111,20 @@ export default function request(url, options) {
       }
       return response.json();
     })
-    .then((responseData) => {
+    .then(responseData => {
       if (responseData.code !== 0) {
-        message.error(responseData.msg,1);
-        if (responseData.code === 4000 || responseData.code === 4001 || responseData.code === 4002) {
-          document.cookie = ''
-          sessionStorage.setItem('cookie', '')
-          store.dispatch(routerRedux.push('/user/login'))
+        message.error(responseData.msg, 2);
+        if (
+          responseData.code === 4000 ||
+          responseData.code === 4001 ||
+          responseData.code === 4002
+        ) {
+          // document.cookie = '';
+          sessionStorage.setItem('cookie', '');
+          store.dispatch(routerRedux.push('/user/login'));
         }
       }
-      return responseData
+      return responseData;
     })
     .catch(e => {
       const { dispatch } = store;

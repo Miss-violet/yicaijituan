@@ -47,7 +47,12 @@ class CompanyManage extends Component {
         render: text => (text === 0 ? <span>启用</span> : <span className={commonStyles.disableState}>停用</span>),
       },
     ]
-    const { data, total } = this.props.companyManage
+    const { total } = this.props.companyManage
+    let { data } = this.props.companyManage
+    data = data.map((item, index) => {
+      item.key = index
+      return item
+    })
     const fmFields = [
       {
         key: 1,

@@ -80,14 +80,11 @@ export default class GlobalHeader extends PureComponent {
           />
         <div className={styles.right}>
           <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-            {
-              /*
+
               <Menu.Item key="currentUser">
                 当前用户：{currentUser}
               </Menu.Item>
               
-              */
-            }
             <Menu.Item key="logout">
               <Icon type="logout" />退出登录
               </Menu.Item>

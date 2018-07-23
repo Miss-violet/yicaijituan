@@ -5,7 +5,7 @@ export default {
 
   state: {
     list: [],
-    currentUser: {},
+    currentUser: '',
   },
 
   effects: {
@@ -35,7 +35,7 @@ export default {
     saveCurrentUser(state, action) {
       return {
         ...state,
-        currentUser: action.payload.loginName,
+        currentUser: action.payload && action.payload.loginName,
       };
     },
     changeNotifyCount(state, action) {

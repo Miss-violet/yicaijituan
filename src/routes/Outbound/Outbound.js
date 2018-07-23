@@ -4,17 +4,16 @@ import { message } from 'antd'
 import OutboundFilter from './Filter'
 import List from './List'
 import EditModal from './Modal'
-import { toDecimal } from '../../utils/utils'
 
 class Outbound extends Component {
   constructor() {
     super()
     this.state = {
-      role: (document.cookie && document.cookie.split('&&')[1]) || (sessionStorage.getItem('cookie') && sessionStorage.getItem('cookie').split('&&')[1]),   // 当前用户的角色
+      // role: (document.cookie && document.cookie.split('&&')[1]) || (sessionStorage.getItem('cookie') && sessionStorage.getItem('cookie').split('&&')[1]),   // 当前用户的角色
+      role: (sessionStorage.getItem('cookie') && sessionStorage.getItem('cookie').split('&&')[1]),
       modalVisible: false,
       disabled: false,
       title: '',
-      standardsInitial: [],
       type: '',
       selectedRows: {},
       selectedRowKeys: [],
@@ -32,7 +31,6 @@ class Outbound extends Component {
   showModal = (type) => {
     if (type === 'add') {
       this.setState({
-        standardsInitial: [],
         selectedDetail: {},     /* 如果是新增，则打开的弹窗里没有单据详情。防止选中后打开带入数据 */
         disabled: false,
         title: "合格证数据新增",
@@ -50,45 +48,10 @@ class Outbound extends Component {
         payload: {
           id: this.state.selectedRows.id,
         },
-        /* 目的：拼凑出选中单据的标准数据（包含具体指标） */
         callback: (code, selectedDetail) => {
           if (code === 0) {
-            /* productSelectList  - 获取产品列表 */
             /* selectedDetail     - 获取选中的单据详情 */
-            /* productId          - 获取选中单据的产品Id */
-            /* selectedStandards  - 获取选中单据的标准数据（其中不包含具体指标） */
-            /* standardsInitial   - 拼凑出选中单据的标准数据（包含具体指标） */
-
-            const { productSelectList } = this.props.outbound
-            const { productId } = selectedDetail
-            const selectedStandards = selectedDetail.standards
-            let standardsInitial
-
-            productSelectList.map(item => {
-              if (item.id === productId) {
-                standardsInitial = item.standards
-              }
-              return item
-            })
-
-            /* 将 selectedDetail 中的标准指标值填入到 standardsInitial */
-            standardsInitial = standardsInitial.map(item => {
-              selectedStandards.map(selectedItem => {
-                if (item.id === selectedItem.standardId) {
-                  item.parameter = selectedItem.parameter
-                  return item
-                }
-                return selectedItem
-              })
-
-              const { pointNum } = item
-              item.oneLevel = toDecimal(item.oneLevel, pointNum)
-              item.twoLevel = toDecimal(item.oneLevel, pointNum)
-              item.threeLevel = toDecimal(item.oneLevel, pointNum)
-              return item
-            })
             this.setState({
-              standardsInitial,
               selectedDetail,
             })
           }
@@ -148,8 +111,16 @@ class Outbound extends Component {
     })
   }
   render() {
-    const { manufacturerSelectList, companySelectList, productSelectList, listData, total, cars } = this.props.outbound
-    const { title, modalVisible, standardsInitial, type, selectedRowKeys, selectedDetail, selectedStatus, role } = this.state
+    const { manufacturerSelectList, companySelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
+
+    let { listData } = this.props.outbound
+
+    listData = listData.map((item, index) => {
+      item.key = index
+      return item
+    })
+
+    const { title, modalVisible, type, selectedRowKeys, selectedDetail, selectedStatus, role } = this.state
     const filterProps = {
       companySelectList,
       manufacturerSelectList,
@@ -169,6 +140,9 @@ class Outbound extends Component {
       role,
       showModal: this.showModal,
       listData,
+      total,
+      sumNetweight,
+      totalRecords,
       selectedStatus,
       selectedId: this.state.selectedRows.id,
       rowSelection: {
@@ -213,7 +187,6 @@ class Outbound extends Component {
       companySelectList,
       manufacturerSelectList,
       productSelectList,
-      standardsInitial,
       resultOk: true,
       disabled: this.state.disabled,
       cars,

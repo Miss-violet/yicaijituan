@@ -64,8 +64,18 @@ class OutboundFilter extends Component {
       timeout = setTimeout(fake, 300);
     }
     const handleChange = (value) => {
-      this.setState({ value });
+      // this.setState({ value });
+      this.props.form.setFieldsValue({
+        carNo: value,
+      });
       fetch(value);
+    }
+    const handleFocus = () => {
+      const { cars } = this.props
+      this.setState({
+        // value: cars,
+        carData: cars,
+      })
     }
 
     return (
@@ -86,7 +96,7 @@ class OutboundFilter extends Component {
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                  />
+                />
               )}
             </FormItem>
           </Col>
@@ -95,14 +105,15 @@ class OutboundFilter extends Component {
               {getFieldDecorator('carNo')(
                 <Select
                   mode="combobox"
-                  value={this.state.value}
+                  // value={this.state.value}
                   placeholder={this.props.placeholder}
                   style={this.props.style}
                   defaultActiveFirstOption={false}
                   showArrow={false}
                   filterOption={false}
                   onChange={handleChange}
-                  >
+                  onFocus={handleFocus}
+                >
                   {options}
                 </Select>
               )}
@@ -118,7 +129,7 @@ class OutboundFilter extends Component {
                     <Select allowClear>
                       {
                         companySelectList && companySelectList.map(item =>
-                          <Option value={item.id}>{item.name}</Option>
+                          <Option key={item.id} value={item.id}>{item.name}</Option>
                         )
                       }
                     </Select>
@@ -131,7 +142,7 @@ class OutboundFilter extends Component {
                     <Select allowClear>
                       {
                         manufacturerSelectList && manufacturerSelectList.map(item =>
-                          <Option value={item.id}>{item.name}</Option>
+                          <Option key={item.id} value={item.id}>{item.name}</Option>
                         )
                       }
                     </Select>
@@ -144,7 +155,7 @@ class OutboundFilter extends Component {
                     <Select allowClear>
                       {
                         productSelectList && productSelectList.map(item =>
-                          <Option value={item.id}>{item.name}</Option>
+                          <Option key={item.id} value={item.id}>{item.name}</Option>
                         )
                       }
                     </Select>
@@ -155,8 +166,19 @@ class OutboundFilter extends Component {
                 <FormItem label='状态' {...formItemLayout} className={styles.formItem}>
                   {getFieldDecorator('status')(
                     <Select allowClear>
-                      <Option value='0'> 启用</Option>
-                      <Option value='1'> 停用</Option>
+                      <Option value='0' key='0'> 启用</Option>
+                      <Option value='1' key='1'> 停用</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+              <Col {...filterFormLayout}>
+                <FormItem label='级别' {...formItemLayout} className={styles.formItem}>
+                  {getFieldDecorator('level')(
+                    <Select allowClear>
+                      <Option value='0' key='0'> I级</Option>
+                      <Option value='1' key='1'> II级</Option>
+                      <Option value='2' key='2'> III级</Option>
                     </Select>
                   )}
                 </FormItem>
@@ -170,15 +192,15 @@ class OutboundFilter extends Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      const { deliveryTime, ...rest } = values
+      const { createTime, ...rest } = values
       let startTime
       let endTime
-      if (deliveryTime === undefined || deliveryTime.length < 1) {
+      if (createTime === undefined || createTime.length < 1) {
         startTime = ''
         endTime = ''
       } else {
-        startTime = moment(values.deliveryTime[0]).format('YYYY-MM-DD HH:mm:ss')
-        endTime = moment(values.deliveryTime[1]).format('YYYY-MM-DD HH:mm:ss')
+        startTime = moment(values.createTime[0]).format('YYYY-MM-DD HH:mm:ss')
+        endTime = moment(values.createTime[1]).format('YYYY-MM-DD HH:mm:ss')
       }
       this.props.handleSearch(
         {
@@ -208,7 +230,6 @@ class OutboundFilter extends Component {
       if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}`
       else url = `/api/file/delivery/export`
       document.getElementById("ifile").src = url;
-
     })
   }
 
@@ -219,7 +240,7 @@ class OutboundFilter extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>
@@ -234,7 +255,7 @@ class OutboundFilter extends Component {
                     <a className={styles.exportBtn} onClick={this.handleExport}>
                       <Icon type="export" /> 导出
                     </a>
-                    <iframe id="ifile" style={{ display: 'none' }} />
+                    <iframe title="ifile" id="ifile" style={{ display: 'none' }} />
                   </span>
                 )
               }

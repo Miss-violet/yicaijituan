@@ -108,7 +108,11 @@ class Journal extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const {data} = this.props
+    let { data } = this.props
+    data = data.map((item, index) => {
+      item.key = index
+      return item
+    })
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -189,7 +193,7 @@ class Journal extends Component {
                   <Select allowClear>
                     {
                       operateType && operateType.map(item =>
-                        <Option value={item.id}>{item.name}</Option>
+                        <Option value={item.id} key={item.id}>{item.name}</Option>
                       )
                     }
                   </Select>
@@ -202,7 +206,7 @@ class Journal extends Component {
                   <Select allowClear>
                     {
                       type && type.map(item =>
-                        <Option value={item.id}>{item.name}</Option>
+                        <Option value={item.id} key={item.id}>{item.name}</Option>
                       )
                     }
                   </Select>
@@ -223,4 +227,4 @@ class Journal extends Component {
     )
   }
 }
-export default connect(({journal}) => (journal))(Form.create()(Journal))
+export default connect(({ journal }) => (journal))(Form.create()(Journal))

@@ -1,6 +1,5 @@
 import pathToRegexp from 'path-to-regexp'
 import { info } from '../services/outbound'
-import { toDecimal } from '../utils/utils'
 
 export default {
   namespace: 'report',
@@ -29,13 +28,6 @@ export default {
     *info({ payload }, { call, put }) {
       const res = yield call(info, payload.id)
       if (res.code === 0) {
-        res.data.standards.map(standardsItem => {
-          const { pointNum } = standardsItem
-          standardsItem.oneLevel = toDecimal(standardsItem.oneLevel, pointNum)
-          standardsItem.twoLevel = toDecimal(standardsItem.oneLevel, pointNum)
-          standardsItem.threeLevel = toDecimal(standardsItem.oneLevel, pointNum)
-          return standardsItem
-        })
         yield put({
           type: 'success',
           payload: {

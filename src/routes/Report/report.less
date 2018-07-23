@@ -43,9 +43,12 @@ ul {
     height: 70%;
     margin-top: 10%;
     .productName {
-        font-size: 18px;
+        font-size: 19px;
+        letter-spacing: 5px;
         margin-top: 20px;
         text-align: center;
+    }
+    .name {
         text-decoration: underline;
     }
     .leftList {
@@ -82,12 +85,13 @@ ul {
             width: 35%;
         }
         .content {
-            width: 55%
+            width: 55%;
         }
     }
     .name {
-        font-size: 18px;
+        font-size: 20px;
         margin-bottom: 45px;
+        letter-spacing: 15px;
         text-align: center;
         text-decoration: underline;
         .title {
@@ -104,13 +108,23 @@ ul {
         }
     }
     .table {
+        border-left: 1px solid #000;
+        border-top: 1px solid #000;
         margin: 0 auto 10px;
         width: 95%;
+        th,
+        td {
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+        }
     }
     .resultLevel {
         display: inline-block;
         text-align: center;
         border-bottom: 1px solid #999;
         width: 50px;
+    }
+    p {
+        margin-bottom: 0;
     }
 }
