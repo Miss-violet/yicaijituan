@@ -55,7 +55,7 @@ class List extends Component {
               ) : (
                   <span>
                     <Icon type="check" />启用
-                </span>
+                  </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -77,9 +77,9 @@ class List extends Component {
           </span>
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>
-          <span>共 <span style={{ color: '#f5222d' }}>{total} </span>条出库单；</span>
-          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : sumNetweight} </span>kg；</span>
-          <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : totalRecords} </span>。</span>
+          <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条出库单；</span>
+          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : Number(sumNetweight).toLocaleString()} </span>kg；</span>
+          <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
           <span>【请根据出厂日期筛选统计】</span>
         </div>
       </div>
@@ -198,7 +198,7 @@ class List extends Component {
           pagination={this.state.pagination}
           onChange={handleTableChange}
           scroll={{ x: 2700 }}
-        />
+          />
       </div>
     );
   }
