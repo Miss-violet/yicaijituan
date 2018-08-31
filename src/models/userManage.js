@@ -79,13 +79,13 @@ export default {
       }
     },
     *queryList({ payload }, { call, put }) {
-      const req = yield call(userList, payload)
-      if (req.code === 0) {
+      const res = yield call(userList, payload)
+      if (res.code === 0) {
         yield put({
           type: 'success',
           payload: {
-            data: req.data.rows,
-            total: req.data.total,
+            data: res.data.rows,
+            total: res.data.total,
           },
         })
       }
