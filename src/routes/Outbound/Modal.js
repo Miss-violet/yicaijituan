@@ -148,6 +148,9 @@ class EditModal extends Component {
         }
         return item;
       });
+      this.props.form.setFieldsValue({
+        customer: distributorName,
+      });
       this.setState({
         distributorName,
       });
@@ -239,7 +242,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                  selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     <Option value="0">I级</Option>
