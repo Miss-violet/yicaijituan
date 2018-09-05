@@ -125,20 +125,25 @@ class Report extends Component {
               </tr>
             </thead>
             <tbody>
-              {detail.standards &&
+              {
+                /**
+                 *  item.type===1：大于等于
+                 *  item.type===0：小于等于
+                 */
+                detail.standards &&
                 detail.standards.map(item => (
                   <tr>
                     <td>{item.standardName}</td>
                     <td className={commonStyles.alignRight}>
-                      {item.type === 1 ? '≤' : '≥'}
+                      {item.type === 0 ? '≤' : '≥'}
                       {item.oneLevel}
                     </td>
                     <td className={commonStyles.alignRight}>
-                      {item.type === 1 ? '≤' : '≥'}
+                      {item.type === 0 ? '≤' : '≥'}
                       {item.twoLevel}
                     </td>
                     <td className={commonStyles.alignRight}>
-                      {item.type === 1 ? '≤' : '≥'}
+                      {item.type === 0 ? '≤' : '≥'}
                       {item.threeLevel}
                     </td>
                     <td className={commonStyles.alignRight}>{item.parameter}</td>

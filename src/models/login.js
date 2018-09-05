@@ -2,12 +2,15 @@ import { routerRedux } from 'dva/router';
 import { fakeAccountLogin, fakeAccountLogout } from '../services/api';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
+import { queryCurrent } from '../services/user';
+
 
 export default {
   namespace: 'login',
 
   state: {
     status: undefined,
+    currentUser: '',
   },
 
   effects: {
@@ -22,6 +25,13 @@ export default {
             currentAuthority: 'admin',
           },
         });
+
+        const userResponse = yield call(queryCurrent);
+        yield put({
+          type: 'saveCurrentUser',
+          payload: userResponse.data,
+        });
+
         reloadAuthorized();
         yield put(routerRedux.push('/'));
       }
@@ -63,6 +73,12 @@ export default {
         ...state,
         status: payload.status,
         type: payload.type,
+      };
+    },
+    saveCurrentUser(state, action) {
+      return {
+        ...state,
+        currentUser: action.payload && action.payload.loginName,
       };
     },
   },

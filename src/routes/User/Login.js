@@ -50,7 +50,7 @@ export default class LoginPage extends Component {
           <UserName name="loginName" placeholder="请填写登录名" />
           <Password name="password" placeholder="请填写密码" />
           <Submit loading={submitting}>登录</Submit>
-          <img src={require('../../assets/qrcode.png')} alt="qrcode" style={{maxHeight: '30%',maxWidth:'30%',marginRight:'20px'}} />
+          <img src={require('../../assets/qrcode.png')} alt="qrcode" style={{ maxHeight: '30%', maxWidth: '30%', marginRight: '20px' }} />
           <span>扫描二维码，可以在手机上访问本站</span>
         </Login>
       </div>

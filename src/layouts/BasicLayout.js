@@ -107,7 +107,7 @@ class BasicLayout extends React.PureComponent {
     });
     /* 获取当前用户 */
     this.props.dispatch({
-      type: 'user/fetchCurrent',
+      type: 'login/fetchCurrent',
     });
   }
   componentWillUnmount() {
@@ -205,7 +205,7 @@ class BasicLayout extends React.PureComponent {
           location={location}
           isMobile={this.state.isMobile}
           onCollapse={this.handleMenuCollapse}
-          />
+        />
         <Layout>
           <Header style={{ background: 'none', height: '48px', padding: 0 }}>
             <GlobalHeader
@@ -219,7 +219,7 @@ class BasicLayout extends React.PureComponent {
               onCollapse={this.handleMenuCollapse}
               onMenuClick={this.handleMenuClick}
               onNoticeVisibleChange={this.handleNoticeVisibleChange}
-              />
+            />
           </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <Switch>
@@ -234,7 +234,7 @@ class BasicLayout extends React.PureComponent {
                   exact={item.exact}
                   authority={item.authority}
                   redirectPath="/exception/403"
-                  />
+                />
               ))}
               <Redirect exact from="/" to={bashRedirect} />
               <Route render={NotFound} />
@@ -247,7 +247,7 @@ class BasicLayout extends React.PureComponent {
                   Copyright <Icon type="copyright" /> 2018 益材集团
                 </Fragment>
               }
-              />
+            />
           </Footer>
         </Layout>
       </Layout>
@@ -263,8 +263,8 @@ class BasicLayout extends React.PureComponent {
   }
 }
 
-export default connect(({ user, global, loading }) => ({
-  currentUser: user.currentUser,
+export default connect(({ login, global, loading }) => ({
+  currentUser: login.currentUser,
   collapsed: global.collapsed,
   fetchingNotices: loading.effects['global/fetchNotices'],
   notices: global.notices,

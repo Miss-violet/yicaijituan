@@ -33,18 +33,17 @@ ul {
 
 .content {
     display: inline-block;
-    height: 30px;
+    min-height: 30px;
     line-height: 30px;
     vertical-align: 10px;
 }
 
 .leftCol {
     border: 1px solid #000;
-    height: 70%;
+    height: 80%;
     margin-top: 10%;
     .productName {
         font-size: 19px;
-        letter-spacing: 5px;
         margin-top: 20px;
         text-align: center;
     }
@@ -53,18 +52,23 @@ ul {
     }
     .leftList {
         li {
-            height: 30px;
+            min-height: 30px;
             line-height: 30px;
             list-style-type: none;
         }
     }
     .label {
+        vertical-align: top;
         width: 30%;
     }
     .content {
         border-bottom: 1px solid #000;
         text-align: center;
-        width: 60%;
+        width: 60%; // span {
+        //     display: inline-block;
+        //     text-decoration: underline;
+        //     width: 100%;
+        // }
     }
     .qrCode {
         margin: 30px 20px 45px 0;
@@ -91,7 +95,6 @@ ul {
     .name {
         font-size: 20px;
         margin-bottom: 45px;
-        letter-spacing: 15px;
         text-align: center;
         text-decoration: underline;
         .title {
