@@ -14,7 +14,6 @@ class EditModal extends Component {
       visible: false,
       confirmLoading: false,
       carData: [],
-      // value: '',
       standardsData: props.selectedDetail.standards,
       levelSelected: '',
       resultOk: this.props.resultOk || false,
@@ -50,7 +49,7 @@ class EditModal extends Component {
     const { getFieldDecorator, setFields } = this.props.form;
     const {
       manufacturerSelectList,
-      companySelectList,
+      companyAllSelectList,
       productSelectList,
       selectedDetail,
       disabled,
@@ -58,7 +57,7 @@ class EditModal extends Component {
     } = this.props;
 
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
-    const companyEnabled = companySelectList.filter(item => item.status === 0);
+    const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
     const productEnabled = productSelectList.filter(item => item.status === 0);
 
 
@@ -143,7 +142,7 @@ class EditModal extends Component {
      */
     const handleDistributorChange = distributorId => {
       let distributorName;
-      companySelectList.map(item => {
+      companyAllSelectList.map(item => {
         if (item.id === distributorId) {
           distributorName = item.name;
         }
@@ -196,7 +195,6 @@ class EditModal extends Component {
       timeout = setTimeout(fake, 300);
     };
     const handleChange = value => {
-      // this.setState({ value });
       this.props.form.setFieldsValue({
         carNo: value,
       });
@@ -205,7 +203,6 @@ class EditModal extends Component {
     const handleFocus = () => {
       const { cars } = this.props
       this.setState({
-        // value: cars,
         carData: cars,
       })
     }
@@ -357,7 +354,6 @@ class EditModal extends Component {
                 })(
                   <Select
                     mode="combobox"
-                    // value={this.state.value}
                     placeholder={this.props.placeholder}
                     style={this.props.style}
                     defaultActiveFirstOption={false}
@@ -383,7 +379,7 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.distributorId,
                 })(
-                  <Select onChange={handleDistributorChange} disabled={disabled}>
+                  <Select onChange={handleDistributorChange} disabled={disabled} allowClear showSearch optionFilterProp="children">
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>

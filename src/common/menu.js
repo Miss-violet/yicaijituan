@@ -40,19 +40,8 @@ const menuData = [
 
 function formatter(data, parentPath = '/', parentAuthority) {
   /* 从cookie中拿到角色 */
-  // const cookie = document.cookie.split('&&')
-  // const role = cookie[1]
   let cookie = ''
   let role = ''
-  // if (document.cookie) {
-  //   cookie = document.cookie.split('&&')
-  //   role = cookie && cookie[1]
-  // } else {
-  //   cookie = sessionStorage.getItem('cookie')
-
-  //   cookie = cookie && cookie.split('&&')
-  //   role = cookie && cookie[1]
-  // }
   cookie = sessionStorage.getItem('cookie')
   cookie = cookie && cookie.split('&&')
   role = cookie && cookie[1]

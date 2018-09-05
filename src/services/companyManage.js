@@ -36,6 +36,12 @@ export async function companyList(params) {
         body: params,
     });
 }
+export async function companyListAll(params) {
+    return request(companyManage.listAll, {
+        method: 'POST',
+        body: params,
+    });
+}
 
 export async function vaildateCompanyName(params) {
     return request(companyManage.vaildateCompanyName, {

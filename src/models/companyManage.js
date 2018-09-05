@@ -7,6 +7,7 @@ export default {
   state: {
     companySelectList: [],
     data: [],
+    total: '',
   },
 
   subscriptions: {
@@ -77,11 +78,12 @@ export default {
           type: 'success',
           payload: {
             data: res.data.rows,
+            total: res.data.total,
           },
         })
       }
     },
-    *vaildateCompanyName({payload}, {call}) {
+    *vaildateCompanyName({ payload }, { call }) {
       yield call(vaildateCompanyName, payload)
     },
   },
