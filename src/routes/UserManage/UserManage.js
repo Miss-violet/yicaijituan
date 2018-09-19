@@ -1,25 +1,76 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
-import { Tooltip, Badge } from 'antd'
+import { Tooltip, Badge, Form, Row, Col, Button, Input, Icon, Select } from 'antd'
 import * as moment from 'moment'
 import BasicDataList from '../../components/BasicDataList/BasicDataList'
 import commonStyles from '../../assets/style/common.less'
+
+const FormItem = Form.Item
+const Option = Select.Option
+
 
 class UserManage extends Component {
   constructor() {
     super()
     this.state = {
       pageSize: 20,
+      pageIndex: 0,
     }
+  }
+  handleSearch = (e) => {
+    e.preventDefault()
+    this.props.form.validateFields((err, params) => {
+      this.props.dispatch({
+        type: 'userManage/queryList',
+        payload: {
+          params,
+          pageIndex: this.state.pageIndex,
+          pageSize: this.state.pageSize,
+        },
+      })
+    })
+  }
+  handleReset = () => {
+    this.props.form.resetFields();
+  }
+  pageIndexChange = (pageIndex) => {
+    this.setState({
+      pageIndex,
+    })
+  }
+  pageSizeChange = (pageSize) => {
+    this.setState({
+      pageSize,
+    })
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form
     const { total } = this.props.userManage
     let { data } = this.props.userManage
     data = data.map((item, index) => {
       item.key = index
       return item
     })
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+        md: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+        md: { span: 16 },
+      },
+    }
+    const filterFormLayout = {
+      xs: { span: 12 },
+      sm: { span: 12 },
+      md: { span: 8 },
+      lg: { span: 8 },
+      xl: { span: 6 },
+    }
     const columns = [
       {
         title: '登录名',
@@ -160,7 +211,7 @@ class UserManage extends Component {
               break;
           }
           return roleData
-        }(),
+        } (),
       },
       {
         key: 5,
@@ -240,6 +291,7 @@ class UserManage extends Component {
         data: this.props.userManage.companySelectList.filter(item => item.status === 0),
       },
     ]
+    const showTotal = () => `共${total}条数据`
     const userProps = {
       columns,
       scrollX: 2000,
@@ -254,6 +306,9 @@ class UserManage extends Component {
         pageSizeOptions: ['10', '20', '30'],
         showSizeChanger: true,
         total,
+        showTotal,
+        onChange: this.pageIndexChange,
+        onShowSizeChange: this.pageSizeChange,
       },
       handleCreate: (values) => {
         this.props.dispatch({
@@ -291,9 +346,55 @@ class UserManage extends Component {
     }
     return (
       <div>
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={this.handleSearch}
+          >
+          <Row gutter={32} className={commonStyles.form}>
+            <span style={{ padding: 0 }}>
+              <Col {...filterFormLayout} >
+                <FormItem label='登录名' {...formItemLayout} className={commonStyles.formItem}>
+                  {getFieldDecorator('loginName')(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col {...filterFormLayout}>
+                <FormItem label='角色' {...formItemLayout} className={commonStyles.formItem}>
+                  {getFieldDecorator('role')(
+                    <Select allowClear>
+                      <Option value='0' key='0'> 超级管理员</Option>
+                      <Option value='1' key='1'> 管理员</Option>
+                      <Option value='2' key='2'> 成员</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+              <Col {...filterFormLayout}>
+                <FormItem label='状态' {...formItemLayout} className={commonStyles.formItem}>
+                  {getFieldDecorator('status')(
+                    <Select allowClear>
+                      <Option value='0' key='0'> 启用</Option>
+                      <Option value='1' key='1'> 停用</Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+            </span>
+          </Row>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>
+
+              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
+                <Icon type="reload" />重置
+              </Button>
+            </Col>
+          </Row>
+        </Form>
         <BasicDataList {...userProps} />
       </div>
     )
   }
 }
-export default connect(({ userManage }) => ({ userManage }))(UserManage)
+export default connect(({ userManage }) => ({ userManage }))(Form.create()(UserManage))

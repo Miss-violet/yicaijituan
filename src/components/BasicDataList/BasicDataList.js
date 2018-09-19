@@ -120,7 +120,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={(item.name === 'loginName') ? itemDisabled(`${item.name}`) : disabled}
                     onChange={(event) => handleChange(event, item)}
-                    />
+                  />
                   )}
               </FormItem>
             </Col>
@@ -266,7 +266,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请选择${item.label}`}
                     disabled={disabled}
                     style={{ width: '100%' }}
-                    />
+                  />
                   )}
               </FormItem>
             </Col>
@@ -456,7 +456,7 @@ class BasicDataList extends Component {
           pagination={pagination}
           onChange={handleTableChange}
           scroll={{ x: scrollX }}
-          />
+        />
 
         <Modal
           title={title}
@@ -466,7 +466,7 @@ class BasicDataList extends Component {
           footer={null}
           width="60%"
           destroyOnClose
-          >
+        >
           <Form className={styles.fm}>
             <Row gutter={24}>{this.getFields()}</Row>
             <FormItem className={styles.fmBtn}>

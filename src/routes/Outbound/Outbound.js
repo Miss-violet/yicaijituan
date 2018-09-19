@@ -136,6 +136,15 @@ class Outbound extends Component {
         })
       },
     }
+    const showTotal = () => `共${total}条数据`
+    // const pageOnChange = (pageIndex) => {
+    //   this.props.dispatch({
+    //     type: 'outbound/queryList',
+    //     payload: {
+    //       pageIndex,
+    //     }
+    //   })
+    // }
     const listProps = {
       role,
       showModal: this.showModal,
@@ -153,8 +162,11 @@ class Outbound extends Component {
       pagination: {
         pageSize: this.state.pageSize,
         pageSizeOptions: ['10', '20', '30'],
+        // pageSizeOptions: ['2', '3'],
         showSizeChanger: true,
         total,
+        showTotal,
+        // onChange: pageOnChange,
       },
       handleTableChange: (pagination) => {
         this.setPagination(pagination)

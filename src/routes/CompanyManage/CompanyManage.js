@@ -1,17 +1,68 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
-import { Tooltip, Badge } from 'antd'
+import { Tooltip, Badge, Form, Row, Col, Button, Input, Icon, Select } from 'antd'
 import BasicDataList from '../../components/BasicDataList/BasicDataList'
 import commonStyles from '../../assets/style/common.less'
+
+const FormItem = Form.Item
+const Option = Select.Option
 
 class CompanyManage extends Component {
   constructor() {
     super()
     this.state = {
       pageSize: 20,
+      pageIndex: 0,
     }
   }
+  handleSearch = (e) => {
+    e.preventDefault()
+    this.props.form.validateFields((err, params) => {
+      this.props.dispatch({
+        type: 'companyManage/queryList',
+        payload: {
+          params,
+          pageIndex: this.state.pageIndex,
+          pageSize: this.state.pageSize,
+        },
+      })
+    })
+  }
+  handleReset = () => {
+    this.props.form.resetFields();
+  }
+
+  pageIndexChange = (pageIndex) => {
+    this.setState({
+      pageIndex,
+    })
+  }
+  pageSizeChange = (pageSize) => {
+    this.setState({
+      pageSize,
+    })
+  }
   render() {
+    const { getFieldDecorator } = this.props.form
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+        md: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+        md: { span: 16 },
+      },
+    }
+    const filterFormLayout = {
+      xs: { span: 12 },
+      sm: { span: 12 },
+      md: { span: 8 },
+      lg: { span: 8 },
+      xl: { span: 6 },
+    }
     const columns = [
       {
         title: '名称',
@@ -122,6 +173,7 @@ class CompanyManage extends Component {
         ],
       },
     ]
+    const showTotal = () => `共${total}条数据`
     const companyProps = {
       columns,
       data,
@@ -135,6 +187,9 @@ class CompanyManage extends Component {
         pageSizeOptions: ['10', '20', '30'],
         showSizeChanger: true,
         total,
+        showTotal,
+        onChange: this.pageIndexChange,
+        onShowSizeChange: this.pageSizeChange,
       },
       handleCreate: (values) => {
         this.props.dispatch({
@@ -176,9 +231,39 @@ class CompanyManage extends Component {
     }
     return (
       <div>
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={this.handleSearch}
+          >
+          <Row gutter={32} className={commonStyles.form}>
+            <Col {...filterFormLayout} >
+              <FormItem label='名称' {...formItemLayout} className={commonStyles.formItem}>
+                {getFieldDecorator('name')(
+                  <Input />
+                )}
+              </FormItem>
+            </Col>
+            <Col {...filterFormLayout}>
+              <FormItem label='状态' {...formItemLayout} className={commonStyles.formItem}>
+                {getFieldDecorator('status')(
+                  <Select allowClear>
+                    <Option value='0' key='0'> 启用</Option>
+                    <Option value='1' key='1'> 停用</Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+            <Col style={{ textAlign: 'right', position: 'relative' }}>
+              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
+                <Icon type="reload" />重置
+              </Button>
+            </Col>
+          </Row>
+        </Form>
         <BasicDataList {...companyProps} />
       </div>
     )
   }
 }
-export default connect(({ companyManage }) => ({ companyManage }))(CompanyManage)
+export default connect(({ companyManage }) => ({ companyManage }))(Form.create()(CompanyManage))
