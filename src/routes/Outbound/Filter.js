@@ -94,7 +94,7 @@ class OutboundFilter extends Component {
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                  />
+                />
               )}
             </FormItem>
           </Col>
@@ -110,7 +110,7 @@ class OutboundFilter extends Component {
                   filterOption={false}
                   onChange={handleChange}
                   onFocus={handleFocus}
-                  >
+                >
                   {options}
                 </Select>
               )}
@@ -217,6 +217,7 @@ class OutboundFilter extends Component {
 
   handleReset = () => {
     this.props.form.resetFields();
+    this.props.handleReset()
   }
   /* 导出 */
   handleExport = () => {
@@ -237,7 +238,7 @@ class OutboundFilter extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>

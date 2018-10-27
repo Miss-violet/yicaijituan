@@ -20,6 +20,7 @@ class Outbound extends Component {
       pageSize: 20,
       selectedDetail: {},         /* 选中的单据的详情 */
       selectedStatus: '',         /* 选中的单据的状态 */
+      filterValue: {},             /* 查询条件 */
     }
   }
 
@@ -110,8 +111,27 @@ class Outbound extends Component {
       },
     })
   }
+
+  handleSearch = (values) => {
+    const {params} = values
+    this.setState({
+      filterValue: params,
+    })
+    this.props.dispatch({
+      type: 'outbound/queryList',
+      payload: {
+        ...values,
+      },
+    })
+  }
+  handleReset = () => {
+    this.setState({
+      filterValue: {},
+    })
+  }
+
   render() {
-    const { manufacturerSelectList, companySelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
+    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
 
     let { listData } = this.props.outbound
 
@@ -127,24 +147,10 @@ class Outbound extends Component {
       productSelectList,
       cars,
       role,
-      handleSearch: (values) => {
-        this.props.dispatch({
-          type: 'outbound/queryList',
-          payload: {
-            ...values,
-          },
-        })
-      },
+      handleSearch: (values) => this.handleSearch(values),
+      handleReset: this.handleReset,
     }
     const showTotal = () => `共${total}条数据`
-    // const pageOnChange = (pageIndex) => {
-    //   this.props.dispatch({
-    //     type: 'outbound/queryList',
-    //     payload: {
-    //       pageIndex,
-    //     }
-    //   })
-    // }
     const listProps = {
       role,
       showModal: this.showModal,
@@ -162,11 +168,9 @@ class Outbound extends Component {
       pagination: {
         pageSize: this.state.pageSize,
         pageSizeOptions: ['10', '20', '30'],
-        // pageSizeOptions: ['2', '3'],
         showSizeChanger: true,
         total,
         showTotal,
-        // onChange: pageOnChange,
       },
       handleTableChange: (pagination) => {
         this.setPagination(pagination)
@@ -177,7 +181,7 @@ class Outbound extends Component {
             pageSize: pagination.pageSize,
             sortField: null,
             sortOrder: null,
-            params: {},
+            params: this.state.filterValue,
           },
         })
       },

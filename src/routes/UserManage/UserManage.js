@@ -15,11 +15,15 @@ class UserManage extends Component {
     this.state = {
       pageSize: 20,
       pageIndex: 0,
+      filterValue: {},        /* 查询条件 */
     }
   }
   handleSearch = (e) => {
     e.preventDefault()
     this.props.form.validateFields((err, params) => {
+      this.setState({
+        filterValue: params,
+      })
       this.props.dispatch({
         type: 'userManage/queryList',
         payload: {
@@ -32,13 +36,16 @@ class UserManage extends Component {
   }
   handleReset = () => {
     this.props.form.resetFields();
+    this.setState({
+      filterValue: {},
+    })
   }
   pageIndexChange = (pageIndex) => {
     this.setState({
       pageIndex,
     })
   }
-  pageSizeChange = (pageSize) => {
+  pageSizeChange = (pageIndex, pageSize) => {
     this.setState({
       pageSize,
     })
@@ -339,7 +346,7 @@ class UserManage extends Component {
             pageSize: pagination.pageSize,
             sortField: null,
             sortOrder: null,
-            params: {},
+            params: this.state.filterValue,
           },
         })
       },

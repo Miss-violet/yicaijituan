@@ -13,11 +13,15 @@ class CompanyManage extends Component {
     this.state = {
       pageSize: 20,
       pageIndex: 0,
+      filterValue: {},        /* 查询条件 */
     }
   }
   handleSearch = (e) => {
     e.preventDefault()
     this.props.form.validateFields((err, params) => {
+      this.setState({
+        filterValue: params,
+      })
       this.props.dispatch({
         type: 'companyManage/queryList',
         payload: {
@@ -30,6 +34,9 @@ class CompanyManage extends Component {
   }
   handleReset = () => {
     this.props.form.resetFields();
+    this.setState({
+      filterValue: {},
+    })
   }
 
   pageIndexChange = (pageIndex) => {
@@ -224,7 +231,7 @@ class CompanyManage extends Component {
             pageSize: pagination.pageSize,
             sortField: null,
             sortOrder: null,
-            params: {},
+            params: this.state.filterValue,
           },
         })
       },
@@ -253,7 +260,7 @@ class CompanyManage extends Component {
                 )}
               </FormItem>
             </Col>
-            <Col style={{ textAlign: 'right', position: 'relative' }}>
+            <Col {...filterFormLayout} style={{ marginTop: '4px' }}>
               <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit"><Icon type="search" />查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
                 <Icon type="reload" />重置

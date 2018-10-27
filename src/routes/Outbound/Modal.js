@@ -438,7 +438,7 @@ class EditModal extends Component {
           break;
       }
       /* 检验是否为空 */
-      if (value === '') {
+      if (item.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
         this.setState({
           resultOk: false,
         });
@@ -453,60 +453,62 @@ class EditModal extends Component {
        *  item.type===1：大于等于
        *  item.type===0：小于等于
        */
-      if (item.type === 1 && value && Number(value) < levelStandards) {
-        this.setState({
-          resultOk: false,
-        });
-        Modal.warning({
-          title: '警告',
-          content: `${item.name || item.standardName}的检验结果须大于等于国家标准值`,
-          okText: '知道了',
-        });
-        return
-      }
-      if (item.type === 0 && value && Number(value) > levelStandards) {
-        this.setState({
-          resultOk: false,
-        });
-        Modal.warning({
-          title: '警告',
-          content: `${item.name || item.standardName}的检验结果须小于等于国家标准值`,
-          okText: '知道了',
-        });
-        return
-      }
-      if (item.pointNum === 0 && value.indexOf('.') !== -1) {
-        this.setState({
-          resultOk: false,
-        });
-        Modal.warning({
-          title: '警告',
-          content: `${item.name || item.standardName}的小数位与产品设置不符合，请填写整数`,
-          okText: '知道了',
-        });
-        return
-      }
-      if (item.pointNum > 0 && value.indexOf('.') === -1) {
-        this.setState({
-          resultOk: false,
-        });
-        Modal.warning({
-          title: '警告',
-          content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
-          okText: '知道了',
-        });
-        return
-      }
-      if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
-        this.setState({
-          resultOk: false,
-        });
-        Modal.warning({
-          title: '警告',
-          content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
-          okText: '知道了',
-        });
-        return
+      if (value !== '' && value !== null) {
+        if (item.type === 1 && value && Number(value) < levelStandards) {
+          this.setState({
+            resultOk: false,
+          });
+          Modal.warning({
+            title: '警告',
+            content: `${item.name || item.standardName}的检验结果须大于等于国家标准值`,
+            okText: '知道了',
+          });
+          return
+        }
+        if (item.type === 0 && value && Number(value) > levelStandards) {
+          this.setState({
+            resultOk: false,
+          });
+          Modal.warning({
+            title: '警告',
+            content: `${item.name || item.standardName}的检验结果须小于等于国家标准值`,
+            okText: '知道了',
+          });
+          return
+        }
+        if (item.pointNum === 0 && value.indexOf('.') !== -1) {
+          this.setState({
+            resultOk: false,
+          });
+          Modal.warning({
+            title: '警告',
+            content: `${item.name || item.standardName}的小数位与产品设置不符合，请填写整数`,
+            okText: '知道了',
+          });
+          return
+        }
+        if (item.pointNum > 0 && value.indexOf('.') === -1) {
+          this.setState({
+            resultOk: false,
+          });
+          Modal.warning({
+            title: '警告',
+            content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+            okText: '知道了',
+          });
+          return
+        }
+        if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
+          this.setState({
+            resultOk: false,
+          });
+          Modal.warning({
+            title: '警告',
+            content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+            okText: '知道了',
+          });
+          return
+        }
       }
       this.setState({
         resultOk: true,
@@ -563,10 +565,10 @@ class EditModal extends Component {
                           <FormItem>
                             {getFieldDecorator(`${item.standardId}`, {
                               rules: [
-                                {
-                                  required: true,
-                                  message: `填写检验结果`,
-                                },
+                                // {
+                                //   required: true,
+                                //   message: `填写检验结果`,
+                                // },
                                 {
                                   validator: (rule, value, callback) =>
                                     this.validateParameter(rule, value, callback, item),
@@ -764,7 +766,7 @@ class EditModal extends Component {
         break;
     }
     /* 校验是否为空 */
-    if (value === '') {
+    if (item.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
       callback({ message: '检验结果不能为空值' });
       return;
     }
@@ -772,25 +774,27 @@ class EditModal extends Component {
      *  item.type===1：大于等于
      *  item.type===0：小于等于
      */
-    if (item.type === 1 && Number(value) < standards) {
-      callback({ message: '检验结果须大于等于国家标准值' });
-      return;
-    } else if (item.type === 0 && Number(value) > standards) {
-      callback({ message: '检验结果须小于等于国家标准值' });
-      return;
-    }
-    /* 校验小数位 */
-    if (item.pointNum === 0 && value.indexOf('.') !== -1) {
-      callback({ message: `请填写整数` })
-      return
-    }
-    if (item.pointNum > 0 && value.indexOf('.') === -1) {
-      callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
-      return
-    }
-    if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
-      callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
-      return
+    if (value !== '' && value !== null) {
+      if (item.type === 1 && Number(value) < standards) {
+        callback({ message: '检验结果须大于等于国家标准值' });
+        return;
+      } else if (item.type === 0 && Number(value) > standards) {
+        callback({ message: '检验结果须小于等于国家标准值' });
+        return;
+      }
+      /* 校验小数位 */
+      if (item.pointNum === 0 && value.indexOf('.') !== -1) {
+        callback({ message: `请填写整数` })
+        return
+      }
+      if (item.pointNum > 0 && value.indexOf('.') === -1) {
+        callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
+        return
+      }
+      if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
+        callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
+        return
+      }
     }
     callback();
   };
