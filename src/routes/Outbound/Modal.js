@@ -267,14 +267,14 @@ class EditModal extends Component {
             </Col>
             <Col {...formColLayout}>
               <FormItem label="出厂时间" {...formItemLayout}>
-                {getFieldDecorator('createTime', {
+                {getFieldDecorator('outTime', {
                   rules: [
                     {
                       required: true,
                       message: '请选择出厂时间',
                     },
                   ],
-                  initialValue: moment(selectedDetail.createTime),
+                  initialValue: moment(selectedDetail.outTime),
                 })(
                   <DatePicker
                     showTime
@@ -813,7 +813,7 @@ class EditModal extends Component {
         values = {
           ...values,
           deliveryTime: moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
-          createTime: moment(values.createTime).format('YYYY-MM-DD HH:mm:ss'),
+          outTime: moment(values.outTime).format('YYYY-MM-DD HH:mm:ss'),
         }
         /* 把填写的检验结果值填入，传给后端 */
         for (const i in values) {

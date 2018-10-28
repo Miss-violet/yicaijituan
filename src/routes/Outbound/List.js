@@ -105,7 +105,7 @@ class List extends Component {
       },
       {
         title: '出厂时间',
-        dataIndex: 'createTime',
+        dataIndex: 'outTime',
         render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         width: 200,
       },
