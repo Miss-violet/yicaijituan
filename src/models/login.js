@@ -62,11 +62,20 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
-        // document.cookie = `${payload.data.token}&&${payload.data.role}`;
-        sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`);
+        const {data} = payload
+        // document.cookie = `${data.token}&&${data.role}`;
+        sessionStorage.setItem('cookie', `${data.token}&&${data.role}`);
+        sessionStorage.setItem('userId', `${data.id}`)
+        sessionStorage.setItem('loginName', `${data.loginName}`)
+        sessionStorage.setItem('companyId', `${data.companyId}`)
+        sessionStorage.setItem('tenantCode', `${data.tenantCode}`)
       } else {
         // document.cookie = '';
         sessionStorage.setItem('cookie', '');
+        sessionStorage.setItem('userId', '')
+        sessionStorage.setItem('loginName', '')
+        sessionStorage.setItem('companyId', '')
+        sessionStorage.setItem('tenantCode', '')
       }
       setAuthority(payload.currentAuthority);
       return {
