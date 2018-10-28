@@ -224,6 +224,8 @@ class BasicDataList extends Component {
                           rules: [{
                             required: modalType === 'add' ? true : this.state.changeCode,
                             message: '请输入密码',
+                          },{
+                            validator: validatePSW,
                           }],
                         })(
                           <Input type="password" placeholder={modalType === 'check' ? '' : '请输入密码'} disabled={disabled} />

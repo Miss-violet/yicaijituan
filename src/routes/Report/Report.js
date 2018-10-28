@@ -20,8 +20,11 @@ class Report extends Component {
     return (
       <Row gutter={16} className={styles.row}>
         <Col span={8} className={styles.leftCol}>
+          <div className={styles.deliveryNo}>
+              No. {detail.deliveryNo}
+          </div>
           <h1 className={styles.productName}>
-            {detail.title}
+            <div>{detail.title}</div>
             <p className={styles.name}>出厂合格证</p>
           </h1>
           <div className={styles.qrCode}>
