@@ -27,7 +27,7 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2018 益材集团
+    Copyright <Icon type="copyright" /> 2018 嵩能
   </Fragment>
 );
 
@@ -35,9 +35,9 @@ class UserLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = '益材';
+    let title = '嵩能';
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - 益材`;
+      title = `${routerData[pathname].name} - 嵩能`;
     }
     return title;
   }
@@ -51,7 +51,7 @@ class UserLayout extends React.PureComponent {
               <div className={styles.header}>
                 <a href="http://www.xmyicai.cn/">
                   <img alt="logo" className={styles.logo} src={logo} />
-                  <span className={styles.title}>益材</span>
+                  <span className={styles.title}>嵩能</span>
                 </a>
               </div>
 

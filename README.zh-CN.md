@@ -1,6 +1,6 @@
 [English](./README.md) | 简体中文
 
-# 益材集团
+# 嵩能
 
 ## 使用 Ant Design Pro / Ant Design of React 3.6.5
 ## React vision:16.2.0+
