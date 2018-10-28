@@ -14,6 +14,13 @@ export default {
   },
 
   effects: {
+    *fetchCurrent({payload},{call, put}){
+      const userResponse = yield call(queryCurrent);
+      yield put({
+        type: 'saveCurrentUser',
+        payload: userResponse.data,
+      });
+    },
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
       // Login successfully
