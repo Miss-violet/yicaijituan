@@ -53,9 +53,9 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                  <span>
-                    <Icon type="check" />启用
-                  </span>
+                <span>
+                  <Icon type="check" />启用
+                </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -105,7 +105,7 @@ class List extends Component {
       },
       {
         title: '出厂时间',
-        dataIndex: 'createTime',
+        dataIndex: 'outTime',
         render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         width: 200,
       },
@@ -198,7 +198,7 @@ class List extends Component {
           pagination={this.state.pagination}
           onChange={handleTableChange}
           scroll={{ x: 2700 }}
-          />
+        />
       </div>
     );
   }

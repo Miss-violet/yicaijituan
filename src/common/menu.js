@@ -36,6 +36,12 @@ const menuData = [
     icon: 'book',
     hideInMenu: '',
   },
+  {
+    name: '库位管理',
+    path: 'libraryManage',
+    icon: 'appstore-o',
+    hideInMenu: '',
+  },
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {

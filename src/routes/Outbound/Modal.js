@@ -17,6 +17,7 @@ class EditModal extends Component {
       standardsData: props.selectedDetail.standards,
       levelSelected: '',
       resultOk: this.props.resultOk || false,
+      // entrepotName: '',                 /* 选中的库位名称 */
       productName: '',                  /* 选中的产品名称 */
       distributorName: '',              /* 选中的客户名称 */
       supplierName: '',                 /* 选中的生厂商名称 */
@@ -51,6 +52,7 @@ class EditModal extends Component {
       manufacturerSelectList,
       companyAllSelectList,
       productSelectList,
+      // entrepotSelectList,
       selectedDetail,
       disabled,
       type,
@@ -59,6 +61,7 @@ class EditModal extends Component {
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
     const productEnabled = productSelectList.filter(item => item.status === 0);
+    // const entrepotEnabled = entrepotSelectList
 
 
     const formItemLayout = {
@@ -136,6 +139,12 @@ class EditModal extends Component {
       });
     };
 
+    /* 库位下拉框变化事件： */
+    const handleEntrepotChange = entrepotName => {
+      // this.setState({
+      //   entrepotName,
+      // })
+    }
     /**
      * 客户名称下拉框变化事件：
      * 查询出当前选中的名称，用于保存
@@ -253,6 +262,31 @@ class EditModal extends Component {
               </FormItem>
             </Col>
             <Col {...formColLayout}>
+              <FormItem label="库位" {...formItemLayout}>
+                {getFieldDecorator('level', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择库位',
+                    },
+                  ],
+                  initialValue:
+                  selectedDetail.entrepot,
+                })(
+                  <Select onChange={handleEntrepotChange} disabled={disabled}>
+                    {
+                      // entrepotEnabled &&
+                      // entrepotEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)
+                    }
+                    <Option value="0">库位1</Option>
+                    <Option value="1">库位2</Option>
+                    <Option value="2">库位3</Option>
+                  </Select>
+                  
+                  )}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
               <FormItem label="公司抬头" {...formItemLayout}>
                 {getFieldDecorator('title', {
                   rules: [
@@ -267,14 +301,14 @@ class EditModal extends Component {
             </Col>
             <Col {...formColLayout}>
               <FormItem label="出厂时间" {...formItemLayout}>
-                {getFieldDecorator('createTime', {
+                {getFieldDecorator('outTime', {
                   rules: [
                     {
                       required: true,
                       message: '请选择出厂时间',
                     },
                   ],
-                  initialValue: moment(selectedDetail.createTime),
+                  initialValue: moment(selectedDetail.outTime),
                 })(
                   <DatePicker
                     showTime
@@ -282,7 +316,7 @@ class EditModal extends Component {
                     placeholder="请选择出厂时间"
                     className={styles.datepicker}
                     disabled
-                    />
+                  />
                   )}
               </FormItem>
             </Col>
@@ -305,7 +339,7 @@ class EditModal extends Component {
                     placeholder="请选择生产日期"
                     className={styles.datepicker}
                     disabled={disabled}
-                    />
+                  />
                   )}
               </FormItem>
             </Col>
@@ -365,9 +399,32 @@ class EditModal extends Component {
                     onChange={handleChange}
                     onFocus={handleFocus}
                     disabled={disabled}
-                    >
+                  >
                     {options}
                   </Select>
+                  )}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="装车时间" {...formItemLayout}>
+                {getFieldDecorator('loadTime', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择装车时间',
+                    },
+                  ],
+                  initialValue: type !== 'add'
+                    ? moment(selectedDetail.loadTime)
+                    : '',
+                })(
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="请选择装车时间"
+                    className={styles.datepicker}
+                    disabled={disabled}
+                  />
                   )}
               </FormItem>
             </Col>
@@ -580,7 +637,7 @@ class EditModal extends Component {
                                 className={styles.inputNumber}
                                 onBlur={e => inputOnBlur(e, item)}
                                 disabled={disabled}
-                                />
+                              />
                               )}
                           </FormItem>
                         </td>
@@ -654,7 +711,7 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
+                />
                 )}
             </FormItem>
           </Col>
@@ -674,7 +731,7 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
+                />
                 )}
             </FormItem>
           </Col>
@@ -694,7 +751,7 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
+                />
                 )}
             </FormItem>
           </Col>
@@ -801,7 +858,12 @@ class EditModal extends Component {
 
   /* 保存按钮事件 */
   handleSubmit = () => {
-    const { productName, distributorName, supplierName } = this.state;
+    const { 
+      productName, 
+      distributorName, 
+      supplierName, 
+      // entrepotName, 
+    } = this.state;
     this.setState({
       confirmLoading: true,
     });
@@ -813,7 +875,8 @@ class EditModal extends Component {
         values = {
           ...values,
           deliveryTime: moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
-          createTime: moment(values.createTime).format('YYYY-MM-DD HH:mm:ss'),
+          outTime: moment(values.outTime).format('YYYY-MM-DD HH:mm:ss'),
+          loadTime:moment(values.loadTime).format('YYYY-MM-DD HH:mm:ss'),
         }
         /* 把填写的检验结果值填入，传给后端 */
         for (const i in values) {
@@ -838,6 +901,7 @@ class EditModal extends Component {
               standards: standardsData,
               productName,
               distributorName,
+              // entrepotName,
               supplierName,
             },
           });
@@ -885,7 +949,7 @@ class EditModal extends Component {
           className={styles.modal}
           footer={null}
           destroyOnClose
-          >
+        >
           <Form className={styles.fm}>
             {this.getCertificateFields()}
             {this.getResult()}
@@ -900,7 +964,7 @@ class EditModal extends Component {
                   htmlType="submit"
                   className={styles.submitBtn}
                   onClick={() => this.handleSubmit()}
-                  >
+                >
                   保存
                 </Button>
               )}

@@ -43,7 +43,19 @@ class Report extends Component {
             <li>
               <span className={styles.label}>出厂日期：</span>
               <div className={styles.content}>
-                <span>{moment(detail.createTime).format('YYYY年MM月DD日')}</span>
+                <span>{moment(detail.outTime).format('YYYY年MM月DD日')}</span>
+              </div>
+            </li>
+            <li>
+              <span className={styles.label}>库位：</span>
+              <div className={styles.content}>
+                <span>{detail.entrepotName}</span>
+              </div>
+            </li>
+            <li>
+              <span className={styles.label}>装车时间：</span>
+              <div className={styles.content}>
+                <span>{moment(detail.loadTime).format('YYYY年MM月DD日')}</span>
               </div>
             </li>
             <li>

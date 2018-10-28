@@ -88,7 +88,7 @@ class OutboundFilter extends Component {
           </Col>
           <Col {...filterFormLayout}>
             <FormItem label='出厂日期' {...formItemLayout} className={styles.formItem}>
-              {getFieldDecorator('createTime')(
+              {getFieldDecorator('outTime')(
                 <RangePicker
                   showTime={{ format: 'HH:mm:ss' }}
                   format="YYYY-MM-DD HH:mm:ss"
@@ -189,15 +189,15 @@ class OutboundFilter extends Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      const { createTime, ...rest } = values
+      const { outTime, ...rest } = values
       let startTime
       let endTime
-      if (createTime === undefined || createTime.length < 1) {
+      if (outTime === undefined || outTime.length < 1) {
         startTime = ''
         endTime = ''
       } else {
-        startTime = moment(values.createTime[0]).format('YYYY-MM-DD HH:mm:ss')
-        endTime = moment(values.createTime[1]).format('YYYY-MM-DD HH:mm:ss')
+        startTime = moment(values.outTime[0]).format('YYYY-MM-DD HH:mm:ss')
+        endTime = moment(values.outTime[1]).format('YYYY-MM-DD HH:mm:ss')
       }
       this.props.handleSearch(
         {
@@ -222,8 +222,8 @@ class OutboundFilter extends Component {
   /* 导出 */
   handleExport = () => {
     this.props.form.validateFields((err, values) => {
-      const startTime = values.createTime && moment(values.createTime[0]).format('YYYY-MM-DD HH:mm:ss')
-      const endTime = values.createTime && moment(values.createTime[1]).format('YYYY-MM-DD HH:mm:ss')
+      const startTime = values.outTime && moment(values.outTime[0]).format('YYYY-MM-DD HH:mm:ss')
+      const endTime = values.outTime && moment(values.outTime[1]).format('YYYY-MM-DD HH:mm:ss')
       let url
       if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}`
       else url = `/api/file/delivery/export`
