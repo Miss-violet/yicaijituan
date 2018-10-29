@@ -21,14 +21,14 @@ class Report extends Component {
       <Row gutter={16} className={styles.row}>
         <Col span={8} className={styles.leftCol}>
           <div className={styles.deliveryNo}>
-              No. {detail.deliveryNo}
+            No. {detail.deliveryNo}
           </div>
           <h1 className={styles.productName}>
             <div>{detail.title}</div>
             <p className={styles.name}>出厂合格证</p>
           </h1>
           <div className={styles.qrCode}>
-            <img src={`http://www.yicaijituan.cn:8090/images/${detail.id}.jpg`} alt="qrCode" />
+            <img src={`http://www.yicaijituan.cn:8091/images/${detail.id}.jpg`} alt="qrCode" />
           </div>
           <ul className={styles.leftList}>
             <li>
@@ -111,7 +111,7 @@ class Report extends Component {
               </Col>
             </Row>
             <div className={styles.qrCode}>
-              <img src={`http://www.yicaijituan.cn:8090/images/${detail.id}.jpg`} alt="qrCode" />
+              <img src={`http://www.yicaijituan.cn:8091/images/${detail.id}.jpg`} alt="qrCode" />
             </div>
           </div>
           <table className={table}>
