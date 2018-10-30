@@ -473,7 +473,7 @@ class BasicDataList extends Component {
               <Button type="default" onClick={this.handleCancel} className={styles.backBtn}>返回</Button>
               {
                 this.state.modalType !== 'check' && (
-                  <Button type="primary" htmlType="submit" className={styles.submitBtn} onClick={() => this.handleSubmit(modalType)} disabled={validateUnique&&validateUnique!==0}>保存</Button>
+                  <Button type="primary" htmlType="submit" className={styles.submitBtn} onClick={() => this.handleSubmit(modalType)} disabled={validateUnique===-1}>保存</Button>
                 )
               }
             </FormItem>
