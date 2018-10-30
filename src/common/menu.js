@@ -39,8 +39,8 @@ const menuData = [
   {
     name: '租户管理',
     path: 'tenantManage',
-    icon: '',
-    hideInMenu: '',   // 根据用户的权限显示/隐藏
+    icon: 'smile-o',
+    hideInMenu: '',     // 根据用户的权限显示/隐藏
   },
 ];
 
@@ -52,14 +52,20 @@ function formatter(data, parentPath = '/', parentAuthority) {
   cookie = cookie && cookie.split('&&')
   role = cookie && cookie[1]
 
+  const tenantCode = sessionStorage.getItem('tenantCode')
+
   return data.map(item => {
     let { path } = item;
+    const {name} = item
     if (!isUrl(path)) {
       path = parentPath + item.path;
     }
     /* 菜单的权限控制 */
     if (item.hasOwnProperty('hideInMenu')) {
       item.hideInMenu = (role !== '0')
+    }
+    if(name === '租户管理') {
+      item.hideInMenu = (tenantCode!=='platform')
     }
     const result = {
       ...item,

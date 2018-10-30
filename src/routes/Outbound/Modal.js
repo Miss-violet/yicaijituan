@@ -55,7 +55,6 @@ class EditModal extends Component {
       disabled,
       type,
     } = this.props;
-
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
     const productEnabled = productSelectList.filter(item => item.status === 0);
@@ -281,8 +280,8 @@ class EditModal extends Component {
                     format="YYYY-MM-DD HH:mm:ss"
                     placeholder="请选择出厂时间"
                     className={styles.datepicker}
-                    disabled
-                    />
+                    disabled={selectedDetail.allowModifyOutTime===0}
+                  />
                   )}
               </FormItem>
             </Col>
@@ -305,7 +304,7 @@ class EditModal extends Component {
                     placeholder="请选择生产日期"
                     className={styles.datepicker}
                     disabled={disabled}
-                    />
+                  />
                   )}
               </FormItem>
             </Col>
@@ -365,7 +364,7 @@ class EditModal extends Component {
                     onChange={handleChange}
                     onFocus={handleFocus}
                     disabled={disabled}
-                    >
+                  >
                     {options}
                   </Select>
                   )}
@@ -580,7 +579,7 @@ class EditModal extends Component {
                                 className={styles.inputNumber}
                                 onBlur={e => inputOnBlur(e, item)}
                                 disabled={disabled}
-                                />
+                              />
                               )}
                           </FormItem>
                         </td>
@@ -654,7 +653,7 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
+                />
                 )}
             </FormItem>
           </Col>
@@ -674,7 +673,7 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
+                />
                 )}
             </FormItem>
           </Col>
@@ -694,7 +693,7 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
+                />
                 )}
             </FormItem>
           </Col>
@@ -885,7 +884,7 @@ class EditModal extends Component {
           className={styles.modal}
           footer={null}
           destroyOnClose
-          >
+        >
           <Form className={styles.fm}>
             {this.getCertificateFields()}
             {this.getResult()}
@@ -900,7 +899,7 @@ class EditModal extends Component {
                   htmlType="submit"
                   className={styles.submitBtn}
                   onClick={() => this.handleSubmit()}
-                  >
+                >
                   保存
                 </Button>
               )}
