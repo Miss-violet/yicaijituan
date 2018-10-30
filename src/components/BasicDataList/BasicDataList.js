@@ -411,10 +411,10 @@ class BasicDataList extends Component {
       selectedRowKeys,
     })
   }
-
   render() {
     const { visible, title, confirmLoading, modalType, selectedRowKeys, pagination } = this.state;
-    const { columns, data, addBtn, updateBtn, checkBtn, deleteBtn, handleTableChange, scrollX } = this.props
+    const { columns, data, addBtn, updateBtn, checkBtn, deleteBtn, handleTableChange, scrollX, validateUnique } = this.props
+
     const rowSelection = {
       type: "radio",
       selectedRowKeys,
@@ -475,7 +475,7 @@ class BasicDataList extends Component {
               <Button type="default" onClick={this.handleCancel} className={styles.backBtn}>返回</Button>
               {
                 this.state.modalType !== 'check' && (
-                  <Button type="primary" htmlType="submit" className={styles.submitBtn} onClick={() => this.handleSubmit(modalType)}>保存</Button>
+                  <Button type="primary" htmlType="submit" className={styles.submitBtn} onClick={() => this.handleSubmit(modalType)} disabled={validateUnique!==0}>保存</Button>
                 )
               }
             </FormItem>

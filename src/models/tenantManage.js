@@ -80,8 +80,9 @@ export default {
         })
       }
     },
-    *validateTenantCode({payload}, {call}) {
+    *validateTenantCode({payload, callback}, {call}) {
       const res = yield call(validateTenantCode, payload)
+        if(callback) callback(res.code)
     },
   },
 

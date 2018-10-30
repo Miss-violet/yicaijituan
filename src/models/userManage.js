@@ -90,8 +90,9 @@ export default {
         })
       }
     },
-    *vaildateLoginName({payload}, {call}) {
-      yield call(vaildateLoginName, payload)
+    *vaildateLoginName({payload, callback}, {call}) {
+      const res = yield call(vaildateLoginName, payload)
+      if(callback) callback(res.code)
     },
   },
 

@@ -8,7 +8,7 @@ class TenantManage extends Component {
   constructor() {
     super()
     this.state = {
-
+      validateTenantCode:0,
     }
   }
   render() {
@@ -20,6 +20,10 @@ class TenantManage extends Component {
           if (record.status === 1) return <span><Tooltip title="此生厂商已被停用"><Badge status="error" /></Tooltip>{text}</span>
           else return <span>{text}</span>
         },
+      },
+      {
+        title: '租户编码',
+        dataIndex: 'tenantCode',
       },
       {
         title: '租户信息',
@@ -34,10 +38,6 @@ class TenantManage extends Component {
         title: '是否可修改出厂时间',
         dataIndex: 'modifyOutTimeFlag',
         render: text => (text === 0 ? <span>不可修改</span> : <span className={commonStyles.disableState}>可修改</span>),
-      },
-      {
-        title: '租户编码',
-        dataIndex: 'tenantCode',
       },
     ]
     let { data } = this.props.tenantManage
@@ -63,6 +63,11 @@ class TenantManage extends Component {
             type: 'tenantManage/validateTenantCode',
             payload: {
               tenantCode,
+            },
+            callback: (code)=>{
+              this.setState({
+                validateTenantCode: code,
+              })
             },
           })
         },
@@ -107,10 +112,11 @@ class TenantManage extends Component {
         },
       ],
   }]
-    const companyProps = {
+    const tenantProps = {
       columns,
       data,
       fmFields,
+      validateUnique: this.state.validateTenantCode,
       addBtn: true,
       updateBtn: true,
       checkBtn: true,
@@ -141,7 +147,7 @@ class TenantManage extends Component {
     }
     return (
       <div>
-        <BasicDataList {...companyProps} />
+        <BasicDataList {...tenantProps} />
       </div>
     )
   }
