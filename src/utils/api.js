@@ -33,5 +33,11 @@ module.exports = {
         journal: {
             list: `/api/log/list`,
         },
+        tenantManage: {
+            list: `/api/tenant/list`,
+            create: `/api/tenant/create`,
+            update: `/api/tenant/update`,
+            validateTenantCode: `/api/tenant/vaildate`,
+        },
     },
 }

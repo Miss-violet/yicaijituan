@@ -36,6 +36,12 @@ const menuData = [
     icon: 'book',
     hideInMenu: '',
   },
+  {
+    name: '租户管理',
+    path: 'tenantManage',
+    icon: '',
+    hideInMenu: '',   // 根据用户的权限显示/隐藏
+  },
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {

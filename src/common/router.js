@@ -90,6 +90,9 @@ export const getRouterData = app => {
     '/journal': {
       component: dynamicWrapper(app, ['journal'], () => import('../routes/Journal/Journal')),
     },
+    '/tenantManage': {
+      component: dynamicWrapper(app, ['tenantManage'], () => import('../routes/TenantManage/TenantManage')),
+    },
     '/scanResult/:id': {
       component: dynamicWrapper(app, ['scanResult'], () => import('../routes/ScanResult/ScanResult')),
     },
