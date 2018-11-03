@@ -75,7 +75,7 @@ export default {
         yield put({
           type: 'success',
           payload: {
-            data: res.data,
+            data: res.data.rows,
           },
         })
       }
