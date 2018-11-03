@@ -124,7 +124,6 @@ export default function request(url, options) {
           sessionStorage.setItem('userId', '')
           sessionStorage.setItem('loginName', '')
           sessionStorage.setItem('companyId', '')
-          sessionStorage.setItem('tenantCode', '')
           store.dispatch(routerRedux.push('/user/login'));
         }
       }
