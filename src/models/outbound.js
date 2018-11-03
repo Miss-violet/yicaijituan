@@ -4,7 +4,7 @@ import { outboundList, create, update, status, info, cars, statistics } from '..
 import { manufacturerList } from '../services/manufacturerManage'
 import { companyListAll } from '../services/companyManage'
 import { productList } from '../services/productManage'
-import {entrepotListAll} from '../services/libraryManage'
+import { entrepotListAll } from '../services/libraryManage'
 
 
 
@@ -17,6 +17,7 @@ export default {
     manufacturerSelectList: [],
     companyAllSelectList: [],
     productSelectList: [],
+    entrepotSelectList: [],
     selectedDetail: {},
     cars: [],
     sumNetweight: '',
@@ -110,15 +111,15 @@ export default {
       })
 
       /* 库位下拉列表 */
-      // const entrepotRes = yield call(entrepotListAll, payload)
-      // if (entrepotRes.code === 0) {
-      //   yield put({
-      //     type: 'success',
-      //     payload: {
-      //       entrepotSelectList: entrepotRes.data,
-      //     },
-      //   })
-      // }
+      const entrepotRes = yield call(entrepotListAll, payload)
+      if (entrepotRes.code === 0) {
+        yield put({
+          type: 'success',
+          payload: {
+            entrepotSelectList: entrepotRes.data,
+          },
+        })
+      }
     },
     *queryList({ payload }, { call, put }) {
       const queryRes = yield call(outboundList, payload)

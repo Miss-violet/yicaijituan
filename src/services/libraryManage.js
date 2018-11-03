@@ -31,13 +31,13 @@ export async function del(id) {
         body: id,
     });
 }
-export async function manufacturerList(params) {
+export async function entrepotList(params) {
     return request(libraryManage.list, {
         method: 'POST',
         body: params,
     });
 }
-export async function manufacturerListAll(params) {
+export async function entrepotListAll(params) {
     return request(libraryManage.listAll, {
         method: 'POST',
         body: params,

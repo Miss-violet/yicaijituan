@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { create, update, del, manufacturerList } from '../services/libraryManage'
+import { create, update, del, entrepotList } from '../services/libraryManage'
 
 export default {
   namespace: 'libraryManage',
@@ -70,7 +70,7 @@ export default {
       }
     },
     *queryList({ payload }, { call, put }) {
-      const res = yield call(manufacturerList, payload)
+      const res = yield call(entrepotList, payload)
       if (res.code === 0) {
         yield put({
           type: 'success',
