@@ -54,8 +54,8 @@ class List extends Component {
                 </span>
               ) : (
                 <span>
-                    <Icon type="check" />启用
-                  </span>
+                  <Icon type="check" />启用
+                </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -197,7 +197,7 @@ class List extends Component {
           bordered
           pagination={this.state.pagination}
           onChange={handleTableChange}
-          scroll={{ x: 2700 }}
+          scroll={{ x: 2700, y: 600 }}
           />
       </div>
     );

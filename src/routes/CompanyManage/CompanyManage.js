@@ -182,6 +182,7 @@ class CompanyManage extends Component {
     ]
     const showTotal = () => `共${total}条数据`
     const companyProps = {
+      scrollY:600,
       columns,
       data,
       fmFields,

@@ -39,7 +39,7 @@ const menuData = [
   {
     name: '库位管理',
     path: 'libraryManage',
-    icon: 'appstore-o',
+    icon: 'inbox',
     hideInMenu: '',
   },
 ];

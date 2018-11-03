@@ -414,7 +414,7 @@ class BasicDataList extends Component {
 
   render() {
     const { visible, title, confirmLoading, modalType, selectedRowKeys, pagination } = this.state;
-    const { columns, data, addBtn, updateBtn, checkBtn, deleteBtn, handleTableChange, scrollX, validateUnique } = this.props
+    const { columns, data, addBtn, updateBtn, checkBtn, deleteBtn, handleTableChange, scrollX,scrollY, validateUnique } = this.props
     const rowSelection = {
       type: "radio",
       selectedRowKeys,
@@ -457,7 +457,7 @@ class BasicDataList extends Component {
           dataSource={data}
           pagination={pagination}
           onChange={handleTableChange}
-          scroll={{ x: scrollX }}
+          scroll={{ x: scrollX ,y:scrollY}}
           />
 
         <Modal
