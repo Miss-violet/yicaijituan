@@ -16,6 +16,7 @@ class UserManage extends Component {
       pageSize: 20,
       pageIndex: 0,
       filterValue: {},        /* 查询条件 */
+      validateLoginName:0,
     }
   }
   handleSearch = (e) => {
@@ -165,6 +166,11 @@ class UserManage extends Component {
             payload: {
               loginName,
             },
+            callback: (code)=>{
+              this.setState({
+                validateLoginName: code,
+              })
+            },
           })
         },
       }, {
@@ -304,6 +310,7 @@ class UserManage extends Component {
       scrollX: 2000,
       data,
       fmFields,
+      validateUnique:this.state.validateLoginName,
       addBtn: true,
       updateBtn: true,
       checkBtn: true,

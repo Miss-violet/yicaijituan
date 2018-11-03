@@ -25,7 +25,7 @@ class Report extends Component {
             <p className={styles.name}>出厂合格证</p>
           </h1>
           <div className={styles.qrCode}>
-            <img src={`http://www.yicaijituan.cn:8090/images/${detail.id}.jpg`} alt="qrCode" />
+            <img src={`http://www.yicaijituan.cn:8091/${detail.qrcodeUrl}`} alt="qrCode" />
           </div>
           <ul className={styles.leftList}>
             <li>
@@ -120,7 +120,7 @@ class Report extends Component {
               </Col>
             </Row>
             <div className={styles.qrCode}>
-              <img src={`http://www.yicaijituan.cn:8090/images/${detail.id}.jpg`} alt="qrCode" />
+              <img src={`http://www.yicaijituan.cn:8091/${detail.qrcodeUrl}`} alt="qrCode" />
             </div>
           </div>
           <table className={table}>
