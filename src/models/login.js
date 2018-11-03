@@ -14,6 +14,13 @@ export default {
   },
 
   effects: {
+    *fetchCurrent({payload},{call, put}){
+       const userResponse = yield call(queryCurrent);
+       yield put({
+         type: 'saveCurrentUser',
+         payload: userResponse.data,
+       });
+     },
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
       // Login successfully
@@ -62,11 +69,18 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
+        const {data} = payload
         // document.cookie = `${payload.data.token}&&${payload.data.role}`;
-        sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`);
+        sessionStorage.setItem('cookie', `${data.token}&&${data.role}`);
+        sessionStorage.setItem('userId', `${data.id}`)
+        sessionStorage.setItem('loginName', `${data.loginName}`)
+        sessionStorage.setItem('companyId', `${data.companyId}`)
       } else {
         // document.cookie = '';
         sessionStorage.setItem('cookie', '');
+          sessionStorage.setItem('userId', '')
+          sessionStorage.setItem('loginName', '')
+          sessionStorage.setItem('companyId', '')
       }
       setAuthority(payload.currentAuthority);
       return {

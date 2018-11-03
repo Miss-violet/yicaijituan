@@ -131,7 +131,16 @@ class Outbound extends Component {
   }
 
   render() {
-    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
+    const {
+      manufacturerSelectList,
+      companyAllSelectList,
+      productSelectList,
+      entrepotSelectList,
+      total,
+      cars,
+      sumNetweight,
+      totalRecords,
+    } = this.props.outbound
 
     let { listData } = this.props.outbound
 
@@ -203,6 +212,7 @@ class Outbound extends Component {
       companyAllSelectList,
       manufacturerSelectList,
       productSelectList,
+      entrepotSelectList,
       resultOk: true,
       disabled: this.state.disabled,
       cars,

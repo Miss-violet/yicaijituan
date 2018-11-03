@@ -116,7 +116,7 @@ class BasicLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = '益材';
+    let title = '嵩能';
     let currRouterData = null;
     // match params path
     Object.keys(routerData).forEach(key => {
@@ -125,7 +125,7 @@ class BasicLayout extends React.PureComponent {
       }
     });
     if (currRouterData && currRouterData.name) {
-      title = `${currRouterData.name} - 益材`;
+      title = `${currRouterData.name} - 嵩能`;
     }
     return title;
   }
@@ -244,7 +244,7 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 益材集团
+                  Copyright <Icon type="copyright" /> 2018 嵩能集团
                 </Fragment>
               }
             />

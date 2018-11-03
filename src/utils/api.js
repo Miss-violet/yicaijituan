@@ -30,6 +30,12 @@ module.exports = {
             create: `/api/mft/create`,
             update: `/api/mft/update`,
         },
+        libraryManage: {
+            list: `/api/entrepot/list`,
+            listAll: `/api/entrepot/listAll`,
+            create: `/api/entrepot/create`,
+            update: `/api/entrepot/update`,
+        },
         journal: {
             list: `/api/log/list`,
         },

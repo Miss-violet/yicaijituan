@@ -53,9 +53,9 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                  <span>
-                    <Icon type="check" />启用
-                  </span>
+                <span>
+                  <Icon type="check" />启用
+                </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -78,9 +78,9 @@ class List extends Component {
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>
           <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条出库单；</span>
-          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : Number(sumNetweight).toLocaleString()} </span>kg；</span>
+          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : (Number(sumNetweight) / 1000).toLocaleString()} </span>吨；</span>
           <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
-          <span>【请根据出厂日期筛选统计】</span>
+          <span>【数据统计请根据出厂日期筛选统计；若无筛选条件则默认统计当月数据。】</span>
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ class List extends Component {
       },
       {
         title: '出厂时间',
-        dataIndex: 'createTime',
+        dataIndex: 'outTime',
         render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         width: 200,
       },
@@ -197,7 +197,7 @@ class List extends Component {
           bordered
           pagination={this.state.pagination}
           onChange={handleTableChange}
-          scroll={{ x: 2700 }}
+          scroll={{ x: 2700, y: 600 }}
           />
       </div>
     );

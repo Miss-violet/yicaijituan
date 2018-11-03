@@ -20,8 +20,11 @@ class Report extends Component {
     return (
       <Row gutter={16} className={styles.row}>
         <Col span={8} className={styles.leftCol}>
+          <div className={styles.deliveryNo}>
+            No. {detail.deliveryNo}
+          </div>
           <h1 className={styles.productName}>
-            {detail.title}
+            <div>{detail.title}</div>
             <p className={styles.name}>出厂合格证</p>
           </h1>
           <div className={styles.qrCode}>
@@ -43,7 +46,19 @@ class Report extends Component {
             <li>
               <span className={styles.label}>出厂日期：</span>
               <div className={styles.content}>
-                <span>{moment(detail.createTime).format('YYYY年MM月DD日')}</span>
+                <span>{moment(detail.outTime).format('YYYY年MM月DD日')}</span>
+              </div>
+            </li>
+            <li>
+              <span className={styles.label}>库位：</span>
+              <div className={styles.content}>
+                <span>{detail.entrepotName}</span>
+              </div>
+            </li>
+            <li>
+              <span className={styles.label}>装车时间：</span>
+              <div className={styles.content}>
+                <span>{moment(detail.loadTime).format('YYYY年MM月DD日')}</span>
               </div>
             </li>
             <li>

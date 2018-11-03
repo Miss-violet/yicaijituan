@@ -121,6 +121,9 @@ export default function request(url, options) {
         ) {
           // document.cookie = '';
           sessionStorage.setItem('cookie', '');
+          sessionStorage.setItem('userId', '')
+          sessionStorage.setItem('loginName', '')
+          sessionStorage.setItem('companyId', '')
           store.dispatch(routerRedux.push('/user/login'));
         }
       }

@@ -120,7 +120,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={(item.name === 'loginName') ? itemDisabled(`${item.name}`) : disabled}
                     onChange={(event) => handleChange(event, item)}
-                  />
+                    />
                   )}
               </FormItem>
             </Col>
@@ -224,6 +224,8 @@ class BasicDataList extends Component {
                           rules: [{
                             required: modalType === 'add' ? true : this.state.changeCode,
                             message: '请输入密码',
+                          }, {
+                            validator: validatePSW,
                           }],
                         })(
                           <Input type="password" placeholder={modalType === 'check' ? '' : '请输入密码'} disabled={disabled} />
@@ -266,7 +268,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请选择${item.label}`}
                     disabled={disabled}
                     style={{ width: '100%' }}
-                  />
+                    />
                   )}
               </FormItem>
             </Col>
@@ -412,7 +414,7 @@ class BasicDataList extends Component {
 
   render() {
     const { visible, title, confirmLoading, modalType, selectedRowKeys, pagination } = this.state;
-    const { columns, data, addBtn, updateBtn, checkBtn, deleteBtn, handleTableChange, scrollX,validateUnique } = this.props
+    const { columns, data, addBtn, updateBtn, checkBtn, deleteBtn, handleTableChange, scrollX,scrollY, validateUnique } = this.props
     const rowSelection = {
       type: "radio",
       selectedRowKeys,
@@ -455,8 +457,8 @@ class BasicDataList extends Component {
           dataSource={data}
           pagination={pagination}
           onChange={handleTableChange}
-          scroll={{ x: scrollX }}
-        />
+          scroll={{ x: scrollX ,y:scrollY}}
+          />
 
         <Modal
           title={title}
@@ -466,14 +468,14 @@ class BasicDataList extends Component {
           footer={null}
           width="60%"
           destroyOnClose
-        >
+          >
           <Form className={styles.fm}>
             <Row gutter={24}>{this.getFields()}</Row>
             <FormItem className={styles.fmBtn}>
               <Button type="default" onClick={this.handleCancel} className={styles.backBtn}>返回</Button>
               {
                 this.state.modalType !== 'check' && (
-                  <Button type="primary" htmlType="submit" className={styles.submitBtn} onClick={() => this.handleSubmit(modalType)} disabled={validateUnique===-1}>保存</Button>
+                  <Button type="primary" htmlType="submit" className={styles.submitBtn} onClick={() => this.handleSubmit(modalType)} disabled={validateUnique === -1}>保存</Button>
                 )
               }
             </FormItem>

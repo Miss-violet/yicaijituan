@@ -182,6 +182,7 @@ class CompanyManage extends Component {
     ]
     const showTotal = () => `共${total}条数据`
     const companyProps = {
+      scrollY:600,
       columns,
       data,
       fmFields,
@@ -241,7 +242,7 @@ class CompanyManage extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={32} className={commonStyles.form}>
             <Col {...filterFormLayout} >
               <FormItem label='名称' {...formItemLayout} className={commonStyles.formItem}>

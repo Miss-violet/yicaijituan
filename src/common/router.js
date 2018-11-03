@@ -87,6 +87,9 @@ export const getRouterData = app => {
     '/manufacturerManage': {
       component: dynamicWrapper(app, ['manufacturerManage'], () => import('../routes/ManufacturerManage/ManufacturerManage')),
     },
+    '/libraryManage': {
+      component: dynamicWrapper(app, ['libraryManage'], () => import('../routes/LibraryManage/LibraryManage')),
+    },
     '/journal': {
       component: dynamicWrapper(app, ['journal'], () => import('../routes/Journal/Journal')),
     },
