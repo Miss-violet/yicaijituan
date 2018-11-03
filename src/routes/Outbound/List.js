@@ -197,7 +197,7 @@ class List extends Component {
           bordered
           pagination={this.state.pagination}
           onChange={handleTableChange}
-          scroll={{ x: 2700 }}
+          scroll={{ x: 2700,y: 600 }}
         />
       </div>
     );

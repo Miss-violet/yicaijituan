@@ -185,6 +185,7 @@ class CompanyManage extends Component {
       columns,
       data,
       fmFields,
+      scrollY: 600,
       addBtn: true,
       updateBtn: true,
       checkBtn: true,

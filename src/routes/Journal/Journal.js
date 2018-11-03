@@ -19,6 +19,7 @@ class Journal extends Component {
       title: '内容',
       dataIndex: 'content',
       key: 'content',
+      className: 'journalContent',
     }, {
       title: '操作类型',
       dataIndex: 'operateType',
@@ -37,10 +38,12 @@ class Journal extends Component {
             return ''
         }
       },
+      className: 'journalTd',
     }, {
       title: '关联id',
       dataIndex: 'relationId',
       key: 'relationId',
+      className: 'journalTd',
     }, {
       title: '类型',
       dataIndex: 'type',
@@ -63,15 +66,18 @@ class Journal extends Component {
             return ''
         }
       },
+      className: 'journalTd',
     }, {
       title: '操作人',
       dataIndex: 'createBy',
       key: 'createBy',
+      className: 'journalTd',
     }, {
       title: '操作时间',
       dataIndex: 'createTime',
       key: 'createTime',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      className: 'journalTd',
     },
   ]
   handleSearch = (e) => {

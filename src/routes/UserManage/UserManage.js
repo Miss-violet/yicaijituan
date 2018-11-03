@@ -308,6 +308,7 @@ class UserManage extends Component {
     const userProps = {
       columns,
       scrollX: 2000,
+      scrollY:600,
       data,
       fmFields,
       validateUnique: this.state.validateLoginName,
