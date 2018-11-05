@@ -105,10 +105,12 @@ class BasicLayout extends React.PureComponent {
         isMobile: mobile,
       });
     });
-    /* 获取当前用户 */
-    this.props.dispatch({
-      type: 'login/fetchCurrent',
-    });
+    /* 获取当前用户，防止重新打开页面时因为没有cookie报错 */
+    if (sessionStorage.getItem('cookie')) {
+      this.props.dispatch({
+        type: 'login/fetchCurrent',
+      });
+    }
   }
   componentWillUnmount() {
     unenquireScreen(this.enquireHandler);
@@ -205,7 +207,7 @@ class BasicLayout extends React.PureComponent {
           location={location}
           isMobile={this.state.isMobile}
           onCollapse={this.handleMenuCollapse}
-        />
+          />
         <Layout>
           <Header style={{ background: 'none', height: '48px', padding: 0 }}>
             <GlobalHeader
@@ -219,7 +221,7 @@ class BasicLayout extends React.PureComponent {
               onCollapse={this.handleMenuCollapse}
               onMenuClick={this.handleMenuClick}
               onNoticeVisibleChange={this.handleNoticeVisibleChange}
-            />
+              />
           </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <Switch>
@@ -234,7 +236,7 @@ class BasicLayout extends React.PureComponent {
                   exact={item.exact}
                   authority={item.authority}
                   redirectPath="/exception/403"
-                />
+                  />
               ))}
               <Redirect exact from="/" to={bashRedirect} />
               <Route render={NotFound} />
@@ -247,7 +249,7 @@ class BasicLayout extends React.PureComponent {
                   Copyright <Icon type="copyright" /> 2018 益材集团
                 </Fragment>
               }
-            />
+              />
           </Footer>
         </Layout>
       </Layout>

@@ -8,7 +8,7 @@ class TenantManage extends Component {
   constructor() {
     super()
     this.state = {
-      validateTenantCode:0,
+      validateTenantCode: 0,
     }
   }
   render() {
@@ -51,27 +51,27 @@ class TenantManage extends Component {
       name: 'name',
       type: 'text',
       required: true,
-    },{
-    key: 2,
-    label: '租户编码',
-    name: 'tenantCode',
-    type: 'text',
+    }, {
+      key: 2,
+      label: '租户编码',
+      name: 'tenantCode',
+      type: 'text',
       required: true,
       verifyUnique: true,
-        verifyFunc: (tenantCode) => {
-          this.props.dispatch({
-            type: 'tenantManage/validateTenantCode',
-            payload: {
-              tenantCode,
-            },
-            callback: (code)=>{
-              this.setState({
-                validateTenantCode: code,
-              })
-            },
-          })
-        },
-  },
+      verifyFunc: (tenantCode) => {
+        this.props.dispatch({
+          type: 'tenantManage/validateTenantCode',
+          payload: {
+            tenantCode,
+          },
+          callback: (code) => {
+            this.setState({
+              validateTenantCode: code,
+            })
+          },
+        })
+      },
+    },
     {
       key: 3,
       label: '租户信息',
@@ -95,8 +95,8 @@ class TenantManage extends Component {
           name: '启用',
         },
       ],
-  },{
-    key: 5,
+    }, {
+      key: 5,
       label: '是否可修改出厂时间',
       name: 'modifyOutTimeFlag',
       type: 'radio',
@@ -111,7 +111,7 @@ class TenantManage extends Component {
           name: '不可修改',
         },
       ],
-  }]
+    }]
     const tenantProps = {
       columns,
       data,
@@ -120,7 +120,7 @@ class TenantManage extends Component {
       addBtn: true,
       updateBtn: true,
       checkBtn: true,
-      deleteBtn: true,
+      deleteBtn: false,
       pagination: false,
       handleCreate: (values) => {
         this.props.dispatch({
