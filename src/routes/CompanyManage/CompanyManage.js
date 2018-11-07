@@ -78,31 +78,38 @@ class CompanyManage extends Component {
           if (record.status === 1) return <span><Tooltip title="此公司已被停用"><Badge status="error" /></Tooltip>{text}</span>
           else return <span>{text}</span>
         },
+        width: 150,
       },
       {
         title: '城市',
         dataIndex: 'city',
+        width: 100,
       },
       {
         title: '地址',
         dataIndex: 'address',
+        width: 100,
       },
       {
         title: '联系人',
         dataIndex: 'contacts',
+        width: 100,
       },
       {
         title: '电话',
         dataIndex: 'phone',
+        width: 100,
       },
       {
         title: '备注',
         dataIndex: 'remark',
+        width: 100,
       },
       {
         title: '状态',
         dataIndex: 'status',
         render: text => (text === 0 ? <span>启用</span> : <span className={commonStyles.disableState}>停用</span>),
+        width: 100,
       },
     ]
     const { total } = this.props.companyManage
@@ -182,7 +189,7 @@ class CompanyManage extends Component {
     ]
     const showTotal = () => `共${total}条数据`
     const companyProps = {
-      scrollY:600,
+      scrollY: 600,
       columns,
       data,
       fmFields,
@@ -242,7 +249,7 @@ class CompanyManage extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-        >
+          >
           <Row gutter={32} className={commonStyles.form}>
             <Col {...filterFormLayout} >
               <FormItem label='名称' {...formItemLayout} className={commonStyles.formItem}>
