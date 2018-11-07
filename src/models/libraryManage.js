@@ -76,6 +76,7 @@ export default {
           type: 'success',
           payload: {
             data: res.data.rows,
+            total: res.data.total,
           },
         })
       }
