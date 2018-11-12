@@ -224,9 +224,10 @@ class OutboundFilter extends Component {
     this.props.form.validateFields((err, values) => {
       const startTime = values.createTime && moment(values.createTime[0]).format('YYYY-MM-DD HH:mm:ss')
       const endTime = values.createTime && moment(values.createTime[1]).format('YYYY-MM-DD HH:mm:ss')
+      const token = sessionStorage.getItem('token')
       let url
-      if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}`
-      else url = `/api/file/delivery/export`
+      if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}&token=${token}`
+      else url = `/api/file/delivery/export&token=${token}`
       document.getElementById("ifile").src = url;
     })
   }

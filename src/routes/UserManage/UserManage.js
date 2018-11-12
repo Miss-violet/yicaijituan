@@ -187,8 +187,7 @@ class UserManage extends Component {
            * 超级管理员('0') - 可新建 超级管理员、管理员 和 成员
            * 管理员('1')     - 可新建 成员 （20180706 - 对管理员暂不开放用户管理菜单操作权限）
            */
-          const cookie = sessionStorage.getItem('cookie').split('&&')
-          const role = cookie && cookie[1]
+          const role = sessionStorage.getItem('role')
           let roleData
           switch (role) {
             case '0':
@@ -356,7 +355,7 @@ class UserManage extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={32} className={commonStyles.form}>
             <span style={{ padding: 0 }}>
               <Col {...filterFormLayout} >

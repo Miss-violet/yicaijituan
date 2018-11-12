@@ -61,12 +61,13 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
+      const {data} = payload
       if (payload.code === 0) {
-        // document.cookie = `${payload.data.token}&&${payload.data.role}`;
-        sessionStorage.setItem('cookie', `${payload.data.token}&&${payload.data.role}`);
+        sessionStorage.setItem('token', `${data.token}`)
+        sessionStorage.setItem('role', `${data.role}`)
       } else {
-        // document.cookie = '';
-        sessionStorage.setItem('cookie', '');
+        sessionStorage.setItem('token', '')
+        sessionStorage.setItem('role', '')
       }
       setAuthority(payload.currentAuthority);
       return {

@@ -43,33 +43,8 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-  // const cookie = document.cookie.split('&&')
-  // const token = cookie[0]
 
-  let cookie = '';
-  let token = '';
-  // if (document.cookie) {
-  //   // cookie = document.cookie.split('&&');
-  //   if (cookie && cookie.indexOf(';') > -1) {
-  //     cookie = cookie[0].split(';');
-  //     cookie = cookie && cookie[cookie.length];
-  //     cookie = cookie.split('&&');
-  //     token = cookie && cookie[0];
-  //   } else {
-  //     cookie = document.cookie.split('&&');
-  //     token = cookie && cookie[0];
-  //   }
-  // } else {
-  //   cookie = sessionStorage.getItem('cookie');
-
-  //   cookie = cookie && cookie.split('&&');
-  //   token = cookie && cookie[0];
-  // }
-  cookie = sessionStorage.getItem('cookie');
-
-  cookie = cookie && cookie.split('&&');
-  token = cookie && cookie[0];
-
+  const token = sessionStorage.getItem('token')
   const defaultOptions = {
     credentials: 'include',
   };
@@ -119,8 +94,8 @@ export default function request(url, options) {
           responseData.code === 4001 ||
           responseData.code === 4002
         ) {
-          // document.cookie = '';
-          sessionStorage.setItem('cookie', '');
+          sessionStorage.setItem('role', '');
+          sessionStorage.setItem('token', '')
           store.dispatch(routerRedux.push('/user/login'));
         }
       }

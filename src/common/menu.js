@@ -39,12 +39,8 @@ const menuData = [
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {
-  /* 从cookie中拿到角色 */
-  let cookie = ''
-  let role = ''
-  cookie = sessionStorage.getItem('cookie')
-  cookie = cookie && cookie.split('&&')
-  role = cookie && cookie[1]
+  /* 从 sessionStorage 中拿到角色 */
+  const role = sessionStorage.getItem('role')
 
   return data.map(item => {
     let { path } = item;
