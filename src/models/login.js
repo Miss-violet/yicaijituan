@@ -70,17 +70,18 @@ export default {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
         const {data} = payload
-        // document.cookie = `${payload.data.token}&&${payload.data.role}`;
-        sessionStorage.setItem('cookie', `${data.token}&&${data.role}`);
+        sessionStorage.setItem('token', `${data.token}`)
+        sessionStorage.setItem('role', `${data.role}`)
         sessionStorage.setItem('userId', `${data.id}`)
         sessionStorage.setItem('loginName', `${data.loginName}`)
         sessionStorage.setItem('companyId', `${data.companyId}`)
       } else {
-        // document.cookie = '';
-        sessionStorage.setItem('cookie', '');
+       sessionStorage.setItem('token', '')
+        sessionStorage.setItem('role', '')
           sessionStorage.setItem('userId', '')
           sessionStorage.setItem('loginName', '')
           sessionStorage.setItem('companyId', '')
+
       }
       setAuthority(payload.currentAuthority);
       return {

@@ -150,7 +150,7 @@ class BasicLayout extends React.PureComponent {
       );
 
       /* 如果没有token，则跳转到登录页 */
-      if (!sessionStorage.getItem('cookie')) {
+      if (!sessionStorage.getItem('token')) {
         authorizedPath = '/user/login'
       }
       return authorizedPath;

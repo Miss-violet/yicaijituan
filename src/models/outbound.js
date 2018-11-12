@@ -28,8 +28,7 @@ export default {
     setup({ dispatch, history }) {
       return history.listen((location) => {
         if (location.pathname === '/outbound') {
-          // if (!document.cookie && sessionStorage.getItem('cookie') === '') {
-          if (sessionStorage.getItem('cookie') === '') {
+          if (sessionStorage.getItem('token') === '') {
             dispatch(routerRedux.push({
               pathname: '/user/login',
             }))
