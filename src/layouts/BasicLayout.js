@@ -105,8 +105,8 @@ class BasicLayout extends React.PureComponent {
         isMobile: mobile,
       });
     });
-    /* 获取当前用户，防止重新打开页面时因为没有cookie报错 */
-    if (sessionStorage.getItem('cookie')) {
+    /* 获取当前用户，防止重新打开页面时因为没有token报错 */
+    if (sessionStorage.getItem('token')) {
       this.props.dispatch({
         type: 'login/fetchCurrent',
       });

@@ -12,8 +12,7 @@ export default {
     setup({ dispatch, history }) {
       return history.listen((location) => {
         if (location.pathname === '/libraryManage') {
-          // if (!document.cookie && sessionStorage.getItem('cookie') === '') {
-          if (sessionStorage.getItem('cookie') === '') {
+          if (sessionStorage.getItem('token') === '') {
             dispatch(routerRedux.push({
               pathname: '/user/login',
             }))
