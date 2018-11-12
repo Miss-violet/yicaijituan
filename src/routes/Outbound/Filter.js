@@ -227,7 +227,7 @@ class OutboundFilter extends Component {
       const token = sessionStorage.getItem('token')
       let url
       if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}&token=${token}`
-      else url = `/api/file/delivery/export&token=${token}`
+      else url = `/api/file/delivery/export?token=${token}`
       document.getElementById("ifile").src = url;
     })
   }
