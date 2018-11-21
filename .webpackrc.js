@@ -23,7 +23,7 @@ export default {
   hash: true,
   proxy: {
     "/api": {
-      "target": "http://www.yicaijituan.cn:8091/api/",
+      "target": "http://sn.51flyash.com:8091/api/",
       "changeOrigin": true,
       "pathRewrite": {
         "^/api": ""
