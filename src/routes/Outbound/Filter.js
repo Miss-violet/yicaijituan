@@ -173,9 +173,9 @@ class OutboundFilter extends Component {
                 <FormItem label='级别' {...formItemLayout} className={styles.formItem}>
                   {getFieldDecorator('level')(
                     <Select allowClear>
-                      <Option value='0' key='0'> I级</Option>
-                      <Option value='1' key='1'> II级</Option>
-                      <Option value='2' key='2'> III级</Option>
+                      <Option value='0' key='0'> Ⅰ级</Option>
+                      <Option value='1' key='1'> Ⅱ级</Option>
+                      <Option value='2' key='2'> Ⅲ级</Option>
                     </Select>
                   )}
                 </FormItem>

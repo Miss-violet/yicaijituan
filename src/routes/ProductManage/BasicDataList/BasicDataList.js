@@ -84,7 +84,7 @@ class BasicDataList extends Component {
         },
       },
       {
-        title: 'I级指标',
+        title: 'Ⅰ级指标',
         dataIndex: 'oneLevel',
         width: '12%',
         render: (text, record) => (
@@ -99,7 +99,7 @@ class BasicDataList extends Component {
         ),
       },
       {
-        title: 'II级指标',
+        title: 'Ⅱ级指标',
         dataIndex: 'twoLevel',
         width: '12%',
         render: (text, record) => (
@@ -114,7 +114,7 @@ class BasicDataList extends Component {
         ),
       },
       {
-        title: 'III级指标',
+        title: 'Ⅲ级指标',
         dataIndex: 'threeLevel',
         width: '12%',
         render: (text, record) => (

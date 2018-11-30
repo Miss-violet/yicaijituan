@@ -18,7 +18,7 @@ class ScanResult extends Component {
           <li>客户名称：{detail && detail.customer}</li>
           <li>品名：{detail && '粉煤灰'}</li>
           <li>
-            级别：{detail && (detail.level === 0 ? 'I级' : detail.level === 1 ? 'II级' : 'III级')}
+            级别：{detail && (detail.level === 0 ? 'Ⅰ级' : detail.level === 1 ? 'Ⅱ级' : 'Ⅲ级')}
           </li>
           <li>运输车号：{detail && detail.carNo}</li>
           <li>皮重（kg）：{detail && Number(detail.tareWeight).toLocaleString()}</li>

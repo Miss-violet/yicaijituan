@@ -144,7 +144,7 @@ class List extends Component {
       {
         title: '级别',
         dataIndex: 'level',
-        render: text => (text === 0 ? 'I级' : text === 1 ? 'II级' : 'III级'),
+        render: text => (text === 0 ? 'Ⅰ级' : text === 1 ? 'Ⅱ级' : 'Ⅲ级'),
         width: 150,
       },
       {

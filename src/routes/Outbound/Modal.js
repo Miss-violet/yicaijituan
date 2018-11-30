@@ -261,9 +261,12 @@ class EditModal extends Component {
                   selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
-                    <Option value="0">I级</Option>
-                    <Option value="1">II级</Option>
-                    <Option value="2">III级</Option>
+                    <Option value="0">Ⅰ级</Option>
+                    <Option value="1">Ⅱ级</Option>
+                    <Option value="2">Ⅲ级</Option>
+                    <Option value="3">Ⅲw级</Option>
+                    <Option value="4">干渣</Option>
+                    <Option value="5">调湿灰</Option>
                   </Select>
                   )}
               </FormItem>
@@ -377,6 +380,8 @@ class EditModal extends Component {
                 })(
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
+                    <Option value="1">加工灰</Option>
+                    <Option value="2">原灰</Option>
                   </Select>
                   )}
               </FormItem>
@@ -578,10 +583,10 @@ class EditModal extends Component {
     levelInitial =
       levelInitial !== undefined
         ? levelInitial === 0
-          ? 'I'
+          ? 'Ⅰ'
           : levelInitial === 1
-            ? 'II'
-            : 'III'
+            ? 'Ⅱ'
+            : 'Ⅲ'
         : '';
     return (
       <div>
@@ -598,9 +603,9 @@ class EditModal extends Component {
                   <th rowSpan="2">检验结果</th>
                 </tr>
                 <tr>
-                  <th>I级</th>
-                  <th>II级</th>
-                  <th>III级</th>
+                  <th>Ⅰ级</th>
+                  <th>Ⅱ级</th>
+                  <th>Ⅲ级</th>
                 </tr>
               </thead>
               <tbody>
@@ -703,7 +708,6 @@ class EditModal extends Component {
               {getFieldDecorator('grossWeight', {
                 rules: [
                   {
-                    required: true,
                     message: '请填写毛重',
                   },
                 ],
@@ -723,7 +727,6 @@ class EditModal extends Component {
               {getFieldDecorator('tareWeight', {
                 rules: [
                   {
-                    required: true,
                     message: '请填写皮重',
                   },
                 ],
@@ -743,7 +746,6 @@ class EditModal extends Component {
               {getFieldDecorator('netWeight', {
                 rules: [
                   {
-                    required: true,
                     message: '请填写净重',
                   },
                 ],
@@ -795,8 +797,8 @@ class EditModal extends Component {
                     message: '请填写出厂批号',
                   },
                 ],
-                initialValue: selectedDetail.batchNo,
-              })(<Input disabled={disabled} />)}
+                initialValue: selectedDetail.batchNo || `HX${moment().format('YYYYMMDD')}`,
+              })(<Input disabled />)}
             </FormItem>
           </Col>
         </Row>

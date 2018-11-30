@@ -95,17 +95,17 @@ class ProductManage extends Component {
         render: text => (text === 0 ? '≤（小于等于）' : '≥（大于等于）'),
       },
       {
-        title: 'I级指标',
+        title: 'Ⅰ级指标',
         dataIndex: 'oneLevel',
         width: '15%',
       },
       {
-        title: 'II级指标',
+        title: 'Ⅱ级指标',
         dataIndex: 'twoLevel',
         width: '15%',
       },
       {
-        title: 'III级指标',
+        title: 'Ⅲ级指标',
         dataIndex: 'threeLevel',
         width: '15%',
       },
