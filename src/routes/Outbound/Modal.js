@@ -580,99 +580,114 @@ class EditModal extends Component {
       });
     };
     let levelInitial = Number(levelSelected || level);
-    levelInitial =
-      levelInitial !== undefined
-        ? levelInitial === 0
-          ? 'Ⅰ'
-          : levelInitial === 1
-            ? 'Ⅱ'
-            : 'Ⅲ'
-        : '';
-    return (
-      <div>
-        <fieldset>
-          <legend> 检查结果</legend>
-        </fieldset>
-        <Row>
-          <Col {...tableColLayout}>
-            <table className={commonStyles.table}>
-              <thead>
-                <tr>
-                  <th rowSpan="2">项目</th>
-                  <th colSpan="3">国家标准</th>
-                  <th rowSpan="2">检验结果</th>
-                </tr>
-                <tr>
-                  <th>Ⅰ级</th>
-                  <th>Ⅱ级</th>
-                  <th>Ⅲ级</th>
-                </tr>
-              </thead>
-              <tbody>
-                {standardsData &&
-                  standardsData.map(item => {
-                    return (
-                      <tr key={item.standardId}>
-                        <td>{item.name || item.standardName}</td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.oneLevel}
-                        </td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.twoLevel}
-                        </td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.threeLevel}
-                        </td>
-                        <td>
-                          <FormItem>
-                            {getFieldDecorator(`${item.standardId}`, {
-                              rules: [
-                                // {
-                                //   required: true,
-                                //   message: `填写检验结果`,
-                                // },
-                                {
-                                  validator: (rule, value, callback) =>
-                                    this.validateParameter(rule, value, callback, item),
-                                },
-                              ],
-                              initialValue: item.parameter,
-                            })(
-                              <Input
-                                className={styles.inputNumber}
-                                onBlur={e => inputOnBlur(e, item)}
-                                disabled={disabled}
-                                />
-                              )}
-                          </FormItem>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td>结果评定</td>
-                  <td colSpan="4">
-                    <div>
-                      <p>
-                        {resultOk ? '符合' : '不符合'}
-                        GB/T 1596-2017 国家标准F类
-                        <span className={styles.resultLevel}>{levelInitial || ''}</span>级技术要求。
-                      </p>
-                      <p>{remark}</p>
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </Col>
-        </Row>
-      </div>
-    );
+    switch (levelInitial) {
+      case 0:
+        levelInitial = 'Ⅰ'
+        break
+      case 1:
+        levelInitial = 'Ⅱ'
+        break
+      case 2:
+        levelInitial = 'Ⅲ'
+        break
+      case 3:
+        levelInitial = 'Ⅲw'
+        break
+      case 4:
+        levelInitial = '干渣'
+        break
+      case 5:
+        levelInitial = '调湿灰'
+        break
+      default:
+        levelInitial = ''
+        break
+    }
+
+    if (levelInitial === 'Ⅰ' || levelInitial === 'Ⅱ' || levelInitial === 'Ⅲ') {
+      return (
+        <div>
+          <fieldset>
+            <legend> 检查结果</legend>
+          </fieldset>
+          <Row>
+            <Col {...tableColLayout}>
+              <table className={commonStyles.table}>
+                <thead>
+                  <tr>
+                    <th rowSpan="2">项目</th>
+                    <th colSpan="3">国家标准</th>
+                    <th rowSpan="2">检验结果</th>
+                  </tr>
+                  <tr>
+                    <th>Ⅰ级</th>
+                    <th>Ⅱ级</th>
+                    <th>Ⅲ级</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {standardsData &&
+                    standardsData.map(item => {
+                      return (
+                        <tr key={item.standardId}>
+                          <td>{item.name || item.standardName}</td>
+                          <td className={commonStyles.alignRight}>
+                            {item.type === 0 ? '≤' : '≥'}
+                            {item.oneLevel}
+                          </td>
+                          <td className={commonStyles.alignRight}>
+                            {item.type === 0 ? '≤' : '≥'}
+                            {item.twoLevel}
+                          </td>
+                          <td className={commonStyles.alignRight}>
+                            {item.type === 0 ? '≤' : '≥'}
+                            {item.threeLevel}
+                          </td>
+                          <td>
+                            <FormItem>
+                              {getFieldDecorator(`${item.standardId}`, {
+                                rules: [
+                                  {
+                                    validator: (rule, value, callback) =>
+                                      this.validateParameter(rule, value, callback, item),
+                                  },
+                                ],
+                                initialValue: item.parameter,
+                              })(
+                                <Input
+                                  className={styles.inputNumber}
+                                  onBlur={e => inputOnBlur(e, item)}
+                                  disabled={disabled}
+                                  />
+                                )}
+                            </FormItem>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>结果评定</td>
+                    <td colSpan="4">
+                      <div>
+                        <p>
+                          {resultOk ? '符合' : '不符合'}
+                          GB/T 1596-2017 国家标准F类
+                          <span className={styles.resultLevel}>{levelInitial || ''}</span>级技术要求。
+                        </p>
+                        <p>{remark}</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </Col>
+          </Row>
+        </div>
+      );
+
+    }
   };
 
   /* 相关信息 */
@@ -706,11 +721,6 @@ class EditModal extends Component {
           <Col {...formColLayout}>
             <FormItem label="毛重（kg）" {...formItemLayout}>
               {getFieldDecorator('grossWeight', {
-                rules: [
-                  {
-                    message: '请填写毛重',
-                  },
-                ],
                 initialValue: selectedDetail.grossWeight,
               })(
                 <InputNumber
@@ -725,11 +735,6 @@ class EditModal extends Component {
           <Col {...formColLayout}>
             <FormItem label="皮重（kg）" {...formItemLayout}>
               {getFieldDecorator('tareWeight', {
-                rules: [
-                  {
-                    message: '请填写皮重',
-                  },
-                ],
                 initialValue: selectedDetail.tareWeight,
               })(
                 <InputNumber
@@ -744,11 +749,6 @@ class EditModal extends Component {
           <Col {...formColLayout}>
             <FormItem label="净重（kg）" {...formItemLayout}>
               {getFieldDecorator('netWeight', {
-                rules: [
-                  {
-                    message: '请填写净重',
-                  },
-                ],
                 initialValue: selectedDetail.netWeight,
               })(
                 <InputNumber
