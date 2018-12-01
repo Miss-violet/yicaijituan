@@ -376,7 +376,7 @@ class EditModal extends Component {
                       message: '请选择工艺',
                     },
                   ],
-                  initialValue: selectedDetail.techno === 0 ? '0' : '',
+                  initialValue: selectedDetail.techno !== undefined ? String(selectedDetail.techno) : '',
                 })(
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>

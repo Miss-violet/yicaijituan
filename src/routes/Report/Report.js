@@ -17,6 +17,43 @@ class Report extends Component {
       [commonStyles.table]: true,
       [styles.table]: true,
     });
+    let techno = ''
+    let level = ''
+    switch (detail.techno) {
+      case 0:
+        techno = '分选'
+        break
+      case 1:
+        techno = '加工灰'
+        break
+      case 2:
+        techno = '原灰'
+        break
+      default:
+        break
+    }
+    switch (detail.level) {
+      case 0:
+        level = 'Ⅰ级'
+        break
+      case 1:
+        level = 'Ⅱ级'
+        break
+      case 2:
+        level = 'Ⅲ级'
+        break
+      case 3:
+        level = 'Ⅲw级'
+        break
+      case 4:
+        level = '干渣'
+        break
+      case 5:
+        level = '调湿灰'
+        break
+      default:
+        break
+    }
     return (
       <Row gutter={16} className={styles.row}>
         <Col span={8} className={styles.leftCol}>
@@ -28,13 +65,17 @@ class Report extends Component {
             <p className={styles.name}>出厂合格证</p>
           </h1>
           <div className={styles.qrCode}>
-            <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
+            {
+              detail.qrcodeUrl !== null ? (
+                <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
+              ) : ''
+            }
           </div>
           <ul className={styles.leftList}>
             <li>
               <span className={styles.label}>级别：</span>
               <div className={styles.content}>
-                <span>{detail.level === 0 ? 'Ⅰ级' : detail.level === 1 ? 'Ⅱ级' : 'Ⅲ级'}</span>
+                <span>{level}</span>
               </div>
             </li>
             <li>
@@ -100,7 +141,7 @@ class Report extends Component {
                   <li>
                     <span className={styles.label}>类别：</span>
                     <span className={styles.content}>
-                      {detail.level === 0 ? 'Ⅰ类' : detail.level === 1 ? 'Ⅱ类' : 'Ⅲ类'}
+                      {level}
                     </span>
                   </li>
                 </ul>
@@ -113,7 +154,10 @@ class Report extends Component {
                   </li>
                   <li>
                     <span className={styles.label}>工艺：</span>
-                    <span className={styles.content}>{detail.techno === 0 ? '分选' : ''}</span>
+                    <span className={styles.content}>{
+                      techno
+                    }
+                    </span>
                   </li>
                   <li>
                     <span className={styles.label}>运输车号：</span>
@@ -123,63 +167,72 @@ class Report extends Component {
               </Col>
             </Row>
             <div className={styles.qrCode}>
-              <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
+              {
+                detail.qrcodeUrl ? (
+                  <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
+                ) : ''
+              }
             </div>
           </div>
-          <table className={table}>
-            <thead>
-              <tr>
-                <th rowSpan="2">项目</th>
-                <th colSpan="3">国家标准</th>
-                <th rowSpan="2">检验结果</th>
-              </tr>
-              <tr>
-                <th>Ⅰ级</th>
-                <th>Ⅱ级</th>
-                <th>Ⅲ级</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                /**
-                 *  item.type===1：大于等于
-                 *  item.type===0：小于等于
-                 */
-                detail.standards &&
-                detail.standards.map(item => (
+          {
+            (detail.level === 0 || detail.level === 1 || detail.level === 2) &&
+            (
+              <table className={table}>
+                <thead>
                   <tr>
-                    <td>{item.standardName}</td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.oneLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.twoLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.threeLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>{item.parameter}</td>
+                    <th rowSpan="2">项目</th>
+                    <th colSpan="3">国家标准</th>
+                    <th rowSpan="2">检验结果</th>
                   </tr>
-                ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td>结果评定</td>
-                <td colSpan="4">
-                  <p>
-                    GB/T 1596-2017 国家标准F类
-                    <span className={styles.resultLevel}>
-                      {detail.level === 0 ? 'Ⅰ' : detail.level === 1 ? 'Ⅱ' : 'Ⅲ'}
-                    </span>级技术要求。
-                  </p>
-                  <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+                  <tr>
+                    <th>Ⅰ级</th>
+                    <th>Ⅱ级</th>
+                    <th>Ⅲ级</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    /**
+                     *  item.type===1：大于等于
+                     *  item.type===0：小于等于
+                     */
+                    detail.standards &&
+                    detail.standards.map(item => (
+                      <tr>
+                        <td>{item.standardName}</td>
+                        <td className={commonStyles.alignRight}>
+                          {item.type === 0 ? '≤' : '≥'}
+                          {item.oneLevel}
+                        </td>
+                        <td className={commonStyles.alignRight}>
+                          {item.type === 0 ? '≤' : '≥'}
+                          {item.twoLevel}
+                        </td>
+                        <td className={commonStyles.alignRight}>
+                          {item.type === 0 ? '≤' : '≥'}
+                          {item.threeLevel}
+                        </td>
+                        <td className={commonStyles.alignRight}>{item.parameter}</td>
+                      </tr>
+                    ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>结果评定</td>
+                    <td colSpan="4">
+                      <p>
+                        GB/T 1596-2017 国家标准F类
+                        <span className={styles.resultLevel}>
+                          {level}
+                        </span>级技术要求。
+                      </p>
+                      <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            )
+          }
           <Row gutter={16}>
             <Col span={6} offset={8}>
               审核：{detail.auditor}
