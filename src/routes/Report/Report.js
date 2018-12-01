@@ -180,9 +180,9 @@ class Report extends Component {
               <table className={table}>
                 <thead>
                   <tr>
-                    <th rowSpan="2">项目</th>
-                    <th colSpan="3">国家标准</th>
-                    <th rowSpan="2">检验结果</th>
+                    <th rowSpan="2" className={styles.standardName}>项目</th>
+                    <th colSpan="3" className={styles.standards}>国家标准</th>
+                    <th rowSpan="2" className={styles.standardsResult}>检验结果</th>
                   </tr>
                   <tr>
                     <th>Ⅰ级</th>

@@ -70,11 +70,7 @@ ul {
     .content {
         border-bottom: 1px solid #000;
         text-align: center;
-        width: 60%; // span {
-        //     display: inline-block;
-        //     text-decoration: underline;
-        //     width: 100%;
-        // }
+        width: 60%;
     }
     .qrCode {
         margin: 30px 20px 45px 0;
@@ -87,11 +83,17 @@ ul {
     }
     .rightList {
         flex: 5;
+        ul {
+            margin-bottom: 10px;
+        }
         li {
+            line-height: 28px;
             list-style-type: none;
             width: 100%;
         }
         .label {
+            height: 28px;
+            line-height: 28px;
             width: 35%;
         }
         .content {
@@ -100,7 +102,7 @@ ul {
     }
     .name {
         font-size: 20px;
-        margin-bottom: 45px;
+        margin-bottom: 33px;
         text-align: center;
         text-decoration: underline;
         .title {
@@ -109,8 +111,9 @@ ul {
     }
     .qrCode {
         flex: 1;
+        margin-bottom: 10px;
         margin-right: 29px;
-        padding-top: 19px;
+        padding-top: 13px;
         img {
             max-height: 60%;
             max-width: 60%;
@@ -125,6 +128,15 @@ ul {
         td {
             border-bottom: 1px solid #000;
             border-right: 1px solid #000;
+        }
+        .standardName {
+            width: 40%;
+        }
+        .standards {
+            width: 45%;
+        }
+        .standardsResult {
+            width: 15%;
         }
     }
     .resultLevel {
