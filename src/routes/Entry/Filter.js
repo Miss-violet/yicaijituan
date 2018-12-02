@@ -17,7 +17,7 @@ class OutboundFilter extends Component {
 
   getFields() {
     const { getFieldDecorator } = this.props.form;
-    const { companyAllSelectList, manufacturerSelectList, productSelectList, role } = this.props
+    const { role } = this.props
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -80,14 +80,14 @@ class OutboundFilter extends Component {
       <Row gutter={32} className={styles.form}>
         <span style={{ padding: 0 }}>
           <Col {...filterFormLayout} >
-            <FormItem label='出库编号' {...formItemLayout} className={styles.formItem}>
+            <FormItem label='入库编号' {...formItemLayout} className={styles.formItem}>
               {getFieldDecorator('deliveryNo')(
                 <Input />
               )}
             </FormItem>
           </Col>
           <Col {...filterFormLayout}>
-            <FormItem label='出厂日期' {...formItemLayout} className={styles.formItem}>
+            <FormItem label='打灰日期' {...formItemLayout} className={styles.formItem}>
               {getFieldDecorator('outTime')(
                 <RangePicker
                   showTime={{ format: 'HH:mm:ss' }}
@@ -123,39 +123,14 @@ class OutboundFilter extends Component {
               <Col {...filterFormLayout}>
                 <FormItem label='公司名称' {...formItemLayout} className={styles.formItem}>
                   {getFieldDecorator('distributorId')(
-                    <Select allowClear showSearch optionFilterProp="children">
-                      {
-                        companyAllSelectList && companyAllSelectList.map(item =>
-                          <Option key={item.id} value={item.id}>{item.name}</Option>
-                        )
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col {...filterFormLayout}>
-                <FormItem label='生厂商名称' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('supplierId')(
-                    <Select allowClear>
-                      {
-                        manufacturerSelectList && manufacturerSelectList.map(item =>
-                          <Option key={item.id} value={item.id}>{item.name}</Option>
-                        )
-                      }
-                    </Select>
+                    <Input />
                   )}
                 </FormItem>
               </Col>
               <Col {...filterFormLayout}>
                 <FormItem label='产品名称' {...formItemLayout} className={styles.formItem}>
                   {getFieldDecorator('productId')(
-                    <Select allowClear>
-                      {
-                        productSelectList && productSelectList.map(item =>
-                          <Option key={item.id} value={item.id}>{item.name}</Option>
-                        )
-                      }
-                    </Select>
+                    <Input />
                   )}
                 </FormItem>
               </Col>
@@ -165,17 +140,6 @@ class OutboundFilter extends Component {
                     <Select allowClear>
                       <Option value='0' key='0'> 启用</Option>
                       <Option value='1' key='1'> 停用</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col {...filterFormLayout}>
-                <FormItem label='级别' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('level')(
-                    <Select allowClear>
-                      <Option value='0' key='0'> Ⅰ级</Option>
-                      <Option value='1' key='1'> Ⅱ级</Option>
-                      <Option value='2' key='2'> Ⅲ级</Option>
                     </Select>
                   )}
                 </FormItem>
@@ -233,7 +197,6 @@ class OutboundFilter extends Component {
   }
 
   render() {
-    const { role } = this.props
     return (
       <div>
         <Form
@@ -248,16 +211,6 @@ class OutboundFilter extends Component {
               <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
                 <Icon type="reload" />重置
               </Button>
-              {
-                (role === '0' || role === '1') && (
-                  <span>
-                    <a className={styles.exportBtn} onClick={this.handleExport}>
-                      <Icon type="export" /> 导出
-                    </a>
-                    <iframe title="ifile" id="ifile" style={{ display: 'none' }} />
-                  </span>
-                )
-              }
             </Col>
           </Row>
         </Form>

@@ -33,7 +33,7 @@ class Entry extends Component {
       this.setState({
         selectedDetail: {},     /* 如果是新增，则打开的弹窗里没有单据详情。防止选中后打开带入数据 */
         disabled: false,
-        title: "合格证数据新增",
+        title: "入库单数据新增",
         modalVisible: true,
         type,
       })
@@ -60,14 +60,14 @@ class Entry extends Component {
     }
     if (type === 'edit') {
       this.setState({
-        title: '合格证数据编辑',
+        title: '入库单数据编辑',
         disabled: false,
         modalVisible: true,
         type,
       })
     } else if (type === 'check') {
       this.setState({
-        title: '合格证数据查看',
+        title: '入库单数据查看',
         disabled: true,
         modalVisible: true,
         type,
@@ -89,7 +89,7 @@ class Entry extends Component {
       selectedStatus: selectedRows[0].status,
     })
   }
-  /* 修改 出库单 状态 */
+  /* 修改 入库单 状态 */
   changeStatus = () => {
     const id = this.state.selectedRows.id
     const status = this.state.selectedRows.status === 0 ? 1 : 0

@@ -176,6 +176,9 @@ class OutboundFilter extends Component {
                       <Option value='0' key='0'> Ⅰ级</Option>
                       <Option value='1' key='1'> Ⅱ级</Option>
                       <Option value='2' key='2'> Ⅲ级</Option>
+                      <Option value='3' key='3'> Ⅲw级</Option>
+                      <Option value='4' key='4'> 干渣</Option>
+                      <Option value='5' key='5'> 调湿灰</Option>
                     </Select>
                   )}
                 </FormItem>

@@ -54,8 +54,8 @@ class List extends Component {
                 </span>
               ) : (
                 <span>
-                  <Icon type="check" />启用
-                </span>
+                    <Icon type="check" />启用
+                  </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -77,9 +77,9 @@ class List extends Component {
           </span>
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>
-          <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条出库单；</span>
+          <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条入库单；</span>
           <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : (Number(sumNetweight) / 1000).toLocaleString()} </span>吨；</span>
-          <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
+          <span>入库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
           <span>【数据统计请根据出厂日期筛选统计；若无筛选条件则默认统计当月数据。】</span>
         </div>
       </div>
@@ -144,13 +144,45 @@ class List extends Component {
       {
         title: '级别',
         dataIndex: 'level',
-        render: text => (text === 0 ? 'Ⅰ级' : text === 1 ? 'Ⅱ级' : 'Ⅲ级'),
+        render: text => {
+          switch (text) {
+            case 0:
+              return 'Ⅰ级'
+            case 1:
+              return 'Ⅱ级'
+            case 2:
+              return 'Ⅲ级'
+            case 3:
+              return 'Ⅲw级'
+            case 4:
+              return '干渣'
+            case 5:
+              return '调湿灰'
+            default:
+              break
+          }
+        },
         width: 150,
       },
       {
         title: '工艺',
         dataIndex: 'techno',
-        render: text => (text === 0 ? '分选' : ''),
+        render: text => {
+          switch (text) {
+            case 0:
+              return '分选'
+            case 1:
+              return '加工灰（Ⅰ级）'
+            case 2:
+              return '加工灰（Ⅱ级）'
+            case 3:
+              return '加工灰（来料）'
+            case 4:
+              return '原灰'
+            default:
+              break
+          }
+        },
         width: 150,
       },
       {
@@ -198,7 +230,7 @@ class List extends Component {
           pagination={this.state.pagination}
           onChange={handleTableChange}
           scroll={{ x: 2700, y: 600 }}
-          />
+        />
       </div>
     );
   }

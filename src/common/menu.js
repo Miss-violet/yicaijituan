@@ -2,6 +2,11 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
+    name: '入库单',
+    path: 'entry',
+    icon: 'file',
+  },
+  {
     name: '出库单',
     path: 'outbound',
     icon: 'file',

@@ -1,9 +1,9 @@
 import { routerRedux } from 'dva/router'
-import { outboundList, create, update, status, info, cars, statistics } from '../services/entry'
+import { outboundList, create, update, status, info } from '../services/entry'
+import { cars } from '../services/outbound'
+
 
 import { manufacturerList } from '../services/manufacturerManage'
-import { companyListAll } from '../services/companyManage'
-import { productList } from '../services/productManage'
 import { entrepotListAll } from '../services/libraryManage'
 
 
@@ -14,14 +14,9 @@ export default {
   state: {
     listData: [],
     total: '',
-    manufacturerSelectList: [],
-    companyAllSelectList: [],
-    productSelectList: [],
     entrepotSelectList: [],
     selectedDetail: {},
     cars: [],
-    sumNetweight: '',
-    totalRecords: '',
   },
 
   subscriptions: {
@@ -81,28 +76,6 @@ export default {
         })
       }
 
-      /* 公司下拉列表 */
-      const companyAllRes = yield call(companyListAll, payload)
-      if (companyAllRes.code === 0) {
-        yield put({
-          type: 'success',
-          payload: {
-            companyAllSelectList: companyAllRes.data,
-          },
-        })
-      }
-
-      /* 产品下拉列表 */
-      const productRes = yield call(productList, payload)
-      if (productRes.code === 0) {
-        yield put({
-          type: 'success',
-          payload: {
-            productSelectList: productRes.data,
-          },
-        })
-      }
-
       /* 车牌号 */
       yield put({
         type: 'queryCars',
@@ -122,7 +95,6 @@ export default {
     },
     *queryList({ payload }, { call, put }) {
       const queryRes = yield call(outboundList, payload)
-      const statisticsRes = yield call(statistics, payload)
       if (queryRes.code === 0) {
         yield put({
           type: 'success',
@@ -134,16 +106,6 @@ export default {
         yield put({
           type: 'queryCars',
           payload: {},
-        })
-      }
-      if (statisticsRes.code === 0) {
-        const { sumNetweight, totalRecords } = statisticsRes.data
-        yield put({
-          type: 'success',
-          payload: {
-            sumNetweight,
-            totalRecords,
-          },
         })
       }
     },

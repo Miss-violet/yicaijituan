@@ -8,11 +8,10 @@ module.exports = {
             statistics: `/api/delivery/statistics`,
         },
         entry: {
-            list: `/api/delivery/list`,
-            create: `/api/delivery/create`,
-            update: `/api/delivery/update`,
+            list: `/api/warehouse/list`,
+            create: `/api/warehouse/create`,
+            update: `/api/warehouse/update`,
             cars: `api/delivery/cars`,
-            statistics: `/api/delivery/statistics`,
         },
         userManage: {
             create: `/api/user/create`,
