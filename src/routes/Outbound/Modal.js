@@ -380,8 +380,10 @@ class EditModal extends Component {
                 })(
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
-                    <Option value="1">加工灰</Option>
-                    <Option value="2">原灰</Option>
+                    <Option value="1">加工灰（Ⅰ级）</Option>
+                    <Option value="2">加工灰（Ⅱ级）</Option>
+                    <Option value="3">加工灰（来料）</Option>
+                    <Option value="4">原灰</Option>
                   </Select>
                   )}
               </FormItem>

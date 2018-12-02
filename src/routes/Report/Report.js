@@ -24,9 +24,15 @@ class Report extends Component {
         techno = '分选'
         break
       case 1:
-        techno = '加工灰'
+        techno = '加工灰（Ⅰ级）'
         break
       case 2:
+        techno = '加工灰（Ⅱ级）'
+        break
+      case 3:
+        techno = '加工灰（来料）'
+        break
+      case 4:
         techno = '原灰'
         break
       default:
@@ -224,7 +230,7 @@ class Report extends Component {
                         GB/T 1596-2017 国家标准F类
                         <span className={styles.resultLevel}>
                           {level}
-                        </span>级技术要求。
+                        </span>技术要求。
                       </p>
                       <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
                     </td>
