@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Button, Input, Select, DatePicker, Icon } from 'antd'
 import * as moment from 'moment'
-import styles from './outbound.less'
+import styles from './entry.less'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -17,7 +17,7 @@ class OutboundFilter extends Component {
 
   getFields() {
     const { getFieldDecorator } = this.props.form;
-    const { companyAllSelectList, manufacturerSelectList, productSelectList, role } = this.props
+    const { role } = this.props
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -80,21 +80,21 @@ class OutboundFilter extends Component {
       <Row gutter={32} className={styles.form}>
         <span style={{ padding: 0 }}>
           <Col {...filterFormLayout} >
-            <FormItem label='出库编号' {...formItemLayout} className={styles.formItem}>
-              {getFieldDecorator('deliveryNo')(
+            <FormItem label='入库编号' {...formItemLayout} className={styles.formItem}>
+              {getFieldDecorator('warehouseNo')(
                 <Input />
               )}
             </FormItem>
           </Col>
           <Col {...filterFormLayout}>
-            <FormItem label='出厂日期' {...formItemLayout} className={styles.formItem}>
-              {getFieldDecorator('outTime')(
+            <FormItem label='打灰日期' {...formItemLayout} className={styles.formItem}>
+              {getFieldDecorator('checkTime')(
                 <RangePicker
                   showTime={{ format: 'HH:mm:ss' }}
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                  />
+                />
               )}
             </FormItem>
           </Col>
@@ -110,7 +110,7 @@ class OutboundFilter extends Component {
                   filterOption={false}
                   onChange={handleChange}
                   onFocus={handleFocus}
-                  >
+                >
                   {options}
                 </Select>
               )}
@@ -122,40 +122,15 @@ class OutboundFilter extends Component {
             <span style={{ padding: 0 }}>
               <Col {...filterFormLayout}>
                 <FormItem label='公司名称' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('distributorId')(
-                    <Select allowClear showSearch optionFilterProp="children">
-                      {
-                        companyAllSelectList && companyAllSelectList.map(item =>
-                          <Option key={item.id} value={item.id}>{item.name}</Option>
-                        )
-                      }
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col {...filterFormLayout}>
-                <FormItem label='生厂商名称' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('supplierId')(
-                    <Select allowClear>
-                      {
-                        manufacturerSelectList && manufacturerSelectList.map(item =>
-                          <Option key={item.id} value={item.id}>{item.name}</Option>
-                        )
-                      }
-                    </Select>
+                  {getFieldDecorator('companyName')(
+                    <Input />
                   )}
                 </FormItem>
               </Col>
               <Col {...filterFormLayout}>
                 <FormItem label='产品名称' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('productId')(
-                    <Select allowClear>
-                      {
-                        productSelectList && productSelectList.map(item =>
-                          <Option key={item.id} value={item.id}>{item.name}</Option>
-                        )
-                      }
-                    </Select>
+                  {getFieldDecorator('productName')(
+                    <Input />
                   )}
                 </FormItem>
               </Col>
@@ -169,20 +144,6 @@ class OutboundFilter extends Component {
                   )}
                 </FormItem>
               </Col>
-              <Col {...filterFormLayout}>
-                <FormItem label='级别' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('level')(
-                    <Select allowClear>
-                      <Option value='0' key='0'> Ⅰ级</Option>
-                      <Option value='1' key='1'> Ⅱ级</Option>
-                      <Option value='2' key='2'> Ⅲ级</Option>
-                      <Option value='3' key='3'> Ⅲw级</Option>
-                      <Option value='4' key='4'> 干渣</Option>
-                      <Option value='5' key='5'> 调湿灰</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
             </span>
           )
         }
@@ -192,15 +153,15 @@ class OutboundFilter extends Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      const { outTime, ...rest } = values
+      const { checkTime, ...rest } = values
       let startTime
       let endTime
-      if (outTime === undefined || outTime.length < 1) {
+      if (checkTime === undefined || checkTime.length < 1) {
         startTime = ''
         endTime = ''
       } else {
-        startTime = moment(values.outTime[0]).format('YYYY-MM-DD HH:mm:ss')
-        endTime = moment(values.outTime[1]).format('YYYY-MM-DD HH:mm:ss')
+        startTime = moment(values.checkTime[0]).format('YYYY-MM-DD HH:mm:ss')
+        endTime = moment(values.checkTime[1]).format('YYYY-MM-DD HH:mm:ss')
       }
       this.props.handleSearch(
         {
@@ -222,27 +183,14 @@ class OutboundFilter extends Component {
     this.props.form.resetFields();
     this.props.handleReset()
   }
-  /* 导出 */
-  handleExport = () => {
-    this.props.form.validateFields((err, values) => {
-      const startTime = values.outTime && moment(values.outTime[0]).format('YYYY-MM-DD HH:mm:ss')
-      const endTime = values.outTime && moment(values.outTime[1]).format('YYYY-MM-DD HH:mm:ss')
-      const token = sessionStorage.getItem('token')
-      let url
-      if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}&token=${token}`
-      else url = `/api/file/delivery/export?token=${token}`
-      document.getElementById("ifile").src = url;
-    })
-  }
 
   render() {
-    const { role } = this.props
     return (
       <div>
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>
@@ -251,16 +199,6 @@ class OutboundFilter extends Component {
               <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
                 <Icon type="reload" />重置
               </Button>
-              {
-                (role === '0' || role === '1') && (
-                  <span>
-                    <a className={styles.exportBtn} onClick={this.handleExport}>
-                      <Icon type="export" /> 导出
-                    </a>
-                    <iframe title="ifile" id="ifile" style={{ display: 'none' }} />
-                  </span>
-                )
-              }
             </Col>
           </Row>
         </Form>

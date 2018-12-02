@@ -774,7 +774,7 @@ class EditModal extends Component {
                   },
                 ],
                 initialValue: selectedDetail.checker,
-              })(<Input disabled={disabled} />)}
+              })(<Input placeholder="请填写检验员" disabled={disabled} />)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
