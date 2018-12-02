@@ -4,7 +4,7 @@ const menuData = [
   {
     name: '入库单',
     path: 'entry',
-    icon: 'file',
+    icon: 'file-add',
   },
   {
     name: '出库单',
@@ -36,15 +36,15 @@ const menuData = [
     hideInMenu: '',
   },
   {
-    name: '操作日志',
-    path: 'journal',
-    icon: 'book',
-    hideInMenu: '',
-  },
-  {
     name: '库位管理',
     path: 'libraryManage',
     icon: 'inbox',
+    hideInMenu: '',
+  },
+  {
+    name: '操作日志',
+    path: 'journal',
+    icon: 'book',
     hideInMenu: '',
   },
 ];

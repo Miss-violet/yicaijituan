@@ -2,12 +2,6 @@ import { routerRedux } from 'dva/router'
 import { outboundList, create, update, status, info } from '../services/entry'
 import { cars } from '../services/outbound'
 
-
-import { manufacturerList } from '../services/manufacturerManage'
-import { entrepotListAll } from '../services/libraryManage'
-
-
-
 export default {
   namespace: 'entry',
 
@@ -66,15 +60,7 @@ export default {
     },
     *querySelectList({ payload }, { call, put }) {
       /* 生厂商下拉列表 */
-      const manufacturerRes = yield call(manufacturerList, payload)
-      if (manufacturerRes.code === 0) {
-        yield put({
-          type: 'success',
-          payload: {
-            manufacturerSelectList: manufacturerRes.data,
-          },
-        })
-      }
+      
 
       /* 车牌号 */
       yield put({
@@ -82,16 +68,6 @@ export default {
         payload: {},
       })
 
-      /* 库位下拉列表 */
-      const entrepotRes = yield call(entrepotListAll, payload)
-      if (entrepotRes.code === 0) {
-        yield put({
-          type: 'success',
-          payload: {
-            entrepotSelectList: entrepotRes.data,
-          },
-        })
-      }
     },
     *queryList({ payload }, { call, put }) {
       const queryRes = yield call(outboundList, payload)

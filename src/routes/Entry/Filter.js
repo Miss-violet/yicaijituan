@@ -81,20 +81,20 @@ class OutboundFilter extends Component {
         <span style={{ padding: 0 }}>
           <Col {...filterFormLayout} >
             <FormItem label='入库编号' {...formItemLayout} className={styles.formItem}>
-              {getFieldDecorator('deliveryNo')(
+              {getFieldDecorator('warehouseNo')(
                 <Input />
               )}
             </FormItem>
           </Col>
           <Col {...filterFormLayout}>
             <FormItem label='打灰日期' {...formItemLayout} className={styles.formItem}>
-              {getFieldDecorator('outTime')(
+              {getFieldDecorator('checkTime')(
                 <RangePicker
                   showTime={{ format: 'HH:mm:ss' }}
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                  />
+                />
               )}
             </FormItem>
           </Col>
@@ -110,7 +110,7 @@ class OutboundFilter extends Component {
                   filterOption={false}
                   onChange={handleChange}
                   onFocus={handleFocus}
-                  >
+                >
                   {options}
                 </Select>
               )}
@@ -122,14 +122,14 @@ class OutboundFilter extends Component {
             <span style={{ padding: 0 }}>
               <Col {...filterFormLayout}>
                 <FormItem label='公司名称' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('distributorId')(
+                  {getFieldDecorator('companyName')(
                     <Input />
                   )}
                 </FormItem>
               </Col>
               <Col {...filterFormLayout}>
                 <FormItem label='产品名称' {...formItemLayout} className={styles.formItem}>
-                  {getFieldDecorator('productId')(
+                  {getFieldDecorator('productName')(
                     <Input />
                   )}
                 </FormItem>
@@ -153,15 +153,15 @@ class OutboundFilter extends Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      const { outTime, ...rest } = values
+      const { checkTime, ...rest } = values
       let startTime
       let endTime
-      if (outTime === undefined || outTime.length < 1) {
+      if (checkTime === undefined || checkTime.length < 1) {
         startTime = ''
         endTime = ''
       } else {
-        startTime = moment(values.outTime[0]).format('YYYY-MM-DD HH:mm:ss')
-        endTime = moment(values.outTime[1]).format('YYYY-MM-DD HH:mm:ss')
+        startTime = moment(values.checkTime[0]).format('YYYY-MM-DD HH:mm:ss')
+        endTime = moment(values.checkTime[1]).format('YYYY-MM-DD HH:mm:ss')
       }
       this.props.handleSearch(
         {
@@ -183,18 +183,6 @@ class OutboundFilter extends Component {
     this.props.form.resetFields();
     this.props.handleReset()
   }
-  /* 导出 */
-  handleExport = () => {
-    this.props.form.validateFields((err, values) => {
-      const startTime = values.outTime && moment(values.outTime[0]).format('YYYY-MM-DD HH:mm:ss')
-      const endTime = values.outTime && moment(values.outTime[1]).format('YYYY-MM-DD HH:mm:ss')
-      const token = sessionStorage.getItem('token')
-      let url
-      if (startTime && endTime) url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}&token=${token}`
-      else url = `/api/file/delivery/export?token=${token}`
-      document.getElementById("ifile").src = url;
-    })
-  }
 
   render() {
     return (
@@ -202,7 +190,7 @@ class OutboundFilter extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>

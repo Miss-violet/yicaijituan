@@ -49,8 +49,8 @@ class List extends Component {
                 </span>
               ) : (
                 <span>
-                    <Icon type="check" />启用
-                  </span>
+                  <Icon type="check" />启用
+                </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -65,7 +65,7 @@ class List extends Component {
     const columns = [
       {
         title: '入库编号',
-        dataIndex: 'deliveryNo',
+        dataIndex: 'warehouseNo',
         fixed: 'left',
         render: (text, record) => {
           if (record.status === 1)
@@ -83,13 +83,13 @@ class List extends Component {
       },
       {
         title: '打灰时间',
-        dataIndex: 'outTime',
+        dataIndex: 'checkStartTime',
         render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         width: 200,
       },
       {
         title: '打灰结束日期',
-        dataIndex: 'deliveryTime',
+        dataIndex: 'checkOutTime',
         render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         width: 200,
         className: role === '2' ? 'hidden' : '',
@@ -101,7 +101,7 @@ class List extends Component {
       },
       {
         title: '公司名称',
-        dataIndex: 'distributorName',
+        dataIndex: 'companyName',
         width: 250,
       },
       {
