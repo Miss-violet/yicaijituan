@@ -131,10 +131,6 @@ export default {
             total: queryRes.data.total,
           },
         })
-        yield put({
-          type: 'queryCars',
-          payload: {},
-        })
       }
       if (statisticsRes.code === 0) {
         const { sumNetweight, totalRecords } = statisticsRes.data

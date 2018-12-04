@@ -176,8 +176,6 @@ class List extends Component {
             case 2:
               return '加工灰（Ⅱ级）'
             case 3:
-              return '加工灰（来料）'
-            case 4:
               return '原灰'
             default:
               break
@@ -230,7 +228,7 @@ class List extends Component {
           pagination={this.state.pagination}
           onChange={handleTableChange}
           scroll={{ x: 2700, y: 600 }}
-        />
+          />
       </div>
     );
   }

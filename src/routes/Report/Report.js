@@ -30,9 +30,6 @@ class Report extends Component {
         techno = '加工灰（Ⅱ级）'
         break
       case 3:
-        techno = '加工灰（来料）'
-        break
-      case 4:
         techno = '原灰'
         break
       default:

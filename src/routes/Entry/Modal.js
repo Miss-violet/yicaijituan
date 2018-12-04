@@ -12,7 +12,6 @@ class EditModal extends Component {
     this.state = {
       visible: false,
       confirmLoading: false,
-      carData: [],
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -53,43 +52,6 @@ class EditModal extends Component {
       lg: { span: 6 },
     };
 
-    /* 车牌 */
-    let timeout;
-    const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
-    const fetch = value => {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-
-      const fake = () => {
-        const { cars } = this.props;
-        const data = [];
-
-        cars.map(carItem => {
-          const reg = new RegExp(value);
-          if (carItem.match(reg)) {
-            data.push(carItem);
-          }
-          return carItem;
-        });
-        this.setState({ carData: data });
-      };
-
-      timeout = setTimeout(fake, 300);
-    };
-    const handleChange = value => {
-      this.props.form.setFieldsValue({
-        carNo: value,
-      });
-      fetch(value);
-    };
-    const handleFocus = () => {
-      const { cars } = this.props
-      this.setState({
-        carData: cars,
-      })
-    }
     return (
       <div>
         <fieldset>
@@ -165,19 +127,7 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.carNo,
                 })(
-                  <Select
-                    mode="combobox"
-                    placeholder={this.props.placeholder}
-                    style={this.props.style}
-                    defaultActiveFirstOption={false}
-                    showArrow={false}
-                    filterOption={false}
-                    onChange={handleChange}
-                    onFocus={handleFocus}
-                    disabled={disabled}
-                  >
-                    {options}
-                  </Select>
+                  <Input placeholder='请填写运输车号' disabled={disabled} />
                   )}
               </FormItem>
             </Col>
@@ -194,6 +144,19 @@ class EditModal extends Component {
                 })(
                   <Input disabled={disabled} placeholder="请填写公司名称" />
                   )}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="细度" {...formItemLayout}>
+                {getFieldDecorator('fineness', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写细度',
+                    },
+                  ],
+                  initialValue: selectedDetail.fineness,
+                })(<Input placeholder="请填写细度" disabled={disabled} />)}
               </FormItem>
             </Col>
           </Row>

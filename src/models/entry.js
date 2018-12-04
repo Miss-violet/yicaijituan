@@ -10,7 +10,6 @@ export default {
     total: '',
     entrepotSelectList: [],
     selectedDetail: {},
-    cars: [],
   },
 
   subscriptions: {
@@ -35,11 +34,6 @@ export default {
                 },
               },
             })
-            /* 加载下拉框选项 */
-            dispatch({
-              type: 'querySelectList',
-              payload: {},
-            })
           }
         }
       })
@@ -47,28 +41,6 @@ export default {
   },
 
   effects: {
-    *queryCars({ payload }, { call, put }) {
-      const carsRes = yield call(cars, payload)
-      if (carsRes.code === 0) {
-        yield put({
-          type: 'success',
-          payload: {
-            cars: carsRes.data,
-          },
-        })
-      }
-    },
-    *querySelectList({ payload }, { call, put }) {
-      /* 生厂商下拉列表 */
-      
-
-      /* 车牌号 */
-      yield put({
-        type: 'queryCars',
-        payload: {},
-      })
-
-    },
     *queryList({ payload }, { call, put }) {
       const queryRes = yield call(outboundList, payload)
       if (queryRes.code === 0) {
@@ -78,10 +50,6 @@ export default {
             listData: queryRes.data.rows,
             total: queryRes.data.total,
           },
-        })
-        yield put({
-          type: 'queryCars',
-          payload: {},
         })
       }
     },

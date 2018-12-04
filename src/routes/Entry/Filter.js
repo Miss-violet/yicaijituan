@@ -38,44 +38,6 @@ class OutboundFilter extends Component {
       xl: { span: 6 },
     };
 
-    /* 车牌 */
-    let timeout;
-    const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
-    const fetch = (value) => {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-
-      const fake = () => {
-        const { cars } = this.props
-        const data = []
-
-        cars.map(carItem => {
-          const reg = new RegExp(value)
-          if (carItem.match(reg)) {
-            data.push(carItem)
-          }
-          return carItem
-        })
-        this.setState({ carData: data })
-      }
-
-      timeout = setTimeout(fake, 300);
-    }
-    const handleChange = (value) => {
-      this.props.form.setFieldsValue({
-        carNo: value,
-      });
-      fetch(value);
-    }
-    const handleFocus = () => {
-      const { cars } = this.props
-      this.setState({
-        // value: cars,
-        carData: cars,
-      })
-    }
     return (
       <Row gutter={32} className={styles.form}>
         <span style={{ padding: 0 }}>
@@ -94,25 +56,14 @@ class OutboundFilter extends Component {
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                />
+                  />
               )}
             </FormItem>
           </Col>
           <Col {...filterFormLayout}>
             <FormItem label='运输车号' {...formItemLayout} className={styles.formItem}>
               {getFieldDecorator('carNo')(
-                <Select
-                  mode="combobox"
-                  placeholder={this.props.placeholder}
-                  style={this.props.style}
-                  defaultActiveFirstOption={false}
-                  showArrow={false}
-                  filterOption={false}
-                  onChange={handleChange}
-                  onFocus={handleFocus}
-                >
-                  {options}
-                </Select>
+                <Input />
               )}
             </FormItem>
           </Col>
@@ -190,7 +141,7 @@ class OutboundFilter extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-        >
+          >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>

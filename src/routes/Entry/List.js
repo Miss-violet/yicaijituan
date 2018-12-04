@@ -48,9 +48,9 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                <span>
-                  <Icon type="check" />启用
-                </span>
+                  <span>
+                    <Icon type="check" />启用
+                  </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -110,6 +110,11 @@ class List extends Component {
         width: 250,
       },
       {
+        title: '精度',
+        dataIndex: 'fineness',
+        width: 250,
+      },
+      {
         title: '检验员',
         dataIndex: 'checker',
         width: 150,
@@ -153,8 +158,8 @@ class List extends Component {
           bordered
           pagination={this.state.pagination}
           onChange={handleTableChange}
-          scroll={{ x: 2150, y: 600 }}
-        />
+          scroll={{ x: 2400, y: 600 }}
+          />
       </div>
     );
   }

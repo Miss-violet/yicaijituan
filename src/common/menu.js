@@ -2,15 +2,15 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
+    name: '出库单',
+    path: 'outbound',
+    icon: 'file',
+  },
+  {
     name: '入库单',
     path: 'entry',
     icon: 'file-add',
     hideInMenu: '',
-  },
-  {
-    name: '出库单',
-    path: 'outbound',
-    icon: 'file',
   },
   {
     name: '用户管理',
@@ -59,14 +59,14 @@ function formatter(data, parentPath = '/', parentAuthority) {
     if (!isUrl(path)) {
       path = parentPath + item.path;
     }
-    
+
     /* 菜单的权限控制 */
     if (item.hasOwnProperty('hideInMenu')) {
       item.hideInMenu = (role !== '0')    // 成员级别隐藏菜单
     }
     /* 管理员及以上级别可访问入库单 */
-    if(item.path==='entry' && item.hasOwnProperty('hideInMenu')) {
-      item.hideInMenu = (Number(role)>1)
+    if (item.path === 'entry' && item.hasOwnProperty('hideInMenu')) {
+      item.hideInMenu = (Number(role) > 1)
     }
     const result = {
       ...item,
