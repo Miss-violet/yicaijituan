@@ -48,7 +48,7 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                  <span>
+                <span>
                     <Icon type="check" />启用
                   </span>
                 )}
@@ -110,7 +110,7 @@ class List extends Component {
         width: 250,
       },
       {
-        title: '精度',
+        title: '细度',
         dataIndex: 'fineness',
         width: 250,
       },
