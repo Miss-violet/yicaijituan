@@ -32,6 +32,9 @@ class Report extends Component {
       case 3:
         techno = '原灰'
         break
+      case 4:
+        techno = '其他'
+        break
       default:
         break
     }
@@ -238,7 +241,7 @@ class Report extends Component {
           }
           <Row gutter={16}>
             <Col span={6} offset={8}>
-              审核：{detail.auditor}
+              审核员：{detail.auditor}
             </Col>
             <Col span={6} offset={4}>
               检验员：{detail.checker}

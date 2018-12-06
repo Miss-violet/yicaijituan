@@ -7,6 +7,7 @@ import commonStyles from '../../assets/style/common.less';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+
 class EditModal extends Component {
   constructor(props) {
     super(props);
@@ -241,7 +242,7 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.productId,
                 })(
-                  <Select onChange={handleProductChange} disabled={disabled}>
+                  <Select onChange={handleProductChange} disabled={disabled} placeholder='请选择品名'>
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
@@ -260,7 +261,7 @@ class EditModal extends Component {
                   initialValue:
                   selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
-                  <Select onChange={handleLevelChange} disabled={disabled}>
+                  <Select onChange={handleLevelChange} disabled={disabled} placeholder='请选择级别'>
                     <Option value="0">Ⅰ级</Option>
                     <Option value="1">Ⅱ级</Option>
                     <Option value="2">Ⅲ级</Option>
@@ -283,7 +284,7 @@ class EditModal extends Component {
                   initialValue:
                   selectedDetail.entrepotId,
                 })(
-                  <Select onChange={handleEntrepotChange} disabled={disabled}>
+                  <Select onChange={handleEntrepotChange} disabled={disabled} placeholder='请选择库位'>
                     {
                       entrepotEnabled &&
                       entrepotEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)
@@ -360,7 +361,7 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.supplierId,
                 })(
-                  <Select onChange={handleSupplierChange} disabled={disabled}>
+                  <Select onChange={handleSupplierChange} disabled={disabled} placeholder='请选择生产厂家'>
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
@@ -378,11 +379,12 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.techno !== undefined ? String(selectedDetail.techno) : '',
                 })(
-                  <Select disabled={disabled}>
+                  <Select disabled={disabled} placeholder='请选择工艺'>
                     <Option value="0">分选</Option>
                     <Option value="1">加工灰（Ⅰ级）</Option>
                     <Option value="2">加工灰（Ⅱ级）</Option>
                     <Option value="3">原灰</Option>
+                    <Option value="4">其他</Option>
                   </Select>
                   )}
               </FormItem>
@@ -400,7 +402,7 @@ class EditModal extends Component {
                 })(
                   <Select
                     mode="combobox"
-                    placeholder={this.props.placeholder}
+                    placeholder='请填写运输车号'
                     style={this.props.style}
                     defaultActiveFirstOption={false}
                     showArrow={false}
@@ -417,20 +419,14 @@ class EditModal extends Component {
             <Col {...formColLayout}>
               <FormItem label="装车时间" {...formItemLayout}>
                 {getFieldDecorator('loadingTime', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择装车时间',
-                    },
-                  ],
-                  initialValue: type !== 'add'
+                  initialValue: type !== 'add' && selectedDetail.loadingTime
                     ? moment(selectedDetail.loadingTime)
                     : '',
                 })(
                   <DatePicker
                     showTime
+                    placeholder=""
                     format="YYYY-MM-DD HH:mm:ss"
-                    placeholder="请选择装车时间"
                     className={styles.datepicker}
                     disabled={disabled}
                     />
@@ -448,7 +444,7 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.distributorId,
                 })(
-                  <Select onChange={handleDistributorChange} disabled={disabled} allowClear showSearch optionFilterProp="children">
+                  <Select onChange={handleDistributorChange} disabled={disabled} allowClear showSearch optionFilterProp="children" placeholder='请填写公司名称'>
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
@@ -766,27 +762,15 @@ class EditModal extends Component {
           <Col {...formColLayout}>
             <FormItem label="检验员" {...formItemLayout}>
               {getFieldDecorator('checker', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请填写检验员',
-                  },
-                ],
                 initialValue: selectedDetail.checker,
-              })(<Input placeholder="请填写检验员" disabled={disabled} />)}
+              })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label="审核" {...formItemLayout}>
+            <FormItem label="审核员" {...formItemLayout}>
               {getFieldDecorator('auditor', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请填写审核人',
-                  },
-                ],
                 initialValue: selectedDetail.auditor,
-              })(<Input placeholder="请填写审核人" disabled={disabled} />)}
+              })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>

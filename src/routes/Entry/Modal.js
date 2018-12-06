@@ -251,16 +251,16 @@ class EditModal extends Component {
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label="审核" {...formItemLayout}>
+            <FormItem label="审核员" {...formItemLayout}>
               {getFieldDecorator('auditor', {
                 rules: [
                   {
                     required: true,
-                    message: '请填写审核人',
+                    message: '请填写审核员',
                   },
                 ],
                 initialValue: selectedDetail.auditor,
-              })(<Input placeholder="请填写审核人" disabled={disabled} />)}
+              })(<Input placeholder="请填写审核员" disabled={disabled} />)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>

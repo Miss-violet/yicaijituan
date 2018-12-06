@@ -177,6 +177,8 @@ class List extends Component {
               return '加工灰（Ⅱ级）'
             case 3:
               return '原灰'
+            case 4:
+              return '其他'
             default:
               break
           }
