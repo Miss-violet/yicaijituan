@@ -48,7 +48,7 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                <span>
+                  <span>
                     <Icon type="check" />启用
                   </span>
                 )}
@@ -125,17 +125,17 @@ class List extends Component {
         width: 150,
       },
       {
-        title: '皮重(kg)',
+        title: '皮重(吨)',
         dataIndex: 'tareWeight',
         width: 150,
       },
       {
-        title: '毛重(kg)',
+        title: '毛重(吨)',
         dataIndex: 'grossWeight',
         width: 150,
       },
       {
-        title: '净重(kg)',
+        title: '净重(吨)',
         dataIndex: 'netWeight',
         width: 150,
       },

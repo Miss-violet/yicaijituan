@@ -194,7 +194,7 @@ class EditModal extends Component {
         </fieldset>
         <Row gutter={8}>
           <Col {...formColLayout}>
-            <FormItem label="毛重（kg）" {...formItemLayout}>
+            <FormItem label="毛重（吨）" {...formItemLayout}>
               {getFieldDecorator('grossWeight', {
                 initialValue: selectedDetail.grossWeight,
               })(
@@ -208,7 +208,7 @@ class EditModal extends Component {
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label="皮重（kg）" {...formItemLayout}>
+            <FormItem label="皮重（吨）" {...formItemLayout}>
               {getFieldDecorator('tareWeight', {
                 initialValue: selectedDetail.tareWeight,
               })(
@@ -222,7 +222,7 @@ class EditModal extends Component {
             </FormItem>
           </Col>
           <Col {...formColLayout}>
-            <FormItem label="净重（kg）" {...formItemLayout}>
+            <FormItem label="净重（吨）" {...formItemLayout}>
               {getFieldDecorator('netWeight', {
                 initialValue: selectedDetail.netWeight,
               })(

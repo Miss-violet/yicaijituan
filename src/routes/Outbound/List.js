@@ -53,7 +53,7 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                <span>
+                  <span>
                     <Icon type="check" />启用
                   </span>
                 )}
@@ -78,7 +78,7 @@ class List extends Component {
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>
           <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条入库单；</span>
-          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : (Number(sumNetweight) / 1000).toLocaleString()} </span>吨；</span>
+          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : Number(sumNetweight).toLocaleString()} </span>吨；</span>
           <span>入库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
           <span>【数据统计请根据出厂日期筛选统计；若无筛选条件则默认统计当月数据。】</span>
         </div>
@@ -196,17 +196,17 @@ class List extends Component {
         width: 150,
       },
       {
-        title: '皮重(kg)',
+        title: '皮重(吨)',
         dataIndex: 'tareWeight',
         width: 150,
       },
       {
-        title: '毛重(kg)',
+        title: '毛重(吨)',
         dataIndex: 'grossWeight',
         width: 150,
       },
       {
-        title: '净重(kg)',
+        title: '净重(吨)',
         dataIndex: 'netWeight',
         width: 150,
       },
