@@ -500,7 +500,7 @@ class EditModal extends Component {
           break;
       }
       /* 检验是否为空 */
-      if (item.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+      if ((item.standardName !== '强度活性指数(%)' && item.standardName !== '强度活性指数（%）') && (value === '' || value === null)) {
         this.setState({
           resultOk: false,
         });
@@ -813,7 +813,7 @@ class EditModal extends Component {
         break;
     }
     /* 校验是否为空 */
-    if (item.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+    if ((item.standardName !== '强度活性指数(%)' && item.standardName !== '强度活性指数（%）') && (value === '' || value === null)) {
       callback({ message: '检验结果不能为空值' });
       return;
     }
