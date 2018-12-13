@@ -53,7 +53,7 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                  <span>
+                <span>
                     <Icon type="check" />启用
                   </span>
                 )}
@@ -77,9 +77,9 @@ class List extends Component {
           </span>
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>
-          <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条入库单；</span>
+          <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条出库单；</span>
           <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : Number(sumNetweight).toLocaleString()} </span>吨；</span>
-          <span>入库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
+          <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
           <span>【数据统计请根据出厂日期筛选统计；若无筛选条件则默认统计当月数据。】</span>
         </div>
       </div>
