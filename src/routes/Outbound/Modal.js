@@ -782,8 +782,8 @@ class EditModal extends Component {
                     message: '请填写出厂批号',
                   },
                 ],
-                initialValue: selectedDetail.batchNo || `HX${moment().format('YYYYMMDD')}`,
-              })(<Input disabled />)}
+                initialValue: selectedDetail.batchNo || `S-${moment().format('YYYYMMDD')}`,
+              })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
         </Row>
