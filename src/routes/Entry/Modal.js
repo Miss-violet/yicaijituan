@@ -12,6 +12,8 @@ class EditModal extends Component {
     this.state = {
       visible: false,
       confirmLoading: false,
+      auditorData: [],                  /* 审核员 */
+      checkerData: [],                   /* 检验员 */
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -69,7 +71,7 @@ class EditModal extends Component {
                   initialValue: selectedDetail.productName,
                 })(
                   <Input disabled={disabled} placeholder="请填写品名" />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -90,7 +92,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -113,7 +115,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -128,7 +130,7 @@ class EditModal extends Component {
                   initialValue: selectedDetail.carNo,
                 })(
                   <Input placeholder='请填写运输车号' disabled={disabled} />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -143,7 +145,7 @@ class EditModal extends Component {
                   initialValue: selectedDetail.companyName,
                 })(
                   <Input disabled={disabled} placeholder="请填写公司名称" />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -187,6 +189,83 @@ class EditModal extends Component {
       md: { span: 8 },
       lg: { span: 6 },
     };
+
+    /* 检验员 */
+    let checkerTimeout;
+    const checkerData = ['龚永华', '温赞文', '汤王钦', '肖联喜', '林自国', '苏振兴', '颜晓辉', '张松钦']
+    const checkerOptions = this.state.checkerData.map(d => <Option key={d}>{d}</Option>);
+    const fetchChecker = value => {
+      if (checkerTimeout) {
+        clearTimeout(checkerTimeout);
+        checkerTimeout = null;
+      }
+
+      const fake = () => {
+
+        const data = [];
+
+        checkerData.map(checkerItem => {
+          const reg = new RegExp(value);
+          if (checkerItem.match(reg)) {
+            data.push(checkerItem);
+          }
+          return checkerItem;
+        });
+        this.setState({ checkerData: data })
+      };
+
+      checkerTimeout = setTimeout(fake, 300);
+    };
+    const handleChangeChecker = value => {
+      this.props.form.setFieldsValue({
+        checker: value,
+      });
+      fetchChecker(value);
+    };
+    const handleFocusChecker = () => {
+      this.setState({
+        checkerData,
+      })
+    }
+
+    /* 审核员 */
+    let auditorTimeout;
+    const auditorData = ['龚永华', '温赞文', '汤王钦', '肖联喜', '林自国', '苏振兴', '颜晓辉', '张松钦']
+    const auditorOptions = this.state.auditorData.map(d => <Option key={d}>{d}</Option>);
+    const fetchAuditor = value => {
+      if (auditorTimeout) {
+        clearTimeout(auditorTimeout);
+        auditorTimeout = null;
+      }
+
+      const fake = () => {
+
+        const data = [];
+
+        auditorData.map(auditorItem => {
+          const reg = new RegExp(value);
+          if (auditorItem.match(reg)) {
+            data.push(auditorItem);
+          }
+          return auditorItem;
+        });
+        this.setState({ auditorData: data })
+      };
+
+      auditorTimeout = setTimeout(fake, 300);
+    };
+    const handleChangeAuditor = value => {
+      this.props.form.setFieldsValue({
+        auditor: value,
+      });
+      fetchAuditor(value);
+    };
+    const handleFocusAuditor = () => {
+      this.setState({
+        auditorData,
+      })
+    }
+
     return (
       <div>
         <fieldset>
@@ -204,7 +283,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -218,7 +297,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -232,7 +311,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -247,7 +326,19 @@ class EditModal extends Component {
                   },
                 ],
                 initialValue: selectedDetail.checker,
-              })(<Input placeholder="请填写检验员" disabled={disabled} />)}
+              })(<Select
+                mode="combobox"
+                placeholder='请填写检验员'
+                style={this.props.style}
+                defaultActiveFirstOption={false}
+                showArrow={false}
+                filterOption={false}
+                onChange={handleChangeChecker}
+                onFocus={handleFocusChecker}
+                disabled={disabled}
+              >
+                {checkerOptions}
+                 </Select>)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -260,7 +351,19 @@ class EditModal extends Component {
                   },
                 ],
                 initialValue: selectedDetail.auditor,
-              })(<Input placeholder="请填写审核员" disabled={disabled} />)}
+              })(<Select
+                mode="combobox"
+                placeholder='请填写审核员'
+                style={this.props.style}
+                defaultActiveFirstOption={false}
+                showArrow={false}
+                filterOption={false}
+                onChange={handleChangeAuditor}
+                onFocus={handleFocusAuditor}
+                disabled={disabled}
+              >
+                {auditorOptions}
+                 </Select>)}
             </FormItem>
           </Col>
           <Col {...formColLayout}>

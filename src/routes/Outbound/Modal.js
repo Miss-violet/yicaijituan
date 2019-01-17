@@ -16,7 +16,7 @@ class EditModal extends Component {
       confirmLoading: false,
       carData: [],                      /* 运输车牌 */
       auditorData: [],                  /* 审核员 */
-      checkerData: [],                   /* 检验员 */
+      checkerData: [],                  /* 检验员 */
       standardsData: props.selectedDetail.standards,
       levelSelected: '',
       resultOk: this.props.resultOk || false,
@@ -990,7 +990,6 @@ class EditModal extends Component {
           }
         }
         if (this.props.type === 'add') {
-
           this.props.dispatch({
             type: 'outbound/create',
             payload: {
