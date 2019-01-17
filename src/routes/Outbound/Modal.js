@@ -14,7 +14,9 @@ class EditModal extends Component {
     this.state = {
       visible: false,
       confirmLoading: false,
-      carData: [],
+      carData: [],                      /* 运输车牌 */
+      auditorData: [],                  /* 审核员 */
+      checkerData: [],                   /* 检验员 */
       standardsData: props.selectedDetail.standards,
       levelSelected: '',
       resultOk: this.props.resultOk || false,
@@ -246,7 +248,7 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -259,7 +261,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                  selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled} placeholder='请选择级别'>
                     <Option value="0">Ⅰ级</Option>
@@ -269,7 +271,7 @@ class EditModal extends Component {
                     <Option value="4">干渣</Option>
                     <Option value="5">调湿灰</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -282,7 +284,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                  selectedDetail.entrepotId,
+                    selectedDetail.entrepotId,
                 })(
                   <Select onChange={handleEntrepotChange} disabled={disabled} placeholder='请选择库位'>
                     {
@@ -290,7 +292,7 @@ class EditModal extends Component {
                       entrepotEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)
                     }
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -323,8 +325,8 @@ class EditModal extends Component {
                     placeholder="请选择出厂时间"
                     className={styles.datepicker}
                     disabled
-                    />
-                  )}
+                  />
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -346,8 +348,8 @@ class EditModal extends Component {
                     placeholder="请选择生产日期"
                     className={styles.datepicker}
                     disabled={disabled}
-                    />
-                  )}
+                  />
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -365,7 +367,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -386,7 +388,7 @@ class EditModal extends Component {
                     <Option value="3">原灰</Option>
                     <Option value="4">其他</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -410,10 +412,10 @@ class EditModal extends Component {
                     onChange={handleChange}
                     onFocus={handleFocus}
                     disabled={disabled}
-                    >
+                  >
                     {options}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -429,8 +431,8 @@ class EditModal extends Component {
                     format="YYYY-MM-DD HH:mm:ss"
                     className={styles.datepicker}
                     disabled={disabled}
-                    />
-                  )}
+                  />
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -448,7 +450,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -655,8 +657,8 @@ class EditModal extends Component {
                                   className={styles.inputNumber}
                                   onBlur={e => inputOnBlur(e, item)}
                                   disabled={disabled}
-                                  />
-                                )}
+                                />
+                              )}
                             </FormItem>
                           </td>
                         </tr>
@@ -709,6 +711,83 @@ class EditModal extends Component {
       md: { span: 8 },
       lg: { span: 6 },
     };
+
+    /* 检验员 */
+    let checkerTimeout;
+    const checkerData = ['龚永华', '温赞文', '汤王钦', '肖联喜', '林自国', '苏振兴', '颜晓辉', '张松钦']
+    const checkerOptions = this.state.checkerData.map(d => <Option key={d}>{d}</Option>);
+    const fetchChecker = value => {
+      if (checkerTimeout) {
+        clearTimeout(checkerTimeout);
+        checkerTimeout = null;
+      }
+
+      const fake = () => {
+
+        const data = [];
+
+        checkerData.map(checkerItem => {
+          const reg = new RegExp(value);
+          if (checkerItem.match(reg)) {
+            data.push(checkerItem);
+          }
+          return checkerItem;
+        });
+        this.setState({ checkerData: data })
+      };
+
+      checkerTimeout = setTimeout(fake, 300);
+    };
+    const handleChangeChecker = value => {
+      this.props.form.setFieldsValue({
+        checker: value,
+      });
+      fetchChecker(value);
+    };
+    const handleFocusChecker = () => {
+      this.setState({
+        checkerData,
+      })
+    }
+
+    /* 审核员 */
+    let auditorTimeout;
+    const auditorData = ['龚永华', '温赞文', '汤王钦', '肖联喜', '林自国', '苏振兴', '颜晓辉', '张松钦']
+    const auditorOptions = this.state.auditorData.map(d => <Option key={d}>{d}</Option>);
+    const fetchAuditor = value => {
+      if (auditorTimeout) {
+        clearTimeout(auditorTimeout);
+        auditorTimeout = null;
+      }
+
+      const fake = () => {
+
+        const data = [];
+
+        auditorData.map(auditorItem => {
+          const reg = new RegExp(value);
+          if (auditorItem.match(reg)) {
+            data.push(auditorItem);
+          }
+          return auditorItem;
+        });
+        this.setState({ auditorData: data })
+      };
+
+      auditorTimeout = setTimeout(fake, 300);
+    };
+    const handleChangeAuditor = value => {
+      this.props.form.setFieldsValue({
+        auditor: value,
+      });
+      fetchAuditor(value);
+    };
+    const handleFocusAuditor = () => {
+      this.setState({
+        auditorData,
+      })
+    }
+
     return (
       <div>
         <fieldset>
@@ -725,8 +804,8 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
-                )}
+                />
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -739,8 +818,8 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
-                )}
+                />
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -753,8 +832,8 @@ class EditModal extends Component {
                   step={0.01}
                   disabled={disabled}
                   style={{ width: '100%' }}
-                  />
-                )}
+                />
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -763,14 +842,42 @@ class EditModal extends Component {
             <FormItem label="检验员" {...formItemLayout}>
               {getFieldDecorator('checker', {
                 initialValue: selectedDetail.checker,
-              })(<Input disabled={disabled} />)}
+              })(
+                <Select
+                  mode="combobox"
+                  placeholder='请填写检验员'
+                  style={this.props.style}
+                  defaultActiveFirstOption={false}
+                  showArrow={false}
+                  filterOption={false}
+                  onChange={handleChangeChecker}
+                  onFocus={handleFocusChecker}
+                  disabled={disabled}
+                >
+                  {checkerOptions}
+                </Select>
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
             <FormItem label="审核员" {...formItemLayout}>
               {getFieldDecorator('auditor', {
                 initialValue: selectedDetail.auditor,
-              })(<Input disabled={disabled} />)}
+              })(
+                <Select
+                  mode="combobox"
+                  placeholder='请填写审核员'
+                  style={this.props.style}
+                  defaultActiveFirstOption={false}
+                  showArrow={false}
+                  filterOption={false}
+                  onChange={handleChangeAuditor}
+                  onFocus={handleFocusAuditor}
+                  disabled={disabled}
+                >
+                  {auditorOptions}
+                </Select>
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -939,7 +1046,7 @@ class EditModal extends Component {
           className={styles.modal}
           footer={null}
           destroyOnClose
-          >
+        >
           <Form className={styles.fm}>
             {this.getCertificateFields()}
             {this.getResult()}
@@ -954,7 +1061,7 @@ class EditModal extends Component {
                   htmlType="submit"
                   className={styles.submitBtn}
                   onClick={() => this.handleSubmit()}
-                  >
+                >
                   保存
                 </Button>
               )}
