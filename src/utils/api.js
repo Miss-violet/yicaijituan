@@ -24,6 +24,7 @@ module.exports = {
             list: `/api/product/list`,
             create: `/api/product/create`,
             update: `/api/product/update`,
+            standardTitleCreate: `/api/standardTitle/create`,
         },
         manufacturerManage: {
             list: `/api/mft/list`,

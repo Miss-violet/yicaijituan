@@ -12,13 +12,16 @@ import {
   Radio,
   message,
   Popconfirm,
+  Progress,
 } from 'antd';
 import EditableCell from './EditableCell';
 import styles from './basicDataList.less';
 
-const Option = Select.Option;
+const { Option } = Select
 const FormItem = Form.Item;
-const confirm = Modal.confirm;
+const { confirm } = Modal
+const RadioGroup = Radio.Group;
+
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -41,147 +44,33 @@ class BasicDataList extends Component {
       confirmLoading: false,
       disabled: false,
       modalType: '',
-      selectedCompanyId: '',
+      selectedProductId: '',
       selected: {},
-      dataSource: [],
       selectedRowKeys: [],
+      tableTitleDialogVisible: false,     /* 控制弹窗展示/隐藏 */
+      rowName: [],                        /* 记录表头列标题 */
+      selectedStandardTitleData: {},                  /* 记录选中的标题 */
+      selectedRowName: '',                 /* 记录选中的表头列标题 */
+      progressPercent: 0,                 /* 进度条 */
+      tableTitleDialogType: '',           /* 弹窗类型：add/edit */
+      dialogTitle: '',                    /* 弹窗标题 */
+      tableDialogType: '',                /* 弹窗操作对象类型：column/row */
     };
-    this.modalColumns = [
-      {
-        title: '项目名称',
-        dataIndex: 'name',
-        width: '30%',
-        render: (text, record) => {
-          return (
-            <EditableCell
-              value={text}
-              onChange={this.onCellChange(record.key, 'name')}
-              type="input"
-              disabled={this.state.modalType === 'check'}
-              name={`name_${record.key}`}
-            />
-          );
-        },
-      },
-      {
-        title: '类型',
-        dataIndex: 'type',
-        width: '14%',
-        render: (text, record) => {
-          return (
-            <FormItem>
-              {this.props.form.getFieldDecorator(`${record.key}`, {
-                rules: [{ required: true, message: '此项必填' }],
-                initialValue: String(record.type),
-              })(
-                <Select style={{ width: '100 %' }} placeholder="请选择">
-                  <Option value="0">≤（小于等于）</Option>
-                  <Option value="1">≥（大于等于）</Option>
-                </Select>
-                )}
-            </FormItem>
-          );
-        },
-      },
-      {
-        title: 'I级指标',
-        dataIndex: 'oneLevel',
-        width: '12%',
-        render: (text, record) => (
-          <EditableCell
-            value={text}
-            onChange={this.onCellChange(record.key, 'oneLevel')}
-            type="input"
-            disabled={this.state.modalType === 'check'}
-            name={`oneLevel_${record.key}`}
-            validatorNum={this.validatorNum}
-          />
-        ),
-      },
-      {
-        title: 'II级指标',
-        dataIndex: 'twoLevel',
-        width: '12%',
-        render: (text, record) => (
-          <EditableCell
-            value={text}
-            onChange={this.onCellChange(record.key, 'twoLevel')}
-            type="input"
-            disabled={this.state.modalType === 'check'}
-            name={`twoLevel_${record.key}`}
-            validatorNum={this.validatorNum}
-          />
-        ),
-      },
-      {
-        title: 'III级指标',
-        dataIndex: 'threeLevel',
-        width: '12%',
-        render: (text, record) => (
-          <EditableCell
-            value={text}
-            onChange={this.onCellChange(record.key, 'threeLevel')}
-            type="input"
-            disabled={this.state.modalType === 'check'}
-            name={`threeLevel_${record.key}`}
-            validatorNum={this.validatorNum}
-          />
-        ),
-      },
-      {
-        title: '保留小数点位数',
-        dataIndex: 'pointNum',
-        width: '10%',
-        render: (text, record) => (
-          <EditableCell
-            value={text}
-            onChange={this.onCellChange(record.key, 'pointNum')}
-            type="numberInput"
-            disabled={this.state.modalType === 'check'}
-            step={1}
-            max={4}
-            min={0}
-            name={`pointNum_${record.key}`}
-          />
-        ),
-      },
-      {
-        title: '操作',
-        dataIndex: 'operation',
-        width: '10%',
-        render: (text, record) => {
-          return this.state.dataSource.length > 1 && this.state.modalType !== 'check' ? (
-            <Popconfirm title="确定要删除这条数据吗?" onConfirm={() => this.onDelete(record.key)}>
-              <a href="javascript:;">删除</a>
-            </Popconfirm>
-          ) : null;
-        },
-      },
-    ];
   }
-  onCellChange = (key, dataIndex) => {
-    return value => {
-      const dataSource = [...this.state.dataSource];
-      const target = dataSource.find(item => item.key === key);
-      if (target) {
-        target[dataIndex] = value;
-        this.setState({ dataSource });
-      }
-    };
-  };
-
-  onDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
-  };
-
+  onChangeRadio = (e) => {
+    const { standardTitleData } = this.props
+    const { value } = e.target
+    const selectedData = standardTitleData.filter(item => item.id === value)
+    if (selectedData.length > 0) {
+      this.setState({
+        selectedStandardTitleData: selectedData[0]
+      })
+    }
+  }
   getFields = () => {
     const { fmFields } = this.props;
     const { disabled } = this.state;
     const { getFieldDecorator, getFieldValue } = this.props.form;
-
-    const Option = Select.Option;
-    const RadioGroup = Radio.Group;
 
     const compareToFirstPassword = (rule, value, callback) => {
       if (value && value !== getFieldValue('password')) {
@@ -346,38 +235,19 @@ class BasicDataList extends Component {
   handleCancel = () => {
     this.setState({
       visible: false,
-      selectedCompanyId: '',
+      selectedProductId: '',
       selectedRowKeys: [],
       selected: {},
     });
   };
 
   showModal = type => {
-    let standards = [];
-    standards =
-      this.state.selected.standards &&
-      this.state.selected.standards.map((item, index) => {
-        item.key = index;
-        return item;
-      });
     switch (type) {
       case 'add':
         this.setState({
           title: '新增',
           disabled: false,
           modalType: 'add',
-          dataSource: [
-            {
-              key: new Date().getTime(),
-              id: '',
-              name: '',
-              oneLevel: '',
-              pointNum: '',
-              threeLevel: '',
-              twoLevel: '',
-              type: '',
-            },
-          ],
           selected: {} /* 点击新增的时候，不带入值。防止选中后点击新增把值带入 */,
         });
         break;
@@ -390,7 +260,6 @@ class BasicDataList extends Component {
           title: '编辑',
           disabled: false,
           modalType: 'edit',
-          dataSource: standards,
         });
         break;
       case 'check':
@@ -402,7 +271,6 @@ class BasicDataList extends Component {
           title: '查看',
           disabled: true,
           modalType: 'check',
-          dataSource: standards,
         });
         break;
       default:
@@ -434,62 +302,20 @@ class BasicDataList extends Component {
   handleSubmit = modalType => {
     /* 判断标准是否填写完整 */
     const itemIsNull = [];
-    const isNullErr = this.state.dataSource.some(item => {
-      for (const i in item) {
-        if (i !== 'id' && i !== 'type') {
-          /* 如果 item[i] 为空，则 塞进itemIsNull */
-          if (item[i] === '') {
-            itemIsNull.push(item[i]);
-          }
-        }
-      }
-      if (itemIsNull.length > 0) return true;
-      else return false;
-    });
-    if (isNullErr) {
-      Modal.warning({
-        title: '警告',
-        content: '标准的各个指标不能为空，请填写完整后再保存',
-        okText: '知道了',
-      });
-      return;
-    }
-    /* 判断标准是否填写了数字 */
-    let isNaNErr = false
-    isNaNErr = this.state.dataSource.some(item =>
-      isNaN(Number(item.oneLevel)) || isNaN(Number(item.twoLevel)) || isNaN(Number(item.threeLevel))
-    )
-    if (isNaNErr) {
-      Modal.warning({
-        title: '警告',
-        content: '标准的各个指标只能是数字，请修改后再保存',
-        okText: '知道了',
-      });
-      return;
-    }
+
+
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let standards = this.state.dataSource
-        standards = standards.map(item => {
-          for (const i in values) {
-            if (!isNaN(Number(i)) && i == item.key) {
-              item.type = values[i]
-              return item
-            }
-          }
-          return item
-        })
+
         if (modalType === 'add') {
           this.props.handleCreate({
             ...values,
-            standards: [...this.state.dataSource],
           });
         } else if (modalType === 'edit') {
           this.props.handleEdit({
             ...values,
-            id: this.state.selectedCompanyId,
-            standards,
+            id: this.state.selectedProductId,
           });
         }
         this.setState({
@@ -506,7 +332,7 @@ class BasicDataList extends Component {
     });
   };
   handleDelete = () => {
-    if (!this.state.selectedCompanyId) {
+    if (!this.state.selectedProductId) {
       message.warning('请选择数据后再进行操作', 2);
       return;
     }
@@ -516,7 +342,7 @@ class BasicDataList extends Component {
       okText: '确定',
       cancelText: '取消',
       onOk: () => {
-        this.props.handleDelete(this.state.selectedCompanyId);
+        this.props.handleDelete(this.state.selectedProductId);
       },
       onCancel() { },
     });
@@ -524,32 +350,151 @@ class BasicDataList extends Component {
   rowOnChange = (selectedRowKeys, selectedRows) => {
     const selected = selectedRows[0];
     this.setState({
-      selectedCompanyId: selected.id,
+      selectedProductId: selected.id,
       selectedRowKeys,
       selected,
     });
   };
 
-  handleAdd = () => {
-    const { dataSource } = this.state;
-    const newData = {
-      key: new Date().getTime(),
-      id: '',
-      name: '',
-      type: '',
-      oneLevel: '',
-      twoLevel: '',
-      threeLevel: '',
-      pointNum: '',
-    };
+  /* 打开 - 新增 表格标题字段弹窗 */
+  handleAddName = (type) => {
+    this.props.form.setFieldsValue({
+      titleName: '',
+    })
     this.setState({
-      dataSource: [...dataSource, newData],
-    });
-  };
+      tableTitleDialogVisible: true,
+      tableTitleDialogType: 'add',
+      tableDialogType: type,
+    })
+    if (type === 0) {
+      this.setState({
+        dialogTitle: '新增行标题',
+      })
+    } else if (type === 1) {
+      this.setState({
+        dialogTitle: '新增列标题',
+      })
+    }
+  }
+  /* 打开 - 修改 表头字段弹窗 */
+  handleEditName = (type) => {
+    if (type === 0) {
+      this.setState({
+        dialogTitle: '编辑行标题',
+      })
+    } else if (type === 1) {
+      this.setState({
+        dialogTitle: '编辑列标题',
+      })
+    }
+    this.props.form.setFieldsValue({
+      titleName: this.state.selectedStandardTitleData.name,
+    })
+    this.setState({
+      tableTitleDialogVisible: true,
+      tableTitleDialogType: 'edit',
+      tableDialogType: type,
+    })
+  }
+  /* 新增/修改 表头字段弹窗 - 保存 */
+  handleSaveName = (type) => {
+    this.props.form.validateFields((err, values) => {
+      if (err === null || !err.titleName) {
+        const {
+          tableTitleDialogType,
+          selectedProductId,
+        } = this.state
+        /* 对标题进行操作 */
+        const { standardTitleData } = this.props
+        const { selectedStandardTitleData } = this.state
+        /* 【新增】列标题 */
+        if (tableTitleDialogType === 'add') {
+          /* 与后端交互 - 【保存】列标题 */
+          this.props.addStandardTitle({
+            name: values.titleName,
+            type,
+            productId: selectedProductId,
+            orderSort: standardTitleData.length,
+          })
+        }
+        else if (tableTitleDialogType === 'edit') {
+          const { id } = selectedStandardTitleData
+          this.props.editStandardTitle({
+            name: values.titleName,
+            id,
+            type,
+            productId: selectedProductId,
+          })
+        }
+        this.setState({
+          tableTitleDialogVisible: false,
+          selectedRowName: '',
+        })
+      } else if (err.titleName) {
+        message.error(err.titleName.errors[0].message, 3)
+      }
+    })
+  }
+
+  /* 新增/修改 表头字段弹窗 - 取消 */
+  handleCancelName = () => {
+    this.setState({
+      tableTitleDialogVisible: false,
+    })
+  }
+  /* 删除 表头字段弹窗 */
+  handleDelName = () => {
+    const { id, productId, type } = this.state.selectedStandardTitleData
+    this.props.delStandardTitle({
+      id,
+      productId,
+      type,
+    })
+  }
+  /* 第一步完成，跳转到 第二步 */
+  toStepTwo = () => {
+    this.setState({
+      progressPercent: 33,
+      selectedStandardTitleData: {},
+    })
+  }
+  /* 第二步 跳转到 第一步 */
+  toStepOne = () => {
+    this.setState({
+      progressPercent: 0,
+    })
+  }
+  toStepThree = () => {
+    this.setState({
+      progressPercent: 66,
+    })
+  }
   render() {
-    const { visible, title, confirmLoading, modalType, dataSource, selectedRowKeys } = this.state;
-    const { columns, data, addBtn, updateBtn, checkBtn, deleteBtn } = this.props;
-    const modalColumns = this.modalColumns;
+    const {
+      visible,
+      title,
+      confirmLoading,
+      modalType,
+      selectedRowKeys,
+      rowName,
+      selectedStandardTitleData,
+      selectedRowName,
+      progressPercent,
+      dialogTitle,
+      tableDialogType,
+      tableTitleDialogVisible,
+      tableTitleDialogType,
+     } = this.state;
+    const {
+      columns,
+      data,
+      addBtn,
+      updateBtn,
+      checkBtn,
+      deleteBtn,
+      standardTitleData,
+     } = this.props;
+    const { getFieldDecorator } = this.props.form;
 
     const rowSelection = {
       type: 'radio',
@@ -593,23 +538,152 @@ class BasicDataList extends Component {
         >
           <Form className={styles.fm}>
             <Row gutter={24}>{this.getFields()}</Row>
-            <Row gutter={24}>
-              <Col span={24}>
-                <FormItem label="标准" {...formItemLayout}>
-                  <div>
-                    <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                      新增行
-                    </Button>
-                    <Table
-                      bordered
-                      dataSource={dataSource}
-                      columns={modalColumns}
-                      pagination={false}
-                    />
-                  </div>
-                </FormItem>
-              </Col>
-            </Row>
+            {
+              modalType === 'edit' && (
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <FormItem label="标准" {...formItemLayout}>
+                      <div className={styles.step}>
+                        <div className={styles.progress}>
+                          <Progress type="circle" percent={progressPercent} />
+                        </div>
+                        <div className={styles.stepDetail}>
+                          <div>
+                            标准创建步骤说明
+                          </div>
+                          <ul>
+                            <li>第一步：新增列，填写表头字段内容</li>
+                            <li>第二步：新增行，创建表格</li>
+                            <li>第三步：新增数据</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div>
+                        {
+                          /* 展示 第一步 内容 */
+                          progressPercent === 0 && (
+                            <div>
+                              <div>第一步：新增列，填写表头字段内容</div>
+                              <div>
+                                <Button onClick={() => this.handleAddName(1)} type="primary" style={{ marginBottom: 16, marginRight: 10 }}>
+                                  新增
+                                </Button>
+                                <Button onClick={() => this.handleEditName(1)} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedStandardTitleData.name === undefined}>
+                                  修改
+                                </Button>
+                                <Button onClick={this.handleDelName} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedStandardTitleData.name === undefined}>
+                                  删除
+                                </Button>
+                              </div>
+                              {/* 展示新增后的列表 */}
+                              <RadioGroup name='columnGroup' onChange={this.onChangeRadio}>
+                                {
+                                  standardTitleData.map(item => (
+                                    <Radio value={item.id} key={item.id}>{item.name}</Radio>
+                                  ))
+                                }
+                              </RadioGroup>
+                              <div>
+                                <Button disabled={standardTitleData.length < 1} onClick={this.toStepTwo}>
+                                  下一步
+                                </Button>
+                              </div>
+                            </div>
+                          )
+                        }
+                        {
+                          /* 展示 第二步 内容 */
+                          progressPercent === 33 && (
+                            <div>
+                              <div className={styles.columnNameListWrap}>
+                                <div className={styles.columnNameListTitle}>第一步已创建好的表头内容：</div>
+                                <ul className={styles.columnNameList}>
+                                  {
+                                    standardTitleData.map(item => <li key={item.id}>{item.name}</li>)
+                                  }
+                                </ul>
+                              </div>
+                              <div>第二步：新增行</div>
+                              <div>
+                                <Button onClick={() => this.handleAddName(0)} type="primary" style={{ marginBottom: 16, marginRight: 10 }}>
+                                  新增
+                                </Button>
+                                <Button onClick={() => this.handleEditName(0)} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedRowName === undefined}>
+                                  修改
+                                </Button>
+                                <Button onClick={this.handleDelName} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedRowName === ''}>
+                                  删除
+                                </Button>
+                              </div>
+                              {/* 展示新增后的列表 */}
+                              <RadioGroup name='columnGroup' onChange={this.onChangeRadio}>
+                                {
+                                  rowName.map(item => (
+                                    <Radio value={item} key={`rowName_${item}`}>{item}</Radio>
+                                  ))
+                                }
+                              </RadioGroup>
+                              <div>
+                                <Button onClick={this.toStepOne} style={{ marginRight: 10 }} >
+                                  上一步
+                                </Button>
+                                <Button onClick={this.toStepThree} disabled={rowName.length < 1} style={{ marginRight: 10 }} >
+                                  下一步
+                                </Button>
+                              </div>
+                            </div>
+                          )
+                        }
+                        {
+                          /* 展示 第三步 内容 */
+                          progressPercent === 66 && (
+                            <div>
+                              <Button onClick={this.toStepTwo}>
+                                上一步
+                              </Button>
+                            </div>
+                          )
+                        }
+                        {/* 弹窗 - 文本框 */}
+                        <Modal
+                          title={dialogTitle}
+                          visible={tableTitleDialogVisible}
+                          onOk={() => this.handleSaveName(tableDialogType)}
+                          onCancel={this.handleCancelName}
+                        >
+                          {
+                            getFieldDecorator(
+                              'titleName',
+                              {
+                                rules:
+                                  [
+                                    {
+                                      required: true,
+                                      message: '请输入字段内容',
+                                    },
+                                    {
+                                      validator: (rule, value, callback) => {
+                                        if (value !== selectedStandardTitleData.name && standardTitleData.some(item => item.name === value && item.type === tableDialogType)) {
+                                          message.error('已存在重复的表格列字段，请重新填写', 3);
+                                          callback({ message: '已存在重复的表格列字段，请重新填写' })
+                                          return
+                                        }
+                                        callback()
+                                      },
+                                    },
+                                  ],
+                              }
+                            )
+                              (<Input placeholder="请输入字段内容" />)
+                          }
+                        </Modal>
+                      </div>
+                    </FormItem>
+                  </Col>
+                </Row>
+              )
+            }
+
             <FormItem className={styles.fmBtn}>
               <Button type="default" onClick={this.handleCancel} className={styles.backBtn}>
                 返回
@@ -627,7 +701,7 @@ class BasicDataList extends Component {
             </FormItem>
           </Form>
         </Modal>
-      </div>
+      </div >
     );
   }
 }

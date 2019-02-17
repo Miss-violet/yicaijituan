@@ -14,7 +14,7 @@ export default {
   },
 
   effects: {
-    *fetchCurrent({payload},{call, put}){
+    *fetchCurrent({ payload }, { call, put }) {
       const userResponse = yield call(queryCurrent);
       yield put({
         type: 'saveCurrentUser',
@@ -32,7 +32,6 @@ export default {
             currentAuthority: 'admin',
           },
         });
-
         const userResponse = yield call(queryCurrent);
         yield put({
           type: 'saveCurrentUser',
@@ -69,7 +68,7 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
-        const {data} = payload
+        const { data } = payload
         sessionStorage.setItem('token', `${data.token}`)
         sessionStorage.setItem('role', `${data.role}`)
         sessionStorage.setItem('userId', `${data.id}`)

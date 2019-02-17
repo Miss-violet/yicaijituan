@@ -52,7 +52,7 @@ function formatter(data, parentPath = '/', parentAuthority) {
 
   return data.map(item => {
     let { path } = item;
-    const {name} = item
+    const { name } = item
     if (!isUrl(path)) {
       path = parentPath + item.path;
     }
@@ -60,8 +60,8 @@ function formatter(data, parentPath = '/', parentAuthority) {
     if (item.hasOwnProperty('hideInMenu')) {
       item.hideInMenu = (role !== '0')
     }
-    if(name === '租户管理') {
-      item.hideInMenu = (tenantCode!=='platform')
+    if (name === '租户管理') {
+      item.hideInMenu = (tenantCode !== 'platform')
     }
     const result = {
       ...item,

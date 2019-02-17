@@ -37,20 +37,20 @@ const dynamicWrapper = (app, models, component) => {
     app,
     models: () =>
       models.filter(model => modelNotExisted(app, model)).map(m => import(`../models/${m}.js`)),
-  // add routerData prop
-  component: () => {
-    if (!routerDataCache) {
-      routerDataCache = getRouterData(app);
-    }
-    return component().then(raw => {
-      const Component = raw.default || raw;
-      return props =>
-        createElement(Component, {
-          ...props,
-          routerData: routerDataCache,
-        });
-    });
-  },
+    // add routerData prop
+    component: () => {
+      if (!routerDataCache) {
+        routerDataCache = getRouterData(app);
+      }
+      return component().then(raw => {
+        const Component = raw.default || raw;
+        return props =>
+          createElement(Component, {
+            ...props,
+            routerData: routerDataCache,
+          });
+      });
+    },
   });
 };
 
@@ -72,6 +72,9 @@ export const getRouterData = app => {
     '/': {
       component: dynamicWrapper(app, ['login'], () => import('../layouts/BasicLayout')),
     },
+    '/productManage': {
+      component: dynamicWrapper(app, ['productManage'], () => import('../routes/ProductManage/ProductManage')),
+    },
     '/outbound': {
       component: dynamicWrapper(app, ['outbound'], () => import('../routes/Outbound/Outbound')),
     },
@@ -80,9 +83,6 @@ export const getRouterData = app => {
     },
     '/companyManage': {
       component: dynamicWrapper(app, ['companyManage'], () => import('../routes/CompanyManage/CompanyManage')),
-    },
-    '/productManage': {
-      component: dynamicWrapper(app, ['productManage'], () => import('../routes/ProductManage/ProductManage')),
     },
     '/manufacturerManage': {
       component: dynamicWrapper(app, ['manufacturerManage'], () => import('../routes/ManufacturerManage/ManufacturerManage')),
@@ -113,47 +113,47 @@ export const getRouterData = app => {
         import('../routes/Exception/triggerException')
       ),
     },
-'/user': {
-  component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
+    '/user': {
+      component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     },
-'/user/login': {
-  component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
+    '/user/login': {
+      component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
-'/user/register': {
-  component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
+    '/user/register': {
+      component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
     },
-'/user/register-result': {
-  component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
+    '/user/register-result': {
+      component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
   };
-// Get name from ./menu.js or just set it in the router data.
-const menuData = getFlatMenuData(getMenuData());
+  // Get name from ./menu.js or just set it in the router data.
+  const menuData = getFlatMenuData(getMenuData());
 
-// Route configuration data
-// eg. {name,authority ...routerConfig }
-const routerData = {};
-// The route matches the menu
-Object.keys(routerConfig).forEach(path => {
-  // Regular match item name
-  // eg.  router /user/:id === /user/chen
-  const pathRegexp = pathToRegexp(path);
-  const menuKey = Object.keys(menuData).find(key => pathRegexp.test(`${key}`));
-  let menuItem = {};
-  // If menuKey is not empty
-  if (menuKey) {
-    menuItem = menuData[menuKey];
-  }
-  let router = routerConfig[path];
-  // If you need to configure complex parameter routing,
-  // https://github.com/ant-design/ant-design-pro-site/blob/master/docs/router-and-nav.md#%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E8%B7%AF%E7%94%B1%E8%8F%9C%E5%8D%95
-  // eg . /list/:type/user/info/:id
-  router = {
-    ...router,
-    name: router.name || menuItem.name,
-    authority: router.authority || menuItem.authority,
-    hideInBreadcrumb: router.hideInBreadcrumb || menuItem.hideInBreadcrumb,
-  };
-  routerData[path] = router;
-});
-return routerData;
+  // Route configuration data
+  // eg. {name,authority ...routerConfig }
+  const routerData = {};
+  // The route matches the menu
+  Object.keys(routerConfig).forEach(path => {
+    // Regular match item name
+    // eg.  router /user/:id === /user/chen
+    const pathRegexp = pathToRegexp(path);
+    const menuKey = Object.keys(menuData).find(key => pathRegexp.test(`${key}`));
+    let menuItem = {};
+    // If menuKey is not empty
+    if (menuKey) {
+      menuItem = menuData[menuKey];
+    }
+    let router = routerConfig[path];
+    // If you need to configure complex parameter routing,
+    // https://github.com/ant-design/ant-design-pro-site/blob/master/docs/router-and-nav.md#%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E8%B7%AF%E7%94%B1%E8%8F%9C%E5%8D%95
+    // eg . /list/:type/user/info/:id
+    router = {
+      ...router,
+      name: router.name || menuItem.name,
+      authority: router.authority || menuItem.authority,
+      hideInBreadcrumb: router.hideInBreadcrumb || menuItem.hideInBreadcrumb,
+    };
+    routerData[path] = router;
+  });
+  return routerData;
 };

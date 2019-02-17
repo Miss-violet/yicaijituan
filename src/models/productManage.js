@@ -1,11 +1,12 @@
 import { routerRedux } from 'dva/router';
-import { create, update, del, productList } from '../services/productManage'
+import { create, update, del, productList, standardTitleCreate, standardTitleDelete, standardTitleEdit, queryStandardTitleList } from '../services/productManage'
 
 export default {
   namespace: 'productManage',
 
   state: {
     data: [],
+    standardTitleData: [],
   },
 
   subscriptions: {
@@ -75,6 +76,62 @@ export default {
           type: 'success',
           payload: {
             data: res.data,
+          },
+        })
+      }
+    },
+    *standardTitleCreate({ payload }, { call, put }) {
+      const res = yield call(standardTitleCreate, payload)
+      if (res.code === 0) {
+        const { productId, type } = res.data
+        yield put({
+          type: 'success',
+          payload: {
+            newStandardTitle: { ...res.data },
+          },
+        })
+        yield put({
+          type: 'queryStandardTitleList',
+          payload: {
+            productId,
+            type,
+          },
+        })
+      }
+    },
+    *standardTitleDelete({ payload }, { call, put }) {
+      const res = yield call(standardTitleDelete, payload.id)
+      if (res.code === 0) {
+        const { productId, type } = payload
+        yield put({
+          type: 'queryStandardTitleList',
+          payload: {
+            productId,
+            type,
+          },
+        })
+      }
+    },
+    *standardTitleEdit({ payload }, { call, put }) {
+      const res = yield call(standardTitleEdit, payload)
+      if (res.code === 0) {
+        const { productId, type } = payload
+        yield put({
+          type: 'queryStandardTitleList',
+          payload: {
+            productId,
+            type,
+          },
+        })
+      }
+    },
+    *queryStandardTitleList({ payload }, { call, put }) {
+      const res = yield call(queryStandardTitleList, payload)
+      if (res.code === 0) {
+        yield put({
+          type: 'success',
+          payload: {
+            standardTitleData: res.data,
           },
         })
       }

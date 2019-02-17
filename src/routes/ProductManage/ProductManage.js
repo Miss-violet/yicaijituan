@@ -78,6 +78,8 @@ class ProductManage extends Component {
       },
     ];
     let { data } = this.props.productManage;
+    const { standardTitleData } = this.props.productManage
+
     data = data.map((item, index) => {
       item.key = index
       return item
@@ -175,9 +177,10 @@ class ProductManage extends Component {
         ],
       },
     ];
-    const companyProps = {
+    const productProps = {
       columns,
       data,
+      standardTitleData,
       fmFields,
       addBtn: true,
       updateBtn: true,
@@ -205,12 +208,30 @@ class ProductManage extends Component {
           payload: id,
         });
       },
+      addStandardTitle: payload => {
+        this.props.dispatch({
+          type: 'productManage/standardTitleCreate',
+          payload,
+        })
+      },
+      delStandardTitle: payload => {
+        this.props.dispatch({
+          type: 'productManage/standardTitleDelete',
+          payload,
+        })
+      },
+      editStandardTitle: payload => {
+        this.props.dispatch({
+          type: 'productManage/standardTitleEdit',
+          payload,
+        })
+      }
     };
     const { standardsVisible, standardsData, proName } = this.state;
 
     return (
       <div>
-        <BasicDataList {...companyProps} />
+        <BasicDataList {...productProps} />
         <Modal
           title={`${proName} 标准`}
           visible={standardsVisible}

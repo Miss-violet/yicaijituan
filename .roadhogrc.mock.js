@@ -7,6 +7,8 @@ import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
 
+import { getProductList, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList } from './mock/productManage'
+
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
 
@@ -71,17 +73,37 @@ const proxy = {
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
   'GET /api/profile/advanced': getProfileAdvancedData,
-  'POST /api/login/account': (req, res) => {
-    const { password, userName, type } = req.body;
-    if (password === '888888' && userName === 'admin') {
+  'POST /api/loginSubmit': (req, res) => {
+    const { password, loginName, type } = req.body;
+    if (password === '888888' && loginName === 'admin') {
       res.send({
-        status: 'ok',
+        code: 0,
         type,
         currentAuthority: 'admin',
+        msg: 'success',
+        'success': true,
+        data: {
+          "id": 41,
+          "loginName": "admin",
+          "password": null,
+          "userName": "平台管理员",
+          "sex": 0,
+          "birth": null,
+          "phone": "",
+          "address": null,
+          "email": null,
+          "role": 0,
+          "status": null,
+          "companyId": 73,
+          "tenantCode": "songneng",
+          "token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0MSIsInN1YiI6InVuaXF1ZSIsImlzcyI6InVuaXF1ZSIsImlhdCI6MTU1MDEyNTYwNCwiZXhwIjoxNTUwMTk3NjA0fQ.5zF-5a-u5agNrvJrPhWLs7MWecWKpOBm4ZR6SaNxv_M",
+          "startTime": null,
+          "endTime": null
+        }
       });
       return;
     }
-    if (password === '123456' && userName === 'user') {
+    if (password === '123456' && loginName === 'user') {
       res.send({
         status: 'ok',
         type,
@@ -93,6 +115,34 @@ const proxy = {
       status: 'error',
       type,
       currentAuthority: 'guest',
+    });
+  },
+  'POST /api/user/info': (req, res) => {
+    res.send({
+      code: 0,
+      currentAuthority: 'admin',
+      msg: 'success',
+      success: true,
+      data: {
+        "id": 41,
+        "loginName": "admin",
+        "password": null,
+        "userName": "平台管理员",
+        "sex": 0,
+        "birth": 1535644800000,
+        "phone": "",
+        "address": null,
+        "email": null,
+        "role": 0,
+        "status": 0,
+        "companyId": 73,
+        "companyName": null,
+        "tenantCode": "songneng",
+        "createBy": "lld",
+        "createTime": 1531185348000,
+        "modifyTime": 1535679261000,
+        "modifyBy": "admin"
+      },
     });
   },
   'POST /api/register': (req, res) => {
@@ -135,9 +185,17 @@ const proxy = {
       path: '/base/category/list',
     });
   },
+  'POST /api/user/create': (req, res) => {
+    console.info('mock')
+  },
+  'POST /api/product/list': getProductList,
+  'POST /api/standardTitle/create': createStandardTitle,
+  'POST /api/standardTitle/list/*/*': getStandardTitleList,
+  'POST /api/standardTitle/delete/*': delStandardTitle,
+  'POST /api/standardTitle/update': editStandardTitle,
 };
 
-// export default (noProxy ? {} : delay(proxy, 1000));
-export default {
-  'GET /api/(.*)': 'http://119.23.210.125:8090/api/',
-};
+export default (noProxy ? {} : delay(proxy, 1000));
+// export default {
+//   'GET /api/(.*)': 'http://119.23.210.125:8090/api/',
+// };

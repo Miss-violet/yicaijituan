@@ -36,3 +36,27 @@ export async function productList(params) {
         body: params,
     });
 }
+export async function standardTitleCreate(params) {
+    return request(productManage.standardTitleCreate, {
+        method: 'POST',
+        body: params,
+    });
+}
+export async function standardTitleDelete(params) {
+    return request(`/api/standardTitle/delete/${params.id}`, {
+        method: 'POST',
+        body: params,
+    });
+}
+export async function standardTitleEdit(params) {
+    return request(`/api/standardTitle/update`, {
+        method: 'POST',
+        body: params,
+    });
+}
+export async function queryStandardTitleList(params) {
+    return request(`/api/standardTitle/list/${params.productId}/${params.type}`, {
+        method: 'POST',
+        body: params,
+    });
+}
