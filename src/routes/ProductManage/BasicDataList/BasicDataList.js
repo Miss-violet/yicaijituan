@@ -63,7 +63,7 @@ class BasicDataList extends Component {
     const selectedData = standardTitleData.filter(item => item.id === value)
     if (selectedData.length > 0) {
       this.setState({
-        selectedStandardTitleData: selectedData[0]
+        selectedStandardTitleData: selectedData[0],
       })
     }
   }
@@ -100,7 +100,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -123,7 +123,7 @@ class BasicDataList extends Component {
                         <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -146,7 +146,7 @@ class BasicDataList extends Component {
                         <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -168,7 +168,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -189,7 +189,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
             </div>
@@ -213,7 +213,7 @@ class BasicDataList extends Component {
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -484,7 +484,7 @@ class BasicDataList extends Component {
       tableDialogType,
       tableTitleDialogVisible,
       tableTitleDialogType,
-     } = this.state;
+    } = this.state;
     const {
       columns,
       data,
@@ -493,7 +493,7 @@ class BasicDataList extends Component {
       checkBtn,
       deleteBtn,
       standardTitleData,
-     } = this.props;
+    } = this.props;
     const { getFieldDecorator } = this.props.form;
 
     const rowSelection = {
@@ -578,13 +578,14 @@ class BasicDataList extends Component {
                               {/* 展示新增后的列表 */}
                               <RadioGroup name='columnGroup' onChange={this.onChangeRadio}>
                                 {
-                                  standardTitleData.map(item => (
-                                    <Radio value={item.id} key={item.id}>{item.name}</Radio>
-                                  ))
+                                  standardTitleData.map(item => item.type === 1 &&
+                                    (
+                                      <Radio value={item.id} key={item.id}>{item.name}</Radio>
+                                    ))
                                 }
                               </RadioGroup>
                               <div>
-                                <Button disabled={standardTitleData.length < 1} onClick={this.toStepTwo}>
+                                <Button disabled={standardTitleData.filter(item => item.type === 1).length < 1} onClick={this.toStepTwo}>
                                   下一步
                                 </Button>
                               </div>
@@ -599,7 +600,7 @@ class BasicDataList extends Component {
                                 <div className={styles.columnNameListTitle}>第一步已创建好的表头内容：</div>
                                 <ul className={styles.columnNameList}>
                                   {
-                                    standardTitleData.map(item => <li key={item.id}>{item.name}</li>)
+                                    standardTitleData.map(item => item.type === 1 && (<li key={item.id}>{item.name}</li>))
                                   }
                                 </ul>
                               </div>
@@ -618,16 +619,17 @@ class BasicDataList extends Component {
                               {/* 展示新增后的列表 */}
                               <RadioGroup name='columnGroup' onChange={this.onChangeRadio}>
                                 {
-                                  rowName.map(item => (
-                                    <Radio value={item} key={`rowName_${item}`}>{item}</Radio>
-                                  ))
+                                  standardTitleData.map(item => item.type === 0 &&
+                                    (
+                                      <Radio value={item.id} key={item.id}>{item.name}</Radio>
+                                    ))
                                 }
                               </RadioGroup>
                               <div>
                                 <Button onClick={this.toStepOne} style={{ marginRight: 10 }} >
                                   上一步
                                 </Button>
-                                <Button onClick={this.toStepThree} disabled={rowName.length < 1} style={{ marginRight: 10 }} >
+                                <Button onClick={this.toStepThree} disabled={standardTitleData.filter(item => item.type === 0).length < 1} style={{ marginRight: 10 }} >
                                   下一步
                                 </Button>
                               </div>

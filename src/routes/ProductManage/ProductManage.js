@@ -225,7 +225,7 @@ class ProductManage extends Component {
           type: 'productManage/standardTitleEdit',
           payload,
         })
-      }
+      },
     };
     const { standardsVisible, standardsData, proName } = this.state;
 
