@@ -6,7 +6,8 @@ export default {
 
   state: {
     data: [],
-    standardTitleData: [],
+    standardColumnTitleData: [],
+    standardRowTitleData: [],
   },
 
   subscriptions: {
@@ -127,13 +128,26 @@ export default {
     },
     *queryStandardTitleList({ payload }, { call, put }) {
       const res = yield call(queryStandardTitleList, payload)
+      const { type } = payload
       if (res.code === 0) {
-        yield put({
-          type: 'success',
-          payload: {
-            standardTitleData: res.data,
-          },
-        })
+        if (type === 0) {
+          /* 行标题 */
+          yield put({
+            type: 'success',
+            payload: {
+              standardRowTitleData: res.data,
+            },
+          })
+        }
+        else if (type === 1) {
+          /* 列标题 */
+          yield put({
+            type: 'success',
+            payload: {
+              standardColumnTitleData: res.data,
+            },
+          })
+        }
       }
     },
   },

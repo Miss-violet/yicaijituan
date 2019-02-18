@@ -77,8 +77,11 @@ class ProductManage extends Component {
         ),
       },
     ];
-    let { data } = this.props.productManage;
-    const { standardTitleData } = this.props.productManage
+    let { data } = this.props.productManage
+    const {
+      standardColumnTitleData,
+      standardRowTitleData,
+    } = this.props.productManage
 
     data = data.map((item, index) => {
       item.key = index
@@ -180,12 +183,13 @@ class ProductManage extends Component {
     const productProps = {
       columns,
       data,
-      standardTitleData,
       fmFields,
       addBtn: true,
       updateBtn: true,
       checkBtn: false,
       deleteBtn: true,
+      standardColumnTitleData,
+      standardRowTitleData,
       handleCreate: values => {
         this.props.dispatch({
           type: 'productManage/create',
@@ -223,6 +227,12 @@ class ProductManage extends Component {
       editStandardTitle: payload => {
         this.props.dispatch({
           type: 'productManage/standardTitleEdit',
+          payload,
+        })
+      },
+      queryStandardTitle: payload => {
+        this.props.dispatch({
+          type: 'productManage/queryStandardTitleList',
           payload,
         })
       },

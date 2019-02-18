@@ -47,26 +47,16 @@ class BasicDataList extends Component {
       selectedProductId: '',
       selected: {},
       selectedRowKeys: [],
-      tableTitleDialogVisible: false,     /* 控制弹窗展示/隐藏 */
-      rowName: [],                        /* 记录表头列标题 */
-      selectedStandardTitleData: {},                  /* 记录选中的标题 */
-      selectedRowName: '',                 /* 记录选中的表头列标题 */
+      editStandardModalVisible: false,    /* 编辑标准弹窗 展示/隐藏 */
+      tableTitleModalVisible: false,     /* 控制弹窗展示/隐藏 */
+      selectedStandardTitleData: {},      /* 记录选中的标题 */
       progressPercent: 0,                 /* 进度条 */
-      tableTitleDialogType: '',           /* 弹窗类型：add/edit */
+      tableTitleModalType: '',           /* 弹窗类型：add/edit */
       dialogTitle: '',                    /* 弹窗标题 */
       tableDialogType: '',                /* 弹窗操作对象类型：column/row */
     };
   }
-  onChangeRadio = (e) => {
-    const { standardTitleData } = this.props
-    const { value } = e.target
-    const selectedData = standardTitleData.filter(item => item.id === value)
-    if (selectedData.length > 0) {
-      this.setState({
-        selectedStandardTitleData: selectedData[0],
-      })
-    }
-  }
+
   getFields = () => {
     const { fmFields } = this.props;
     const { disabled } = this.state;
@@ -100,7 +90,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -123,7 +113,7 @@ class BasicDataList extends Component {
                         <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -146,7 +136,7 @@ class BasicDataList extends Component {
                         <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -168,7 +158,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -189,7 +179,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
             </div>
@@ -213,7 +203,7 @@ class BasicDataList extends Component {
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -223,6 +213,395 @@ class BasicDataList extends Component {
     });
     return fmItem;
   };
+  getEditStandardFields = () => {
+    const {
+      selectedStandardTitleData,
+      progressPercent,
+      dialogTitle,
+      tableDialogType,
+      tableTitleModalVisible,
+    } = this.state
+    const {
+      standardColumnTitleData,
+      standardRowTitleData,
+    } = this.props
+    const { getFieldDecorator } = this.props.form;
+
+    const standardTableColumns = [
+      {
+        title: '项目名称',
+        dataIndex: 'name',
+      },{
+        title: '类型',
+        dataIndex: 'type',
+        width: '14%',
+        render: (text, record) => {
+          return (
+            <FormItem>
+              {this.props.form.getFieldDecorator(`${record.key}`, {
+                rules: [{ required: true, message: '此项必填' }],
+                initialValue: String(record.type),
+              })(
+                <Select style={{ width: '100 %' }} placeholder="请选择">
+                  <Option value="0">≤（小于等于）</Option>
+                  <Option value="1">≥（大于等于）</Option>
+                </Select>
+                )}
+            </FormItem>
+          );
+        },
+      },
+    ]
+
+    const onChangeRadio = (type, e) => {
+      const { value } = e.target
+      let selectedData = []
+      if (type === 0) {
+        selectedData = standardRowTitleData.filter(item => item.id === value)
+      } else if (type === 1) {
+        selectedData = standardColumnTitleData.filter(item => item.id === value)
+      }
+      if (selectedData.length > 0) {
+        this.setState({
+          selectedStandardTitleData: selectedData[0],
+        })
+      }
+    }
+
+    /* 打开 - 新增 表格标题字段弹窗 */
+    const handleAddName = (type) => {
+      this.props.form.setFieldsValue({
+        titleName: '',
+      })
+      this.setState({
+        tableTitleModalVisible: true,
+        tableTitleModalType: 'add',
+        tableDialogType: type,
+      })
+      if (type === 0) {
+        this.setState({
+          dialogTitle: '新增行标题',
+        })
+      } else if (type === 1) {
+        this.setState({
+          dialogTitle: '新增列标题',
+        })
+      }
+    }
+    /* 打开 - 修改 表头字段弹窗 */
+    const handleEditName = (type) => {
+      if (type === 0) {
+        this.setState({
+          dialogTitle: '编辑行标题',
+        })
+      } else if (type === 1) {
+        this.setState({
+          dialogTitle: '编辑列标题',
+        })
+      }
+      this.props.form.setFieldsValue({
+        titleName: this.state.selectedStandardTitleData.name,
+      })
+      this.setState({
+        tableTitleModalVisible: true,
+        tableTitleModalType: 'edit',
+        tableDialogType: type,
+      })
+    }
+    /* 新增/修改 表头字段弹窗 - 保存 */
+    const handleSaveName = (type) => {
+      this.props.form.validateFields((err, values) => {
+        if (err === null || !err.titleName) {
+          const {
+          tableTitleModalType,
+            selectedProductId,
+        } = this.state
+          /* 【新增】列标题 */
+          if (tableTitleModalType === 'add') {
+            /* 与后端交互 - 【保存】列标题 */
+            if (type === 1) {
+              this.props.addStandardTitle({
+                name: values.titleName,
+                type,
+                productId: selectedProductId,
+                orderSort: standardColumnTitleData.length + 1,
+              })
+            } else if (type === 0) {
+              this.props.addStandardTitle({
+                name: values.titleName,
+                type,
+                productId: selectedProductId,
+                orderSort: standardRowTitleData.length + 1,
+              })
+            }
+          }
+          else if (tableTitleModalType === 'edit') {
+            const { id } = selectedStandardTitleData
+            this.props.editStandardTitle({
+              name: values.titleName,
+              id,
+              type,
+              productId: selectedProductId,
+            })
+          }
+          this.setState({
+            tableTitleModalVisible: false,
+          })
+        } else if (err.titleName) {
+          message.error(err.titleName.errors[0].message, 3)
+        }
+      })
+    }
+
+    /* 新增/修改 表头字段弹窗 - 取消 */
+    const handleCancelName = () => {
+      this.setState({
+        tableTitleModalVisible: false,
+      })
+    }
+    /* 删除 表头字段弹窗 */
+    const handleDelName = () => {
+      const { id, productId, type } = this.state.selectedStandardTitleData
+      this.props.delStandardTitle({
+        id,
+        productId,
+        type,
+      })
+    }
+    /* 第一步完成，跳转到 第二步 */
+    const toStepTwo = () => {
+      this.setState({
+        progressPercent: 33,
+        selectedStandardTitleData: {},
+      })
+    }
+    /* 第二步 跳转到 第一步 */
+    const toStepOne = () => {
+      this.setState({
+        progressPercent: 0,
+      })
+    }
+    const toStepThree = () => {
+      this.setState({
+        progressPercent: 66,
+      })
+    }
+    return (
+      <Col span={24}>
+        <FormItem label="标准" {...formItemLayout}>
+          <div className={styles.step}>
+            <div className={styles.progress}>
+              <Progress type="circle" percent={progressPercent} />
+            </div>
+            <div className={styles.stepDetail}>
+              <div>
+                标准模板创建步骤说明
+              </div>
+              <ul>
+                <li>第一步：新增列标题</li>
+                <li>第二步：新增行标题，创建表格</li>
+                <li>第三步：新增标准模板数据</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            {
+              /* 展示 第一步 内容 */
+              progressPercent === 0 && (
+                <div>
+                  <div>第一步：新增列标题</div>
+                  <div>
+                    <Button onClick={() => handleAddName(1)} type="primary" className={styles.editStandardModalBtnBar}>
+                      新增
+                    </Button>
+                    <Button onClick={() => handleEditName(1)} type="default" className={styles.editStandardModalBtnBar} disabled={selectedStandardTitleData.name === undefined}>
+                      修改
+                    </Button>
+                    <Button onClick={handleDelName} type="default" className={styles.editStandardModalBtnBar} disabled={selectedStandardTitleData.name === undefined}>
+                      删除
+                    </Button>
+                  </div>
+                  {/* 展示新增后的列表 */}
+                  <RadioGroup name='columnGroup' onChange={(event) => onChangeRadio(1, event)}>
+                    {
+                      standardColumnTitleData.map(item => item.type === 1 &&
+                        (
+                          <Radio value={item.id} key={item.id}>{item.name}</Radio>
+                        ))
+                    }
+                  </RadioGroup>
+                  <div>
+                    <Button disabled={standardColumnTitleData.length < 1} onClick={toStepTwo}>
+                      下一步
+                    </Button>
+                  </div>
+                </div>
+              )
+            }
+            {
+              /* 展示 第二步 内容 */
+              progressPercent === 33 && (
+                <div>
+                  <div className={styles.columnNameListWrap}>
+                    <div className={styles.columnNameListTitle}>第一步已创建好的列标题：</div>
+                    <ul className={styles.columnNameList}>
+                      {
+                        standardColumnTitleData.map(item => item.type === 1 && (<li key={item.id}>{item.name}</li>))
+                      }
+                    </ul>
+                  </div>
+                  <div>第二步：新增行标题</div>
+                  <div>
+                    <Button onClick={() => handleAddName(0)} type="primary" className={styles.editStandardModalBtnBar}>
+                      新增
+                    </Button>
+                    <Button onClick={() => handleEditName(0)} type="default" className={styles.editStandardModalBtnBar} disabled={selectedStandardTitleData.name === undefined}>
+                      修改
+                    </Button>
+                    <Button onClick={handleDelName} type="default" className={styles.editStandardModalBtnBar} disabled={selectedStandardTitleData.name === undefined}>
+                      删除
+                    </Button>
+                  </div>
+                  {/* 展示新增后的列表 */}
+                  <RadioGroup name='columnGroup' onChange={(event) => onChangeRadio(0, event)}>
+                    {
+                      standardRowTitleData.map(item => item.type === 0 &&
+                        (
+                          <Radio value={item.id} key={item.id}>{item.name}</Radio>
+                        ))
+                    }
+                  </RadioGroup>
+                  <div>
+                    <Button onClick={toStepOne} style={{ marginRight: 10 }} >
+                      上一步
+                    </Button>
+                    <Button onClick={toStepThree} disabled={standardRowTitleData.length < 1} style={{ marginRight: 10 }} >
+                      下一步
+                    </Button>
+                  </div>
+                </div>
+              )
+            }
+            {
+              /* 展示 第三步 内容 */
+              progressPercent === 66 && (
+                <div>
+                  <div className={styles.columnNameListWrap}>
+                    <div className={styles.columnNameListTitle}>第一步已创建好的列标题：</div>
+                    <ul className={styles.columnNameList}>
+                      {
+                        standardColumnTitleData.map(item => item.type === 1 && (<li key={item.id}>{item.name}</li>))
+                      }
+                    </ul>
+                  </div>
+                  <div className={styles.columnNameListWrap}>
+                    <div className={styles.columnNameListTitle}>第二步已创建好的行标题：</div>
+                    <ul className={styles.columnNameList}>
+                      {
+                        standardRowTitleData.map(item => item.type === 0 && (<li key={item.id}>{item.name}</li>))
+                      }
+                    </ul>
+                  </div>
+                  <Table
+                      bordered
+                      // dataSource={dataSource}
+                      columns={standardTableColumns}
+                      pagination={false}
+                    />
+                  <Button onClick={toStepTwo}>
+                    上一步
+                  </Button>
+                </div>
+              )
+            }
+            {/* 弹窗 - 文本框 */}
+            <Modal
+              title={dialogTitle}
+              visible={tableTitleModalVisible}
+              onOk={() => handleSaveName(tableDialogType)}
+              onCancel={handleCancelName}
+              destroyOnClose
+            >
+              {
+                getFieldDecorator(
+                  'titleName',
+                  {
+                    rules:
+                      [
+                        {
+                          required: true,
+                          message: '请输入字段内容',
+                        },
+                        {
+                          validator: (rule, value, callback) => {
+                            if (tableDialogType === 1) {
+                              if (value !== selectedStandardTitleData.name && standardColumnTitleData.some(item => item.name === value)) {
+                                message.error('已存在重复的表格列字段，请重新填写', 3);
+                                callback({ message: '已存在重复的表格列字段，请重新填写' })
+                                return
+                              }
+                            } else if (tableDialogType === 0) {
+                              if (value !== selectedStandardTitleData.name && standardRowTitleData.some(item => item.name === value)) {
+                                message.error('已存在重复的表格行字段，请重新填写', 3);
+                                callback({ message: '已存在重复的表格行字段，请重新填写' })
+                                return
+                              }
+                            }
+                            callback()
+                          },
+                        },
+                      ],
+                  }
+                )
+                  (<Input placeholder="请输入字段内容" />)
+              }
+            </Modal>
+          </div>
+        </FormItem>
+      </Col>
+    )
+  }
+
+  /**
+   * 编辑标准模板 弹窗
+   * 通过选中的商品ID，去查询列标题
+   * 
+   * @memberof BasicDataList
+   */
+  showEditStandardModal = () => {
+    if (JSON.stringify(this.state.selected) === '{}') {
+      message.warning('请选择数据后再进行操作', 3);
+      return;
+    }
+    const {
+      selectedProductId,
+     } = this.state
+    /* 根据选中的商品ID 查询到列标题 */
+    this.props.queryStandardTitle({
+      productId: selectedProductId,
+      type: 1,
+    })
+    /* 根据选中的商品ID 查询到行标题 */
+    this.props.queryStandardTitle({
+      productId: selectedProductId,
+      type: 0,
+    })
+    this.setState({
+      editStandardModalVisible: true,
+    })
+  }
+  handleCancelEditStandard = () => {
+    this.setState({
+      editStandardModalVisible: false,
+      progressPercent: 0,
+      selectedProductId: '',
+      selectedRowKeys: [],
+      selected: {},
+    })
+  }
+  handleSubmitEditStandard = () => {
+    alert('编辑完标准模板，保存')
+  }
 
   validatorNum = (rule, value, callback) => {
     if (isNaN(Number(value))) {
@@ -303,8 +682,6 @@ class BasicDataList extends Component {
     /* 判断标准是否填写完整 */
     const itemIsNull = [];
 
-
-
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
 
@@ -347,6 +724,11 @@ class BasicDataList extends Component {
       onCancel() { },
     });
   };
+  /**
+   * 产品列表 - 选中数据事件
+   * 
+   * @memberof BasicDataList
+   */
   rowOnChange = (selectedRowKeys, selectedRows) => {
     const selected = selectedRows[0];
     this.setState({
@@ -356,119 +738,6 @@ class BasicDataList extends Component {
     });
   };
 
-  /* 打开 - 新增 表格标题字段弹窗 */
-  handleAddName = (type) => {
-    this.props.form.setFieldsValue({
-      titleName: '',
-    })
-    this.setState({
-      tableTitleDialogVisible: true,
-      tableTitleDialogType: 'add',
-      tableDialogType: type,
-    })
-    if (type === 0) {
-      this.setState({
-        dialogTitle: '新增行标题',
-      })
-    } else if (type === 1) {
-      this.setState({
-        dialogTitle: '新增列标题',
-      })
-    }
-  }
-  /* 打开 - 修改 表头字段弹窗 */
-  handleEditName = (type) => {
-    if (type === 0) {
-      this.setState({
-        dialogTitle: '编辑行标题',
-      })
-    } else if (type === 1) {
-      this.setState({
-        dialogTitle: '编辑列标题',
-      })
-    }
-    this.props.form.setFieldsValue({
-      titleName: this.state.selectedStandardTitleData.name,
-    })
-    this.setState({
-      tableTitleDialogVisible: true,
-      tableTitleDialogType: 'edit',
-      tableDialogType: type,
-    })
-  }
-  /* 新增/修改 表头字段弹窗 - 保存 */
-  handleSaveName = (type) => {
-    this.props.form.validateFields((err, values) => {
-      if (err === null || !err.titleName) {
-        const {
-          tableTitleDialogType,
-          selectedProductId,
-        } = this.state
-        /* 对标题进行操作 */
-        const { standardTitleData } = this.props
-        const { selectedStandardTitleData } = this.state
-        /* 【新增】列标题 */
-        if (tableTitleDialogType === 'add') {
-          /* 与后端交互 - 【保存】列标题 */
-          this.props.addStandardTitle({
-            name: values.titleName,
-            type,
-            productId: selectedProductId,
-            orderSort: standardTitleData.length,
-          })
-        }
-        else if (tableTitleDialogType === 'edit') {
-          const { id } = selectedStandardTitleData
-          this.props.editStandardTitle({
-            name: values.titleName,
-            id,
-            type,
-            productId: selectedProductId,
-          })
-        }
-        this.setState({
-          tableTitleDialogVisible: false,
-          selectedRowName: '',
-        })
-      } else if (err.titleName) {
-        message.error(err.titleName.errors[0].message, 3)
-      }
-    })
-  }
-
-  /* 新增/修改 表头字段弹窗 - 取消 */
-  handleCancelName = () => {
-    this.setState({
-      tableTitleDialogVisible: false,
-    })
-  }
-  /* 删除 表头字段弹窗 */
-  handleDelName = () => {
-    const { id, productId, type } = this.state.selectedStandardTitleData
-    this.props.delStandardTitle({
-      id,
-      productId,
-      type,
-    })
-  }
-  /* 第一步完成，跳转到 第二步 */
-  toStepTwo = () => {
-    this.setState({
-      progressPercent: 33,
-      selectedStandardTitleData: {},
-    })
-  }
-  /* 第二步 跳转到 第一步 */
-  toStepOne = () => {
-    this.setState({
-      progressPercent: 0,
-    })
-  }
-  toStepThree = () => {
-    this.setState({
-      progressPercent: 66,
-    })
-  }
   render() {
     const {
       visible,
@@ -476,14 +745,7 @@ class BasicDataList extends Component {
       confirmLoading,
       modalType,
       selectedRowKeys,
-      rowName,
-      selectedStandardTitleData,
-      selectedRowName,
-      progressPercent,
-      dialogTitle,
-      tableDialogType,
-      tableTitleDialogVisible,
-      tableTitleDialogType,
+      editStandardModalVisible,
     } = this.state;
     const {
       columns,
@@ -492,9 +754,7 @@ class BasicDataList extends Component {
       updateBtn,
       checkBtn,
       deleteBtn,
-      standardTitleData,
     } = this.props;
-    const { getFieldDecorator } = this.props.form;
 
     const rowSelection = {
       type: 'radio',
@@ -512,6 +772,11 @@ class BasicDataList extends Component {
           {updateBtn && (
             <Button className={styles.btn} onClick={() => this.showModal('edit')}>
               编辑
+            </Button>
+          )}
+          {updateBtn && (
+            <Button className={styles.btn} onClick={this.showEditStandardModal}>
+              编辑标准
             </Button>
           )}
           {checkBtn && (
@@ -538,154 +803,6 @@ class BasicDataList extends Component {
         >
           <Form className={styles.fm}>
             <Row gutter={24}>{this.getFields()}</Row>
-            {
-              modalType === 'edit' && (
-                <Row gutter={24}>
-                  <Col span={24}>
-                    <FormItem label="标准" {...formItemLayout}>
-                      <div className={styles.step}>
-                        <div className={styles.progress}>
-                          <Progress type="circle" percent={progressPercent} />
-                        </div>
-                        <div className={styles.stepDetail}>
-                          <div>
-                            标准创建步骤说明
-                          </div>
-                          <ul>
-                            <li>第一步：新增列，填写表头字段内容</li>
-                            <li>第二步：新增行，创建表格</li>
-                            <li>第三步：新增数据</li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div>
-                        {
-                          /* 展示 第一步 内容 */
-                          progressPercent === 0 && (
-                            <div>
-                              <div>第一步：新增列，填写表头字段内容</div>
-                              <div>
-                                <Button onClick={() => this.handleAddName(1)} type="primary" style={{ marginBottom: 16, marginRight: 10 }}>
-                                  新增
-                                </Button>
-                                <Button onClick={() => this.handleEditName(1)} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedStandardTitleData.name === undefined}>
-                                  修改
-                                </Button>
-                                <Button onClick={this.handleDelName} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedStandardTitleData.name === undefined}>
-                                  删除
-                                </Button>
-                              </div>
-                              {/* 展示新增后的列表 */}
-                              <RadioGroup name='columnGroup' onChange={this.onChangeRadio}>
-                                {
-                                  standardTitleData.map(item => item.type === 1 &&
-                                    (
-                                      <Radio value={item.id} key={item.id}>{item.name}</Radio>
-                                    ))
-                                }
-                              </RadioGroup>
-                              <div>
-                                <Button disabled={standardTitleData.filter(item => item.type === 1).length < 1} onClick={this.toStepTwo}>
-                                  下一步
-                                </Button>
-                              </div>
-                            </div>
-                          )
-                        }
-                        {
-                          /* 展示 第二步 内容 */
-                          progressPercent === 33 && (
-                            <div>
-                              <div className={styles.columnNameListWrap}>
-                                <div className={styles.columnNameListTitle}>第一步已创建好的表头内容：</div>
-                                <ul className={styles.columnNameList}>
-                                  {
-                                    standardTitleData.map(item => item.type === 1 && (<li key={item.id}>{item.name}</li>))
-                                  }
-                                </ul>
-                              </div>
-                              <div>第二步：新增行</div>
-                              <div>
-                                <Button onClick={() => this.handleAddName(0)} type="primary" style={{ marginBottom: 16, marginRight: 10 }}>
-                                  新增
-                                </Button>
-                                <Button onClick={() => this.handleEditName(0)} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedRowName === undefined}>
-                                  修改
-                                </Button>
-                                <Button onClick={this.handleDelName} type="default" style={{ marginBottom: 16, marginRight: 10 }} disabled={selectedRowName === ''}>
-                                  删除
-                                </Button>
-                              </div>
-                              {/* 展示新增后的列表 */}
-                              <RadioGroup name='columnGroup' onChange={this.onChangeRadio}>
-                                {
-                                  standardTitleData.map(item => item.type === 0 &&
-                                    (
-                                      <Radio value={item.id} key={item.id}>{item.name}</Radio>
-                                    ))
-                                }
-                              </RadioGroup>
-                              <div>
-                                <Button onClick={this.toStepOne} style={{ marginRight: 10 }} >
-                                  上一步
-                                </Button>
-                                <Button onClick={this.toStepThree} disabled={standardTitleData.filter(item => item.type === 0).length < 1} style={{ marginRight: 10 }} >
-                                  下一步
-                                </Button>
-                              </div>
-                            </div>
-                          )
-                        }
-                        {
-                          /* 展示 第三步 内容 */
-                          progressPercent === 66 && (
-                            <div>
-                              <Button onClick={this.toStepTwo}>
-                                上一步
-                              </Button>
-                            </div>
-                          )
-                        }
-                        {/* 弹窗 - 文本框 */}
-                        <Modal
-                          title={dialogTitle}
-                          visible={tableTitleDialogVisible}
-                          onOk={() => this.handleSaveName(tableDialogType)}
-                          onCancel={this.handleCancelName}
-                        >
-                          {
-                            getFieldDecorator(
-                              'titleName',
-                              {
-                                rules:
-                                  [
-                                    {
-                                      required: true,
-                                      message: '请输入字段内容',
-                                    },
-                                    {
-                                      validator: (rule, value, callback) => {
-                                        if (value !== selectedStandardTitleData.name && standardTitleData.some(item => item.name === value && item.type === tableDialogType)) {
-                                          message.error('已存在重复的表格列字段，请重新填写', 3);
-                                          callback({ message: '已存在重复的表格列字段，请重新填写' })
-                                          return
-                                        }
-                                        callback()
-                                      },
-                                    },
-                                  ],
-                              }
-                            )
-                              (<Input placeholder="请输入字段内容" />)
-                          }
-                        </Modal>
-                      </div>
-                    </FormItem>
-                  </Col>
-                </Row>
-              )
-            }
-
             <FormItem className={styles.fmBtn}>
               <Button type="default" onClick={this.handleCancel} className={styles.backBtn}>
                 返回
@@ -700,6 +817,31 @@ class BasicDataList extends Component {
                   保存
                 </Button>
               )}
+            </FormItem>
+          </Form>
+        </Modal>
+        <Modal
+          title='编辑标准'
+          visible={editStandardModalVisible}
+          onCancel={this.handleCancelEditStandard}
+          footer={null}
+          width="80%"
+          destroyOnClose
+        >
+          <Form className={styles.fm}>
+            <Row gutter={24}>{this.getEditStandardFields()}</Row>
+            <FormItem className={styles.fmBtn}>
+              <Button type="default" onClick={this.handleCancelEditStandard} className={styles.backBtn}>
+                返回
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className={styles.submitBtn}
+                onClick={this.handleSubmitEditStandard}
+              >
+                保存
+              </Button>
             </FormItem>
           </Form>
         </Modal>
