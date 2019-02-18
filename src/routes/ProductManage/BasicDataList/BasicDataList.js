@@ -375,6 +375,7 @@ class BasicDataList extends Component {
         progressPercent: 66,
       })
     }
+
     return (
       <Col span={24}>
         <FormItem label="标准" {...standardFmItemLayout}>
@@ -508,7 +509,7 @@ class BasicDataList extends Component {
                             </td>
                             <td>
                               <FormItem>
-                                {getFieldDecorator(`${rowTitleItem.id}`, {
+                                {getFieldDecorator(`type_${rowTitleItem.id}`, {
                                   rules: [{ required: true, message: '此项必填' }],
                                   // initialValue: String(record.type),
                                 })(
@@ -662,6 +663,10 @@ class BasicDataList extends Component {
   }
   handleSubmitEditStandard = () => {
     alert('编辑完标准模板，保存')
+    /* 判断标准是否填写完整 */
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      console.info('values->', values)
+    })
   }
 
   validatorNum = (rule, value, callback) => {
@@ -740,9 +745,6 @@ class BasicDataList extends Component {
     }, 0);
   };
   handleSubmit = modalType => {
-    /* 判断标准是否填写完整 */
-    const itemIsNull = [];
-
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
 
@@ -801,7 +803,7 @@ class BasicDataList extends Component {
 
   render() {
     const {
-              visible,
+      visible,
       title,
       confirmLoading,
       modalType,
