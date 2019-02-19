@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames'
 import {
   Button,
   Table,
@@ -386,7 +387,18 @@ class BasicDataList extends Component {
         progressPercent: 66,
       })
     }
-
+    const stepOne = classNames({
+      [styles.currentStep]: this.state.progressPercent === 0,
+      [styles.normalStep]: true,
+    })
+    const stepTwo = classNames({
+      [styles.currentStep]: this.state.progressPercent === 33,
+      [styles.normalStep]: true,
+    })
+    const stepThree = classNames({
+      [styles.currentStep]: this.state.progressPercent === 66,
+      [styles.normalStep]: true,
+    })
     return (
       <Col span={24}>
         <FormItem label="标准" {...standardFmItemLayout}>
@@ -399,9 +411,34 @@ class BasicDataList extends Component {
                 标准模板创建步骤说明
               </div>
               <ul>
-                <li>第一步：新增列标题</li>
-                <li>第二步：新增行标题，创建表格</li>
-                <li>第三步：新增标准模板数据</li>
+                <li className={stepOne}>
+                  {progressPercent === 0 && (<span>第一步：新增列标题</span>)}
+                  {progressPercent !== 0 && (
+                    <div className={styles.columnNameListWrap}>
+                      <div className={styles.columnNameListTitle}>第一步已创建好的列标题：</div>
+                      <ul className={styles.columnNameList}>
+                        {
+                          standardColumnTitleData.map(item => <li key={item.id}>{item.name}</li>)
+                        }
+                      </ul>
+                    </div>
+                  )}
+                </li>
+
+                <li className={stepTwo}>
+                  {progressPercent !== 66 && (<span>第二步：新增行标题，创建表格</span>)}
+                  {progressPercent === 66 && (
+                    <div className={styles.columnNameListWrap}>
+                      <div className={styles.columnNameListTitle}>第二步已创建好的行标题：</div>
+                      <ul className={styles.columnNameList}>
+                        {
+                          standardRowTitleData.map(item => <li key={item.id}>{item.name}</li>)
+                        }
+                      </ul>
+                    </div>
+                  )}
+                </li>
+                <li className={stepThree}>第三步：新增标准模板数据</li>
               </ul>
             </div>
           </div>
@@ -410,7 +447,6 @@ class BasicDataList extends Component {
               /* 展示 第一步 内容 */
               progressPercent === 0 && (
                 <div>
-                  <div>第一步：新增列标题</div>
                   <div>
                     <Button onClick={() => handleAddName(1)} type="primary" className={styles.editStandardModalBtnBar}>
                       新增
@@ -443,15 +479,6 @@ class BasicDataList extends Component {
               /* 展示 第二步 内容 */
               progressPercent === 33 && (
                 <div>
-                  <div className={styles.columnNameListWrap}>
-                    <div className={styles.columnNameListTitle}>第一步已创建好的列标题：</div>
-                    <ul className={styles.columnNameList}>
-                      {
-                        standardColumnTitleData.map(item => item.type === 1 && (<li key={item.id}>{item.name}</li>))
-                      }
-                    </ul>
-                  </div>
-                  <div>第二步：新增行标题</div>
                   <div>
                     <Button onClick={() => handleAddName(0)} type="primary" className={styles.editStandardModalBtnBar}>
                       新增
@@ -487,10 +514,7 @@ class BasicDataList extends Component {
               /* 展示 第三步 内容 */
               progressPercent === 66 && (
                 <div>
-                  <div className={styles.columnNameListWrap}>
-                    第三步：创建表格，新增标准模板数据
-                  </div>
-                  <table className={commomStyles.table} style={{ width: '100%' }}>
+                  <table className={commomStyles.table} style={{ width: '100%', marginBottom: '10px' }}>
                     <thead>
                       <tr>
                         <th>
@@ -732,6 +756,7 @@ class BasicDataList extends Component {
     })
     this.setState({
       editStandardModalVisible: false,
+      progressPercent: 0,
     })
   }
 

@@ -23,6 +23,8 @@
 .step {
     border-bottom: 1px dashed #ddd;
     display: flex;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
     .progress {
         flex: 1;
         margin-top: 20px;
@@ -30,11 +32,15 @@
     }
     .stepDetail {
         flex: 4;
+        li {
+            line-height: 30px;
+        }
     }
 }
 
 .columnNameListWrap {
     display: flex;
+    margin-top: -30px;
     .columnNameListTitle {
         flex: 1;
         line-height: 30px;
@@ -42,7 +48,7 @@
         min-width: 200px;
     }
     .columnNameList {
-        flex: 4;
+        flex: 2;
         max-height: 50px;
         margin-bottom: 0;
         overflow-y: auto;
@@ -59,6 +65,15 @@
             }
         }
     }
+}
+
+.normalStep {
+    color: #333;
+}
+
+.currentStep {
+    color: rgb(16, 142, 233);
+    font-weight: bold;
 }
 
 .editStandardModalBtnBar {
