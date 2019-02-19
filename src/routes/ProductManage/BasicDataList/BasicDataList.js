@@ -341,14 +341,18 @@ class BasicDataList extends Component {
         }
       })
     }
+    /* 新增/修改 表头字段弹窗 文本框有内容时，确定按钮可点击 */
     const handleChangeName = (e) => {
-      if (e.target) {
+      if (e.target.value) {
         this.setState({
           okBtnDisabled: false,
         })
+      } else {
+        this.setState({
+          okBtnDisabled: true,
+        })
       }
     }
-
     /* 新增/修改 表头字段弹窗 - 取消 */
     const handleCancelName = () => {
       this.setState({
