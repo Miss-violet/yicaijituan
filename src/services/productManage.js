@@ -60,3 +60,9 @@ export async function queryStandardTitleList(params) {
         body: params,
     });
 }
+export async function standardParamsCreate(params) {
+    return request(`/api/standardParams/create`, {
+        method: 'POST',
+        body: params,
+    })
+}

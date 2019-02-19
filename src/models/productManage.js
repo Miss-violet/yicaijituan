@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { create, update, del, productList, standardTitleCreate, standardTitleDelete, standardTitleEdit, queryStandardTitleList } from '../services/productManage'
+import { create, update, del, productList, standardTitleCreate, standardTitleDelete, standardTitleEdit, queryStandardTitleList, standardParamsCreate } from '../services/productManage'
 
 export default {
   namespace: 'productManage',
@@ -148,6 +148,14 @@ export default {
             },
           })
         }
+      }
+    },
+    *standardParamsCreate({ payload }, { call, put }) {
+      const res = yield call(standardParamsCreate, payload)
+      if (res.code === 0) {
+        yield put({
+          type: 'success',
+        })
       }
     },
   },

@@ -236,6 +236,12 @@ class ProductManage extends Component {
           payload,
         })
       },
+      standardParamsCreate: payload => {
+        this.props.dispatch({
+          type: 'productManage/standardParamsCreate',
+          payload,
+        })
+      },
     };
     const { standardsVisible, standardsData, proName } = this.state;
 

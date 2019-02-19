@@ -56,7 +56,7 @@ export function getProductList(req, res) {
 
 export function createStandardTitle(req, res) {
     const { name, type, productId, orderSort } = req.body
-    const id = `${productId}_${name}`
+    const id = `${name}`
     standardsTitleList.push({ name, id, productId, type })
     const result = {
         "code": 0,
@@ -122,6 +122,19 @@ export function getStandardTitleList(req, res) {
         code: 0,
         msg: 'success',
         data,
+    }
+    if (res && res.json) {
+        res.json(result)
+    } else {
+        return result
+    }
+}
+
+export function createStandardParams(req, res) {
+    const result = {
+        code: 0,
+        msg: 'success',
+        data: {},
     }
     if (res && res.json) {
         res.json(result)

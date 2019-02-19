@@ -11,11 +11,9 @@ import {
   DatePicker,
   Radio,
   message,
-  Popconfirm,
   Progress,
   InputNumber,
 } from 'antd';
-import EditableCell from './EditableCell';
 import styles from './basicDataList.less';
 import commomStyles from '../../../assets/style/common.less'
 
@@ -49,13 +47,14 @@ class BasicDataList extends Component {
       selectedProductId: '',
       selected: {},
       selectedRowKeys: [],
-      editStandardModalVisible: true,    /* 编辑标准 弹窗 - 展示/隐藏 */
-      tableTitleModalVisible: false,     /* 标准行/列标题 弹窗 - 展示/隐藏 */
+      editStandardModalVisible: false,    /* 编辑标准 弹窗 - 展示/隐藏 */
+      tableTitleModalVisible: false,      /* 标准行/列标题 弹窗 - 展示/隐藏 */
       selectedStandardTitleData: {},      /* 记录选中的标题 */
-      progressPercent: 66,                /* 进度条 */
+      progressPercent: 0,                 /* 进度条 */
       tableTitleModalType: '',            /* 弹窗类型：add/edit */
       dialogTitle: '',                    /* 弹窗标题 */
       tableDialogType: '',                /* 弹窗操作对象类型：column/row */
+      okBtnDisabled: true,                /* 标准行/列标题 弹窗 保存按钮是否可执行 */
     };
   }
 
@@ -212,6 +211,7 @@ class BasicDataList extends Component {
         default:
           break;
       }
+      return item
     });
     return fmItem;
   };
@@ -340,6 +340,13 @@ class BasicDataList extends Component {
           message.error(err.titleName.errors[0].message, 3)
         }
       })
+    }
+    const handleChangeName = (e) => {
+      if (e.target) {
+        this.setState({
+          okBtnDisabled: false,
+        })
+      }
     }
 
     /* 新增/修改 表头字段弹窗 - 取消 */
@@ -582,7 +589,7 @@ class BasicDataList extends Component {
               visible={tableTitleModalVisible}
               onOk={() => handleSaveName(tableDialogType)}
               onCancel={handleCancelName}
-              destroyOnClose
+              okButtonProps={{ disabled: this.state.okBtnDisabled }}
             >
               {
                 getFieldDecorator(
@@ -615,7 +622,7 @@ class BasicDataList extends Component {
                       ],
                   }
                 )
-                  (<Input placeholder="请输入字段内容" />)
+                  (<Input placeholder="请输入字段内容" onChange={handleChangeName} />)
               }
             </Modal>
           </div>
@@ -636,8 +643,8 @@ class BasicDataList extends Component {
       return;
     }
     const {
-              selectedProductId,
-            } = this.state
+      selectedProductId,
+    } = this.state
     /* 根据选中的商品ID 查询到列标题 */
     this.props.queryStandardTitle({
       productId: selectedProductId,
@@ -662,10 +669,65 @@ class BasicDataList extends Component {
     })
   }
   handleSubmitEditStandard = () => {
-    alert('编辑完标准模板，保存')
+    const { standardColumnTitleData, standardRowTitleData } = this.props
+    const { selectedProductId } = this.state
+    const standardTemplateData = []
     /* 判断标准是否填写完整 */
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      console.info('values->', values)
+    const values = this.props.form.getFieldsValue()
+    let itemIsNull = 0
+    for (const i in values) {
+      if (values[i] === undefined && (i !== 'titleName' && i !== 'printName' && i !== 'titleName' && i !== 'remark' && i !== 'name')) {
+        itemIsNull += 1
+      }
+    }
+    if (itemIsNull !== 0) {
+      Modal.warning({
+        title: '警告',
+        content: '标准的各个指标不能为空，请填写完整后再保存',
+        okText: '知道了',
+      });
+      return;
+    }
+    /* 填写完整以后 */
+    standardColumnTitleData.map(columnItem => {
+      standardRowTitleData.map(rowItem => {
+        /* 可以找到 rowId 和 columnId */
+        const rowId = rowItem.id
+        const columnId = columnItem.id
+        let type = ''
+        let pointNum = ''
+        let val = ''
+        for (const i in values) {
+          if (values) {
+            if (i === `type_${rowId}`) {
+              type = values[i]
+            }
+            if (i === `pointerNum_${rowId}`) {
+              pointNum = values[i]
+            }
+            if (i === `${columnItem.id}_${rowItem.id}`) {
+              val = values[i]
+            }
+          }
+        }
+        /* 拼凑出后端需要的数据格式 */
+        standardTemplateData.push({
+          rowId,
+          columnId,
+          type,
+          productId: selectedProductId,
+          pointNum,
+          val,
+        })
+        return rowItem
+      })
+      return columnItem
+    })
+    this.props.standardParamsCreate({
+      ...standardTemplateData,
+    })
+    this.setState({
+      editStandardModalVisible: false,
     })
   }
 
