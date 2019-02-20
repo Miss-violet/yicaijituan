@@ -696,6 +696,7 @@ class BasicDataList extends Component {
       selected: {},
     })
   }
+  /* 保存标准模板 */
   handleSubmitEditStandard = () => {
     const { standardColumnTitleData, standardRowTitleData } = this.props
     const { selectedProductId } = this.state
@@ -759,7 +760,11 @@ class BasicDataList extends Component {
       progressPercent: 0,
     })
   }
-
+  /**
+   * 输入校验
+   * 
+   * @memberof BasicDataList
+   */
   validatorNum = (rule, value, callback) => {
     if (isNaN(Number(value))) {
       callback('请输入数字');
@@ -776,7 +781,11 @@ class BasicDataList extends Component {
       selected: {},
     });
   };
-
+  /**
+   * 新增/编辑 产品
+   * 
+   * @memberof BasicDataList
+   */
   showModal = type => {
     switch (type) {
       case 'add':
@@ -835,10 +844,14 @@ class BasicDataList extends Component {
       });
     }, 0);
   };
+  /**
+   * 保存产品信息
+   * 
+   * @memberof BasicDataList
+   */
   handleSubmit = modalType => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
         if (modalType === 'add') {
           this.props.handleCreate({
             ...values,
@@ -862,6 +875,11 @@ class BasicDataList extends Component {
       }
     });
   };
+  /**
+   * 删除产品信息
+   * 
+   * @memberof BasicDataList
+   */
   handleDelete = () => {
     if (!this.state.selectedProductId) {
       message.warning('请选择数据后再进行操作', 2);
