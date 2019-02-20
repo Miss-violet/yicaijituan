@@ -40,6 +40,7 @@ const getProduct = [
     },
 ]
 let standardsTitleList = []
+const standardsParams = []
 export function getProductList(req, res) {
     const product = {
         data: getProduct,
@@ -53,7 +54,20 @@ export function getProductList(req, res) {
         return product
     }
 }
-
+export function getProductInfo(req, res) {
+    const { id } = req.body
+    const selected = getProduct.filter(item => item.productId === id)
+    const result = {
+        code: 0,
+        msg: 'success',
+        data: { ...selected[0] },
+    }
+    if (res && res.json) {
+        res.json(result)
+    } else {
+        return result
+    }
+}
 export function createStandardTitle(req, res) {
     const { name, type, productId, orderSort } = req.body
     const id = `${name}`
@@ -131,10 +145,28 @@ export function getStandardTitleList(req, res) {
 }
 
 export function createStandardParams(req, res) {
+    for (const i in req.body) {
+        if (req.body)
+            standardsParams.push(req.body[i])
+    }
     const result = {
         code: 0,
         msg: 'success',
-        data: {},
+        data: standardsParams,
+    }
+    if (res && res.json) {
+        res.json(result)
+    } else {
+        return result
+    }
+}
+
+export function queryStandardParams(req, res) {
+    const data = standardsParams.filter(item => item.productId === req.body.productId)
+    const result = {
+        code: 0,
+        msg: 'success',
+        data,
     }
     if (res && res.json) {
         res.json(result)

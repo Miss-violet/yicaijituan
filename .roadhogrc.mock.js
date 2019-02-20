@@ -7,7 +7,7 @@ import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
 
-import { getProductList, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList, createStandardParams } from './mock/productManage'
+import { getProductList, getProductInfo, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList, createStandardParams, queryStandardParams } from './mock/productManage'
 
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
@@ -189,11 +189,13 @@ const proxy = {
     console.info('mock')
   },
   'POST /api/product/list': getProductList,
+  'POST /api/product/info/*': getProductInfo,
   'POST /api/standardTitle/create': createStandardTitle,
   'POST /api/standardTitle/list/*/*': getStandardTitleList,
   'POST /api/standardTitle/delete/*': delStandardTitle,
   'POST /api/standardTitle/update': editStandardTitle,
   'POST /api/standardParams/create': createStandardParams,
+  'POST /api/standardParams/list/*': queryStandardParams,
 };
 
 export default (noProxy ? {} : delay(proxy, 1000));

@@ -37,7 +37,7 @@ const formItemLayout = {
 };
 
 class BasicDataList extends Component {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
       title: '',
@@ -48,7 +48,7 @@ class BasicDataList extends Component {
       selectedProductId: '',
       selected: {},
       selectedRowKeys: [],
-      editStandardModalVisible: false,    /* 编辑标准 弹窗 - 展示/隐藏 */
+      fmFields: props.fmFields,
       tableTitleModalVisible: false,      /* 标准行/列标题 弹窗 - 展示/隐藏 */
       selectedStandardTitleData: {},      /* 记录选中的标题 */
       progressPercent: 0,                 /* 进度条 */
@@ -58,10 +58,36 @@ class BasicDataList extends Component {
       okBtnDisabled: true,                /* 标准行/列标题 弹窗 保存按钮是否可执行 */
     };
   }
+  componentWillReceiveProps(nextProps) {
+    /* 把查询到的商品详情回填到弹窗中 */
+    if (this.props.productDetail !== nextProps.productDetail) {
+      const { productDetail } = nextProps
+      const { fmFields } = this.props
+      for (const i in productDetail) {
+        if (productDetail) {
+          fmFields.map(fmItem => {
+            if (i === fmItem.name) {
+              fmItem.initialValue = productDetail[i];
+            }
+            return fmItem;
+          });
+        }
+      }
+      setTimeout(() => {
+        this.setState({
+          fmFields,
+        })
+      }, 0)
+    }
+  }
 
-  getFields = () => {
-    const { fmFields } = this.props;
-    const { disabled } = this.state;
+  /**
+   * 产品基本信息
+   * 
+   * @memberof BasicDataList
+   */
+  getEditProductFields = () => {
+    const { fmFields, disabled } = this.state;
     const { getFieldDecorator, getFieldValue } = this.props.form;
 
     const compareToFirstPassword = (rule, value, callback) => {
@@ -71,7 +97,6 @@ class BasicDataList extends Component {
         callback();
       }
     };
-
     const fmItem = fmFields.map(item => {
       const { modalType } = this.state;
       switch (item.type) {
@@ -216,6 +241,12 @@ class BasicDataList extends Component {
     });
     return fmItem;
   };
+
+  /**
+   * 产品标准模板信息
+   * 
+   * @memberof BasicDataList
+   */
   getEditStandardFields = () => {
     const {
       selectedStandardTitleData,
@@ -227,22 +258,11 @@ class BasicDataList extends Component {
     const {
       standardColumnTitleData,
       standardRowTitleData,
+      standardParams,
     } = this.props
     const { getFieldDecorator } = this.props.form;
 
-    const standardFmItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 24 },
-        md: { span: 2 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 24 },
-        md: { span: 22 },
-      },
-    }
-
+    /* 选中字段 */
     const onChangeRadio = (type, e) => {
       const { value } = e.target
       let selectedData = []
@@ -382,6 +402,7 @@ class BasicDataList extends Component {
         progressPercent: 0,
       })
     }
+    /* 第二步完成，跳转到 第三步 */
     const toStepThree = () => {
       this.setState({
         progressPercent: 66,
@@ -399,9 +420,10 @@ class BasicDataList extends Component {
       [styles.currentStep]: this.state.progressPercent === 66,
       [styles.normalStep]: true,
     })
+
     return (
       <Col span={24}>
-        <FormItem label="标准" {...standardFmItemLayout}>
+        <FormItem label="标准" {...formItemLayout}>
           <div className={styles.step}>
             <div className={styles.progress}>
               <Progress type="circle" percent={progressPercent} />
@@ -537,71 +559,91 @@ class BasicDataList extends Component {
                     </thead>
                     <tbody>
                       {
-                        standardRowTitleData.map(rowTitleItem => (
-                          <tr key={rowTitleItem.id}>
-                            <td>
-                              {rowTitleItem.name}
-                            </td>
-                            <td>
-                              <FormItem>
-                                {getFieldDecorator(`type_${rowTitleItem.id}`, {
-                                  rules: [{ required: true, message: '此项必填' }],
-                                  // initialValue: String(record.type),
-                                })(
-                                  <Select style={{ width: '100 %' }} placeholder="请选择">
-                                    <Option value="0">≤（小于等于）</Option>
-                                    <Option value="1">≥（大于等于）</Option>
-                                  </Select>
+                        standardRowTitleData.map(rowTitleItem => {
+                          /* 通过遍历 standardParams， 找出已知的类型值，填入表格中 */
+                          let pointNumValue
+                          let typeValue
+                          standardParams.map(standardParamsItem => {
+                            if (standardParamsItem.rowId === rowTitleItem.id) {
+                              typeValue = standardParamsItem.type
+                            }
+                            return standardParamsItem
+                          })
+                          return (
+                            <tr key={rowTitleItem.id}>
+                              <td>
+                                {rowTitleItem.name}
+                              </td>
+                              <td>
+                                <FormItem>
+                                  {getFieldDecorator(`type_${rowTitleItem.id}`, {
+                                    rules: [{ required: true, message: '此项必填' }],
+                                    initialValue: typeValue,
+                                  })(
+                                    <Select style={{ width: '100 %' }} placeholder="请选择">
+                                      <Option value="0">≤（小于等于）</Option>
+                                      <Option value="1">≥（大于等于）</Option>
+                                    </Select>
+                                    )
+                                  }
+                                </FormItem>
+                              </td>
+                              {
+                                standardColumnTitleData.map(columnTitleItem => {
+                                  let cellValue
+                                  /* 通过遍历 standardParams，找出已知的标准模板值，填入表格中 */
+                                  standardParams.map(standardParamsItem => {
+                                    if (standardParamsItem.columnId === columnTitleItem.id && standardParamsItem.rowId === rowTitleItem.id) {
+                                      cellValue = standardParamsItem.val
+                                      pointNumValue = standardParamsItem.pointNum
+                                    }
+                                    return standardParamsItem
+                                  })
+                                  return (
+                                    <td key={`${columnTitleItem.id}_${rowTitleItem.id}`}>
+                                      <FormItem>
+                                        {getFieldDecorator(`${columnTitleItem.id}_${rowTitleItem.id}`, {
+                                          rules: [{ required: true, message: '此项必填' }, {
+                                            validator: this.validatorNum,
+                                          }],
+                                          initialValue: cellValue,
+                                        })(
+                                          <InputNumber
+                                            onBlur={this.inputNumberCheck}
+                                            disabled={this.props.disabled}
+                                            step={this.props.step}
+                                            min={this.props.min}
+                                            max={this.props.max}
+                                          />
+                                          )}
+                                      </FormItem>
+                                    </td>
                                   )
                                 }
-                              </FormItem>
-                            </td>
-                            {
-                              standardColumnTitleData.map(columnTitleItem => {
-                                return (
-                                  <td key={`${columnTitleItem.id}_${rowTitleItem.id}`}>
-                                    <FormItem>
-                                      {getFieldDecorator(`${columnTitleItem.id}_${rowTitleItem.id}`, {
-                                        rules: [{ required: true, message: '此项必填' }, {
-                                          validator: this.validatorNum,
-                                        }],
-                                        // initialValue: value,
-                                      })(
-                                        <InputNumber
-                                          onBlur={this.inputNumberCheck}
-                                          disabled={this.props.disabled}
-                                          step={this.props.step}
-                                          min={this.props.min}
-                                          max={this.props.max}
-                                        />
-                                        )}
-                                    </FormItem>
-                                  </td>
                                 )
                               }
-                              )
-                            }
-                            <td>
-                              <FormItem>
-                                {getFieldDecorator(`pointerNum_${rowTitleItem.name}`, {
-                                  rules: [{ required: true, message: '此项必填' }, {
-                                    validator: this.validatorNum,
-                                  }],
-                                  // initialValue: value,
-                                })(
-                                  <InputNumber
-                                    onBlur={this.inputNumberCheck}
-                                    disabled={this.props.disabled}
-                                    step={this.props.step}
-                                    min={this.props.min}
-                                    max={this.props.max}
-                                  />
-                                  )}
-                              </FormItem>
-                            </td>
-                          </tr>
+                              <td>
+                                <FormItem>
+                                  {getFieldDecorator(`pointerNum_${rowTitleItem.name}`, {
+                                    rules: [{ required: true, message: '此项必填' }, {
+                                      validator: this.validatorNum,
+                                    }],
+                                    initialValue: pointNumValue,
+                                  })(
+                                    <InputNumber
+                                      onBlur={this.inputNumberCheck}
+                                      disabled={this.props.disabled}
+                                      step={this.props.step}
+                                      min={this.props.min}
+                                      max={this.props.max}
+                                    />
+                                    )}
+                                </FormItem>
+                              </td>
+                            </tr>
 
-                        ))
+                          )
+                        })
                       }
                     </tbody>
                   </table>
@@ -660,63 +702,190 @@ class BasicDataList extends Component {
   }
 
   /**
-   * 编辑标准模板 弹窗
-   * 通过选中的商品ID，去查询列标题
-   *
+   * 输入校验
+   * 
    * @memberof BasicDataList
    */
-  showEditStandardModal = () => {
-    if (JSON.stringify(this.state.selected) === '{}') {
-      message.warning('请选择数据后再进行操作', 3);
-      return;
+  validatorNum = (rule, value, callback) => {
+    if (isNaN(Number(value))) {
+      callback('请输入数字');
+    } else {
+      this.setState({})
     }
-    const {
-      selectedProductId,
-    } = this.state
-    /* 根据选中的商品ID 查询到列标题 */
-    this.props.queryStandardTitle({
-      productId: selectedProductId,
-      type: 1,
-    })
-    /* 根据选中的商品ID 查询到行标题 */
-    this.props.queryStandardTitle({
-      productId: selectedProductId,
-      type: 0,
-    })
-    this.setState({
-      editStandardModalVisible: true,
-    })
+    callback()
   }
-  handleCancelEditStandard = () => {
+
+  /**
+   * 关闭弹窗 - 新增/编辑/查看 产品，编辑产品标准模板
+   * 
+   * @memberof BasicDataList
+   */
+  handleCancel = (modalType) => {
+    if (modalType === 'editStandard') {
+      this.setState({
+        progressPercent: 0,
+      })
+    }
+
     this.setState({
-      editStandardModalVisible: false,
-      progressPercent: 0,
+      visible: false,
       selectedProductId: '',
       selectedRowKeys: [],
       selected: {},
-    })
-  }
-  /* 保存标准模板 */
-  handleSubmitEditStandard = () => {
+    });
+  };
+
+  /**
+   * 打开弹窗 - 新增/编辑/查看 产品，编辑产品标准模板
+   * 
+   * @memberof BasicDataList
+   */
+  showModal = type => {
+    switch (type) {
+      case 'add':
+        this.setState({
+          title: '新增产品',
+          disabled: false,
+          modalType: 'add',
+          selected: {} /* 点击新增的时候，不带入值。防止选中后点击新增把值带入 */,
+        });
+        break;
+      case 'edit':
+        if (JSON.stringify(this.state.selected) === '{}') {
+          message.warning('请选择数据后再进行操作', 3);
+          return;
+        }
+        this.setState({
+          title: '编辑产品',
+          disabled: false,
+          modalType: 'edit',
+        });
+        break;
+      case 'check':
+        if (JSON.stringify(this.state.selected) === '{}') {
+          message.warning('请选择数据后再进行操作', 3);
+          return;
+        }
+        this.setState({
+          title: '查看产品',
+          disabled: true,
+          modalType: 'check',
+        });
+        break;
+      case 'editStandard':
+        if (JSON.stringify(this.state.selected) === '{}') {
+          message.warning('请选择数据后再进行操作', 3);
+          return;
+        }
+        this.setState({
+          title: '编辑产品模板',
+          disabled: true,
+          modalType: 'editStandard',
+        });
+        break;
+      default:
+        break;
+    }
+    setTimeout(() => {
+      const { selected, modalType, fmFields } = this.state;
+      const { id } = selected
+      const { queryStandardParams, handleCheck, productDetail } = this.props
+      if (JSON.stringify(this.state.selected) === '{}') {
+        /* 如果 this.state.selected 为空，则说明是 新增 */
+        fmFields.map(fmItem => {
+          fmItem.initialValue = null;
+          return fmItem;
+        });
+      } else {
+        if (modalType === 'editStandard') {
+          queryStandardParams({
+            productId: id,
+          })
+        }
+        /* 用接口查询商品详情 */
+        handleCheck({
+          productId: id,
+        })
+      }
+      this.setState({
+        visible: true,
+      });
+    }, 0);
+  };
+
+  /**
+   * 保存产品信息
+   * 
+   * @memberof BasicDataList
+   */
+  handleSubmit = modalType => {
+    if (modalType !== 'editStandard') {
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err || (Object.keys(err).length === 1 && err.titleName)) {
+          switch (modalType) {
+            case 'add':
+              this.props.handleCreate({
+                ...values,
+              });
+              break;
+            case 'edit':
+              this.props.handleEdit({
+                ...values,
+                id: this.state.selectedProductId,
+              });
+              break;
+            default:
+              break;
+          }
+          this.setState({
+            confirmLoading: true,
+            selectedRowKeys: [],
+          });
+          setTimeout(() => {
+            this.setState({
+              confirmLoading: false,
+            });
+          }, 500);
+          this.handleCancel();
+        }
+      }
+      );
+    } else {
+      const values = this.props.form.getFieldsValue()
+      for (const i in values) {
+        if (values[i] === undefined && i !== 'titleName') {
+          Modal.warning({
+            title: '警告',
+            content: '标准的各个指标不能为空，请填写完整后再保存',
+            okText: '知道了',
+          });
+          return
+        }
+      }
+      this.handleSubmitEditStandard(values)
+      this.setState({
+        progressPercent: 0,
+        confirmLoading: true,
+        selectedRowKeys: [],
+      });
+      setTimeout(() => {
+        this.setState({
+          confirmLoading: false,
+        });
+      }, 500);
+      this.handleCancel();
+    }
+  };
+
+  /**
+   * 保存标准模板
+   * 
+   * @memberof BasicDataList
+   */
+  handleSubmitEditStandard = (values) => {
     const { standardColumnTitleData, standardRowTitleData } = this.props
     const { selectedProductId } = this.state
     const standardTemplateData = []
-    /* 判断标准是否填写完整 */
-    const values = this.props.form.getFieldsValue()
-    let itemIsNull = 0
-    for (const i in values) {
-      if (values[i] === undefined && (i !== 'titleName' && i !== 'printName' && i !== 'titleName' && i !== 'remark' && i !== 'name')) {
-        itemIsNull += 1
-      }
-    }
-    if (itemIsNull !== 0) {
-      Modal.warning({
-        title: '警告',
-        content: '标准的各个指标不能为空，请填写完整后再保存',
-        okText: '知道了',
-      });
-      return;
-    }
     /* 填写完整以后 */
     standardColumnTitleData.map(columnItem => {
       standardRowTitleData.map(rowItem => {
@@ -755,126 +924,8 @@ class BasicDataList extends Component {
     this.props.standardParamsCreate({
       ...standardTemplateData,
     })
-    this.setState({
-      editStandardModalVisible: false,
-      progressPercent: 0,
-    })
   }
-  /**
-   * 输入校验
-   * 
-   * @memberof BasicDataList
-   */
-  validatorNum = (rule, value, callback) => {
-    if (isNaN(Number(value))) {
-      callback('请输入数字');
-    } else {
-      this.setState({})
-    }
-    callback()
-  }
-  handleCancel = () => {
-    this.setState({
-      visible: false,
-      selectedProductId: '',
-      selectedRowKeys: [],
-      selected: {},
-    });
-  };
-  /**
-   * 新增/编辑 产品
-   * 
-   * @memberof BasicDataList
-   */
-  showModal = type => {
-    switch (type) {
-      case 'add':
-        this.setState({
-          title: '新增',
-          disabled: false,
-          modalType: 'add',
-          selected: {} /* 点击新增的时候，不带入值。防止选中后点击新增把值带入 */,
-        });
-        break;
-      case 'edit':
-        if (JSON.stringify(this.state.selected) === '{}') {
-          message.warning('请选择数据后再进行操作', 3);
-          return;
-        }
-        this.setState({
-          title: '编辑',
-          disabled: false,
-          modalType: 'edit',
-        });
-        break;
-      case 'check':
-        if (JSON.stringify(this.state.selected) === '{}') {
-          message.warning('请选择数据后再进行操作', 3);
-          return;
-        }
-        this.setState({
-          title: '查看',
-          disabled: true,
-          modalType: 'check',
-        });
-        break;
-      default:
-        break;
-    }
-    setTimeout(() => {
-      const { selected } = this.state;
-      if (JSON.stringify(this.state.selected) === '{}') {
-        /* 如果 this.state.selected 为空，则说明是 新增 */
-        this.props.fmFields.map(fmItem => {
-          fmItem.initialValue = null;
-          return fmItem;
-        });
-      } else {
-        for (const i in selected) {
-          this.props.fmFields.map(fmItem => {
-            if (i === fmItem.name) {
-              fmItem.initialValue = selected[i];
-            }
-            return fmItem;
-          });
-        }
-      }
-      this.setState({
-        visible: true,
-      });
-    }, 0);
-  };
-  /**
-   * 保存产品信息
-   * 
-   * @memberof BasicDataList
-   */
-  handleSubmit = modalType => {
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        if (modalType === 'add') {
-          this.props.handleCreate({
-            ...values,
-          });
-        } else if (modalType === 'edit') {
-          this.props.handleEdit({
-            ...values,
-            id: this.state.selectedProductId,
-          });
-        }
-        this.setState({
-          confirmLoading: true,
-          selectedRowKeys: [],
-        });
-        setTimeout(() => {
-          this.setState({
-            confirmLoading: false,
-          });
-        }, 500);
-        this.handleCancel();
-      }
-    });
-  };
+
   /**
    * 删除产品信息
    * 
@@ -896,6 +947,7 @@ class BasicDataList extends Component {
       onCancel() { },
     });
   };
+
   /**
    * 产品列表 - 选中数据事件
    *
@@ -917,10 +969,9 @@ class BasicDataList extends Component {
       confirmLoading,
       modalType,
       selectedRowKeys,
-      editStandardModalVisible,
     } = this.state;
     const {
-              columns,
+      columns,
       data,
       addBtn,
       updateBtn,
@@ -947,7 +998,7 @@ class BasicDataList extends Component {
             </Button>
           )}
           {updateBtn && (
-            <Button className={styles.btn} onClick={this.showEditStandardModal}>
+            <Button className={styles.btn} onClick={() => this.showModal('editStandard')}>
               编辑标准
             </Button>
           )}
@@ -968,15 +1019,20 @@ class BasicDataList extends Component {
           title={title}
           visible={visible}
           confirmLoading={confirmLoading}
-          onCancel={this.handleCancel}
+          onCancel={() => this.handleCancel(modalType)}
           footer={null}
           width="80%"
           destroyOnClose
         >
           <Form className={styles.fm}>
-            <Row gutter={24}>{this.getFields()}</Row>
+            <Row gutter={24}>{this.getEditProductFields()}</Row>
+            {
+              modalType === 'editStandard' && (
+                <Row gutter={24}>{this.getEditStandardFields()}</Row>
+              )
+            }
             <FormItem className={styles.fmBtn}>
-              <Button type="default" onClick={this.handleCancel} className={styles.backBtn}>
+              <Button type="default" onClick={() => this.handleCancel(modalType)} className={styles.backBtn}>
                 返回
               </Button>
               {this.state.modalType !== 'check' && (
@@ -989,31 +1045,6 @@ class BasicDataList extends Component {
                   保存
                 </Button>
               )}
-            </FormItem>
-          </Form>
-        </Modal>
-        <Modal
-          title='编辑标准'
-          visible={editStandardModalVisible}
-          onCancel={this.handleCancelEditStandard}
-          footer={null}
-          width="80%"
-          destroyOnClose
-        >
-          <Form className={styles.fm}>
-            <Row gutter={24}>{this.getEditStandardFields()}</Row>
-            <FormItem className={styles.fmBtn}>
-              <Button type="default" onClick={this.handleCancelEditStandard} className={styles.backBtn}>
-                返回
-              </Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className={styles.submitBtn}
-                onClick={this.handleSubmitEditStandard}
-              >
-                保存
-              </Button>
             </FormItem>
           </Form>
         </Modal>

@@ -77,10 +77,13 @@ class ProductManage extends Component {
         ),
       },
     ];
+    const { dispatch } = this.props
     let { data } = this.props.productManage
     const {
       standardColumnTitleData,
       standardRowTitleData,
+      standardParams,
+      productDetail,
     } = this.props.productManage
 
     data = data.map((item, index) => {
@@ -190,8 +193,10 @@ class ProductManage extends Component {
       deleteBtn: true,
       standardColumnTitleData,
       standardRowTitleData,
+      standardParams,
+      productDetail,
       handleCreate: values => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/create',
           payload: {
             ...values,
@@ -199,7 +204,7 @@ class ProductManage extends Component {
         });
       },
       handleEdit: values => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/edit',
           payload: {
             ...values,
@@ -207,38 +212,50 @@ class ProductManage extends Component {
         });
       },
       handleDelete: id => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/delete',
           payload: id,
         });
       },
+      handleCheck: payload => {
+        dispatch({
+          type: 'productManage/info',
+          payload,
+        })
+      },
       addStandardTitle: payload => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/standardTitleCreate',
           payload,
         })
       },
       delStandardTitle: payload => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/standardTitleDelete',
           payload,
         })
       },
       editStandardTitle: payload => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/standardTitleEdit',
           payload,
         })
       },
       queryStandardTitle: payload => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/queryStandardTitleList',
           payload,
         })
       },
       standardParamsCreate: payload => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/standardParamsCreate',
+          payload,
+        })
+      },
+      queryStandardParams: payload => {
+        dispatch({
+          type: 'productManage/standardParamsQuery',
           payload,
         })
       },

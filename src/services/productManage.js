@@ -30,6 +30,12 @@ export async function del(id) {
         body: id,
     });
 }
+export async function info(id) {
+    return request(`/api/product/info/${id}`, {
+        method: 'POST',
+        body: id,
+    });
+}
 export async function productList(params) {
     return request(productManage.list, {
         method: 'POST',
@@ -62,6 +68,12 @@ export async function queryStandardTitleList(params) {
 }
 export async function standardParamsCreate(params) {
     return request(`/api/standardParams/create`, {
+        method: 'POST',
+        body: params,
+    })
+}
+export async function standardParamsQuery(params) {
+    return request(`/api/standardParams/list/${params.productId}`, {
         method: 'POST',
         body: params,
     })
