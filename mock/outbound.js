@@ -462,7 +462,6 @@ export function queryDeliveryInfo(req, res) {
         "carNo": "D/8093",
         "loadingTime": null,
         "batchNo": "HX-",
-        "level": 1,
         "techno": 3,
         "qrcodeUrl": "http://images.51flyash.com/songneng_2460.jpg",
         "title": "粉煤灰",
@@ -474,6 +473,8 @@ export function queryDeliveryInfo(req, res) {
         "modifyBy": null,
         "tenantCode": "songneng",
         "allowModifyOutTime": 0,
+        columnId: 'a',
+        columnName: 'a',
         "standards": [{
             "id": 20757,
             "standardId": 88,
@@ -627,7 +628,7 @@ export function queryDeliveryInfo(req, res) {
                 val: '3.3',
                 pointNum: '3',
             },
-        },],
+        }],
     }
     const result = {
         code: 0,

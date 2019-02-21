@@ -51,6 +51,15 @@ class Outbound extends Component {
         callback: (code, selectedDetail) => {
           if (code === 0) {
             /* selectedDetail     - 获取选中的单据详情 */
+            /* 查询列标题 */
+            const { productId } = selectedDetail
+            this.props.dispatch({
+              type: 'outbound/queryStandardTitleList',
+              payload: {
+                productId,
+                type: 1,
+              },
+            })
             this.setState({
               selectedDetail,
             })
@@ -112,7 +121,7 @@ class Outbound extends Component {
   }
 
   handleSearch = (values) => {
-    const {params} = values
+    const { params } = values
     this.setState({
       filterValue: params,
     })
@@ -130,7 +139,7 @@ class Outbound extends Component {
   }
 
   render() {
-    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
+    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords, standardColumnTitleData } = this.props.outbound
 
     let { listData } = this.props.outbound
 
@@ -205,7 +214,9 @@ class Outbound extends Component {
       resultOk: true,
       disabled: this.state.disabled,
       cars,
+      standardColumnTitleData,
     }
+    console.info('standardColumnTitleData->', standardColumnTitleData)
     return (
       <div>
         <OutboundFilter {...filterProps} />

@@ -241,7 +241,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                  selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     <Option value="0">I级</Option>
@@ -280,7 +280,7 @@ class EditModal extends Component {
                     format="YYYY-MM-DD HH:mm:ss"
                     placeholder="请选择出厂时间"
                     className={styles.datepicker}
-                    disabled={selectedDetail.allowModifyOutTime===0}
+                    disabled={selectedDetail.allowModifyOutTime === 0}
                   />
                   )}
               </FormItem>
@@ -410,9 +410,11 @@ class EditModal extends Component {
   /* 检查结果 */
   getResult = () => {
     const { levelSelected, resultOk, remark, standardsData } = this.state;
-    const { disabled, selectedDetail } = this.props;
+    const { disabled, selectedDetail, standardColumnTitleData } = this.props;
     const { getFieldDecorator } = this.props.form;
     const { level } = selectedDetail;
+
+    console.info('selectDetail->', selectedDetail)
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -537,11 +539,12 @@ class EditModal extends Component {
                   <th rowSpan="2">检验结果</th>
                 </tr>
                 <tr>
-                  <th>I级</th>
-                  <th>II级</th>
-                  <th>III级</th>
+                  {
+                    standardColumnTitleData.map(item => <th key={item.id}>{item.name}</th>)
+                  }
                 </tr>
               </thead>
+              {console.info('standardsData->', standardsData)}
               <tbody>
                 {standardsData &&
                   standardsData.map(item => {
