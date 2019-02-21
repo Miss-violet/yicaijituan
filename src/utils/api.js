@@ -4,7 +4,7 @@ module.exports = {
             list: `/api/delivery/list`,
             create: `/api/delivery/create`,
             update: `/api/delivery/update`,
-            cars: `api/delivery/cars`,
+            cars: `/api/delivery/cars`,
             statistics: `/api/delivery/statistics`,
         },
         userManage: {

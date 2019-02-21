@@ -9,7 +9,7 @@ import { format, delay } from 'roadhog-api-doc';
 
 import { getProductList, getProductInfo, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList, createStandardParams, queryStandardParams } from './mock/productManage'
 
-import { queryDeliveryList, queryDeliveryCarsList, queryDeliveryStatistics } from './mock/outbound'
+import { queryDeliveryList, queryDeliveryCarsList, queryDeliveryStatistics, queryDeliveryInfo } from './mock/outbound'
 
 import { queryMftList } from './mock/manufacturerManage'
 
@@ -204,8 +204,10 @@ const proxy = {
   'POST /api/standardParams/create': createStandardParams,
   'POST /api/standardParams/list/*': queryStandardParams,
   'POST /api/delivery/list': queryDeliveryList,
-  'POST api/delivery/cars': queryDeliveryCarsList,
+  'POST /api/delivery/cars': queryDeliveryCarsList,
   'POST /api/delivery/statistics': queryDeliveryStatistics,
+  'POST /api/delivery/info/*': queryDeliveryInfo,
+  'POST /api/delivery/update': deliveryUpdate,
   'POST /api/mft/list': queryMftList,
   'POST /api/company/listAll': queryCompanyListAll,
 };
