@@ -72,9 +72,6 @@ export const getRouterData = app => {
     '/': {
       component: dynamicWrapper(app, ['login'], () => import('../layouts/BasicLayout')),
     },
-    '/productManage': {
-      component: dynamicWrapper(app, ['productManage'], () => import('../routes/ProductManage/ProductManage')),
-    },
     '/outbound': {
       component: dynamicWrapper(app, ['outbound'], () => import('../routes/Outbound/Outbound')),
     },
@@ -83,6 +80,9 @@ export const getRouterData = app => {
     },
     '/companyManage': {
       component: dynamicWrapper(app, ['companyManage'], () => import('../routes/CompanyManage/CompanyManage')),
+    },
+    '/productManage': {
+      component: dynamicWrapper(app, ['productManage'], () => import('../routes/ProductManage/ProductManage')),
     },
     '/manufacturerManage': {
       component: dynamicWrapper(app, ['manufacturerManage'], () => import('../routes/ManufacturerManage/ManufacturerManage')),

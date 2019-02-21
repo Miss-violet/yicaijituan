@@ -1,7 +1,7 @@
 const Mock = require('mockjs')
-const api = require('../utils/api')
+// const api = require('../utils/api')
 
-const { outbound } = api
+// const { outbound } = api
 
 let deliveryListData = Mock.mock({
     "currentPage": 0,
@@ -39,10 +39,42 @@ let deliveryListData = Mock.mock({
     "totalPage": 0,
 })
 
-module.exports = {
-    [`POST ${outbound.list}`](req, res) {
-        return {
-            data: deliveryListData.rows,
-        }
-    },
+export function queryDeliveryList(req, res) {
+    console.info('222')
+    const result = {
+        code: 0,
+        msg: 'success',
+        data: {},
+    }
+    if (res && res.json) {
+        res.json(result)
+    } else {
+        return result
+    }
+}
+export function queryDeliveryCarsList(req, res) {
+    console.info('queryCars')
+    const result = {
+        code: 0,
+        msg: 'success',
+        data: {},
+    }
+    if (res && res.json) {
+        res.json(result)
+    } else {
+        return result
+    }
+}
+export function queryDeliveryStatistics(req, res) {
+    console.info('queryDeliveryStatistics')
+    const result = {
+        code: 0,
+        msg: 'success',
+        data: {},
+    }
+    if (res && res.json) {
+        res.json(result)
+    } else {
+        return result
+    }
 }

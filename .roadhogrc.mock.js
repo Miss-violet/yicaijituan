@@ -9,6 +9,12 @@ import { format, delay } from 'roadhog-api-doc';
 
 import { getProductList, getProductInfo, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList, createStandardParams, queryStandardParams } from './mock/productManage'
 
+import { queryDeliveryList, queryDeliveryCarsList, queryDeliveryStatistics } from './mock/outbound'
+
+import { queryMftList } from './mock/manufacturerManage'
+
+import { queryCompanyListAll } from './mock/companyManage'
+
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
 
@@ -74,6 +80,7 @@ const proxy = {
   'GET /api/profile/basic': getProfileBasicData,
   'GET /api/profile/advanced': getProfileAdvancedData,
   'POST /api/loginSubmit': (req, res) => {
+    console.info('/api/loginSubmit')
     const { password, loginName, type } = req.body;
     if (password === '888888' && loginName === 'admin') {
       res.send({
@@ -196,6 +203,11 @@ const proxy = {
   'POST /api/standardTitle/update': editStandardTitle,
   'POST /api/standardParams/create': createStandardParams,
   'POST /api/standardParams/list/*': queryStandardParams,
+  'POST /api/delivery/list': queryDeliveryList,
+  'POST api/delivery/cars': queryDeliveryCarsList,
+  'POST /api/delivery/statistics': queryDeliveryStatistics,
+  'POST /api/mft/list': queryMftList,
+  'POST /api/company/listAll': queryCompanyListAll,
 };
 
 export default (noProxy ? {} : delay(proxy, 1000));
