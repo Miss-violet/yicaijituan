@@ -9,7 +9,7 @@ import { format, delay } from 'roadhog-api-doc';
 
 import { getProductList, getProductInfo, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList, createStandardParams, queryStandardParams } from './mock/productManage'
 
-import { queryDeliveryList, queryDeliveryCarsList, queryDeliveryStatistics, queryDeliveryInfo } from './mock/outbound'
+import { queryDeliveryList, queryDeliveryCarsList, queryDeliveryStatistics, queryDeliveryInfo, deliveryUpdate } from './mock/outbound'
 
 import { queryMftList } from './mock/manufacturerManage'
 
