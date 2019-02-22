@@ -60,6 +60,12 @@ class Outbound extends Component {
                 type: 1,
               },
             })
+              type: 'outbound/queryStandardTitleList',
+              payload: {
+                productId,
+                type: 0,
+              },
+            })
             this.setState({
               selectedDetail,
             })
@@ -139,7 +145,7 @@ class Outbound extends Component {
   }
 
   render() {
-    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords, standardColumnTitleData } = this.props.outbound
+    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords, standardColumnTitleData, standardRowTitleData } = this.props.outbound
 
     let { listData } = this.props.outbound
 
@@ -215,8 +221,8 @@ class Outbound extends Component {
       disabled: this.state.disabled,
       cars,
       standardColumnTitleData,
+      standardRowTitleData,
     }
-    console.info('standardColumnTitleData->', standardColumnTitleData)
     return (
       <div>
         <OutboundFilter {...filterProps} />

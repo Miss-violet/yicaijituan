@@ -54,6 +54,7 @@ class EditModal extends Component {
       selectedDetail,
       disabled,
       type,
+      standardColumnTitleData,
     } = this.props;
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
@@ -233,7 +234,7 @@ class EditModal extends Component {
             </Col>
             <Col {...formColLayout}>
               <FormItem label="级别" {...formItemLayout}>
-                {getFieldDecorator('level', {
+                {getFieldDecorator('columnName', {
                   rules: [
                     {
                       required: true,
@@ -241,12 +242,14 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                    selectedDetail.level !== undefined ? String(selectedDetail.level) : '',
+                    selectedDetail.columnName !== undefined ? String(selectedDetail.columnName) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
-                    <Option value="0">I级</Option>
-                    <Option value="1">II级</Option>
-                    <Option value="2">III级</Option>
+                    {
+                      standardColumnTitleData.map(
+                        item => <Option value={item.id} key={item.id}>{item.name}</Option>
+                      )
+                    }
                   </Select>
                   )}
               </FormItem>
@@ -410,102 +413,100 @@ class EditModal extends Component {
   /* 检查结果 */
   getResult = () => {
     const { levelSelected, resultOk, remark, standardsData } = this.state;
-    const { disabled, selectedDetail, standardColumnTitleData } = this.props;
+    const { disabled, selectedDetail, standardColumnTitleData, standardRowTitleData } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const { level } = selectedDetail;
-
-    console.info('selectDetail->', selectedDetail)
+    const { columnName, columnId } = selectedDetail;
+    console.info('levelSelected->', levelSelected)
 
     const tableColLayout = {
       xs: { offset: 0 },
       sm: { offset: 0 },
       md: { offset: 2 },
     };
-    const inputOnBlur = (event, item) => {
+    /* 检验结果 文本框 失焦时的校验 */
+    const inputOnBlur = (event, standardsItem) => {
       window.event.cancelBubble = true;
-      let levelStandards = '';
-      const value = event.target.value
-      switch (Number(levelSelected || level)) {
-        case 0:
-          levelStandards = item.oneLevel;
-          break;
-        case 1:
-          levelStandards = item.twoLevel;
-          break;
-        case 2:
-          levelStandards = item.threeLevel;
-          break;
-        default:
-          break;
-      }
+
+      let levelStandards = 0;
+      const { value } = event.target
+      const { type, pointNum, standardName } = standardsItem
+
+      standardsItem.params.map(paramsItem => {
+        const { val } = paramsItem
+
+        if (paramsItem.columnId === columnId || paramsItem.columnId === levelSelected) {
+          levelStandards = Number(val)
+        }
+        return paramsItem
+      })
       /* 检验是否为空 */
-      if (item.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+      if (standardsItem.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
         this.setState({
           resultOk: false,
         });
         Modal.warning({
           title: '警告',
-          content: `${item.name || item.standardName}的检验结果不能为空值`,
+          content: `${standardName}的检验结果不能为空值`,
           okText: '知道了',
         });
-        return
+        return false
       }
       /**
-       *  item.type===1：大于等于
-       *  item.type===0：小于等于
+       *  type===1：大于等于
+       *  type===0：小于等于
        */
       if (value !== '' && value !== null) {
-        if (item.type === 1 && value && Number(value) < levelStandards) {
+        if (type === 1 && value && Number(value) < levelStandards) {
           this.setState({
             resultOk: false,
           });
           Modal.warning({
             title: '警告',
-            content: `${item.name || item.standardName}的检验结果须大于等于国家标准值`,
+            content: `${standardName}的检验结果须大于等于国家标准值`,
             okText: '知道了',
           });
           return
         }
-        if (item.type === 0 && value && Number(value) > levelStandards) {
+        if (type === 0 && value && Number(value) > levelStandards) {
           this.setState({
             resultOk: false,
           });
           Modal.warning({
             title: '警告',
-            content: `${item.name || item.standardName}的检验结果须小于等于国家标准值`,
+            content: `${standardName}的检验结果须小于等于国家标准值`,
             okText: '知道了',
           });
           return
         }
-        if (item.pointNum === 0 && value.indexOf('.') !== -1) {
+        if (pointNum === 0 && value.indexOf('.') !== -1) {
           this.setState({
             resultOk: false,
           });
           Modal.warning({
             title: '警告',
-            content: `${item.name || item.standardName}的小数位与产品设置不符合，请填写整数`,
+            content: `${standardName}的小数位与产品设置不符合，请填写整数`,
             okText: '知道了',
           });
           return
         }
-        if (item.pointNum > 0 && value.indexOf('.') === -1) {
+        if (pointNum > 0 && value.indexOf('.') === -1) {
           this.setState({
             resultOk: false,
           });
           Modal.warning({
             title: '警告',
-            content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+            content: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
             okText: '知道了',
           });
           return
         }
-        if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
+        if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
           this.setState({
             resultOk: false,
           });
           Modal.warning({
             title: '警告',
-            content: `${item.name || item.standardName}的小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数`,
+            content: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
             okText: '知道了',
           });
           return
@@ -515,15 +516,7 @@ class EditModal extends Component {
         resultOk: true,
       });
     };
-    let levelInitial = Number(levelSelected || level);
-    levelInitial =
-      levelInitial !== undefined
-        ? levelInitial === 0
-          ? 'I'
-          : levelInitial === 1
-            ? 'II'
-            : 'III'
-        : '';
+
     return (
       <div>
         <fieldset>
@@ -535,60 +528,53 @@ class EditModal extends Component {
               <thead>
                 <tr>
                   <th rowSpan="2">项目</th>
-                  <th colSpan="3">国家标准</th>
+                  <th colSpan={standardColumnTitleData.length}>国家标准</th>
                   <th rowSpan="2">检验结果</th>
                 </tr>
                 <tr>
                   {
-                    standardColumnTitleData.map(item => <th key={item.id}>{item.name}</th>)
+                    standardColumnTitleData && standardColumnTitleData.map(item => <th key={item.id}>{item.name}</th>)
                   }
                 </tr>
               </thead>
-              {console.info('standardsData->', standardsData)}
               <tbody>
-                {standardsData &&
-                  standardsData.map(item => {
+                {
+                  standardsData && standardsData.map(standardsItem => {
                     return (
-                      <tr key={item.standardId}>
-                        <td>{item.name || item.standardName}</td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.oneLevel}
+                      <tr>
+                        <td>
+                          {standardsItem.standardName}
                         </td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.twoLevel}
-                        </td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.threeLevel}
-                        </td>
+                        {
+                          standardsItem.params.map(item => {
+                            return (
+                              <td>{item.type === '0' ? '≤' : '≥'}{item.val}</td>
+                            )
+                          })
+                        }
                         <td>
                           <FormItem>
-                            {getFieldDecorator(`${item.standardId}`, {
+                            {getFieldDecorator(`${standardsItem.id}`, {
                               rules: [
-                                // {
-                                //   required: true,
-                                //   message: `填写检验结果`,
-                                // },
                                 {
                                   validator: (rule, value, callback) =>
-                                    this.validateParameter(rule, value, callback, item),
+                                    this.validateParameter(rule, value, callback, standardsItem),
                                 },
                               ],
-                              initialValue: item.parameter,
+                              initialValue: standardsItem.parameter,
                             })(
                               <Input
                                 className={styles.inputNumber}
-                                onBlur={e => inputOnBlur(e, item)}
+                                onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
                               )}
                           </FormItem>
                         </td>
                       </tr>
-                    );
-                  })}
+                    )
+                  })
+                }
               </tbody>
               <tfoot>
                 <tr>
@@ -598,7 +584,7 @@ class EditModal extends Component {
                       <p>
                         {resultOk ? '符合' : '不符合'}
                         GB/T 1596-2017 国家标准F类
-                        <span className={styles.resultLevel}>{levelInitial || ''}</span>级技术要求。
+                        <span className={styles.resultLevel}>{columnName || ''}</span>级技术要求。
                       </p>
                       <p>{remark}</p>
                     </div>
@@ -746,55 +732,54 @@ class EditModal extends Component {
     );
   };
 
-  validateParameter = (rule, value, callback, item) => {
+  validateParameter = (rule, value, callback, standardsItem) => {
     if (isNaN(Number(value))) {
       callback('请输入数字')
       return
     }
-    let standards = '';
-    const { levelSelected } = this.state;
-    const { level } = this.props.selectedDetail;
-    switch (Number(levelSelected || level)) {
-      case 0:
-        standards = item.oneLevel;
-        break;
-      case 1:
-        standards = item.twoLevel;
-        break;
-      case 2:
-        standards = item.threeLevel;
-        break;
-      default:
-        break;
-    }
-    /* 校验是否为空 */
-    if (item.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+    let levelStandards = 0;
+    const { type, pointNum, standardName } = standardsItem
+    const { columnId } = this.props.selectedDetail;
+    const { levelSelected } = this.state
+
+    standardsItem.params.map(paramsItem => {
+      const { val } = paramsItem
+
+      if (paramsItem.columnId === columnId || paramsItem.columnId === levelSelected) {
+        levelStandards = Number(val)
+      }
+      return paramsItem
+    })
+
+    /* 检验是否为空 */
+    if (standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
       callback({ message: '检验结果不能为空值' });
       return;
     }
+
     /**
-     *  item.type===1：大于等于
-     *  item.type===0：小于等于
+     *  standardsItem.type===1：大于等于
+     *  standardsItem.type===0：小于等于
      */
     if (value !== '' && value !== null) {
-      if (item.type === 1 && Number(value) < standards) {
+      if (type === 1 && value && Number(value) < levelStandards) {
         callback({ message: '检验结果须大于等于国家标准值' });
         return;
-      } else if (item.type === 0 && Number(value) > standards) {
+      }
+      if (type === 0 && value && Number(value) > levelStandards) {
         callback({ message: '检验结果须小于等于国家标准值' });
         return;
       }
-      /* 校验小数位 */
-      if (item.pointNum === 0 && value.indexOf('.') !== -1) {
+      if (pointNum === 0 && value.indexOf('.') !== -1) {
         callback({ message: `请填写整数` })
         return
       }
-      if (item.pointNum > 0 && value.indexOf('.') === -1) {
-        callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
+      if (pointNum > 0 && value.indexOf('.') === -1) {
+        callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` })
         return
       }
-      if (item.pointNum > 0 && value.length - value.indexOf('.') - 1 !== item.pointNum) {
-        callback({ message: `小数位与产品设置不符合，小数点后需保留${item.pointNum}位小数` })
+      if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
+        callback({ message: `小数位与产品设置不符合，小数点后需保留${standardsItem.pointNum}位小数` })
         return
       }
     }
