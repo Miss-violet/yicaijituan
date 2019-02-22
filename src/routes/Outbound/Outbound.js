@@ -60,6 +60,7 @@ class Outbound extends Component {
                 type: 1,
               },
             })
+            this.props.dispatch({
               type: 'outbound/queryStandardTitleList',
               payload: {
                 productId,
