@@ -193,7 +193,6 @@ export default {
     *queryStandardTitleList({ payload }, { call, put }) {
       const res = yield call(queryStandardTitleList, payload)
       const { type } = payload
-      console.info('resss->', res)
       if (res.code === 0) {
         if (type === 0) {
           /* 行标题 */

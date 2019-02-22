@@ -413,10 +413,9 @@ class EditModal extends Component {
   /* 检查结果 */
   getResult = () => {
     const { levelSelected, resultOk, remark, standardsData } = this.state;
-    const { disabled, selectedDetail, standardColumnTitleData, standardRowTitleData } = this.props;
+    const { disabled, selectedDetail, standardColumnTitleData } = this.props;
     const { getFieldDecorator } = this.props.form;
     const { columnName, columnId } = selectedDetail;
-    console.info('levelSelected->', levelSelected)
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -541,7 +540,7 @@ class EditModal extends Component {
                 {
                   standardsData && standardsData.map(standardsItem => {
                     return (
-                      <tr>
+                      <tr key={standardsItem.standardId}>
                         <td>
                           {standardsItem.standardName}
                         </td>
@@ -732,6 +731,7 @@ class EditModal extends Component {
     );
   };
 
+  /* 检验结果 文本框 输入时的校验 */
   validateParameter = (rule, value, callback, standardsItem) => {
     if (isNaN(Number(value))) {
       callback('请输入数字')
@@ -805,14 +805,17 @@ class EditModal extends Component {
         /* 把填写的检验结果值填入，传给后端 */
         for (const i in values) {
           if (Number(i)) {
-            standardsData = standardsData.map(item => {
-              if (item.standardId === Number(i)) {
+            standardsData = standardsData.map(standardsItem => {
+              if (standardsItem.id === Number(i)) {
+                const { id, standardId, standardName } = standardsItem
                 return {
-                  ...item,
+                  id,
+                  standardId,
+                  standardName,
                   parameter: String(values[i]),
                 }
               }
-              return item
+              return standardsItem
             });
           }
         }
