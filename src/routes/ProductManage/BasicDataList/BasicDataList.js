@@ -924,6 +924,9 @@ class BasicDataList extends Component {
     this.props.standardParamsCreate({
       ...standardTemplateData,
     })
+    this.setState({
+      selectedRowKeys: [],
+    })
   }
 
   /**

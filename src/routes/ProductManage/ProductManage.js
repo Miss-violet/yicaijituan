@@ -31,6 +31,14 @@ class ProductManage extends Component {
     });
   };
   render() {
+    const { dispatch } = this.props
+    let { data } = this.props.productManage
+    const {
+      standardColumnTitleData,
+      standardRowTitleData,
+      standardParams,
+      productDetail,
+    } = this.props.productManage
     const columns = [
       {
         title: '名称',
@@ -70,21 +78,23 @@ class ProductManage extends Component {
       {
         title: '标准',
         dataIndex: 'standards',
-        render: (text, record) => (
-          <a href="javascript: void(0)" onClick={() => this.check(record)}>
-            查看标准
-          </a>
-        ),
+        render: (text, record) => {
+          if (standardColumnTitleData.length <= 0) return (
+            <Tooltip title="请先编辑标准后再查看">
+              <span>
+                查看标准
+              </span>
+            </Tooltip>
+          )
+          else return (
+            <a href="javascript: void(0)" onClick={() => this.check(record)}>
+              查看标准
+            </a>
+          )
+        },
       },
     ];
-    const { dispatch } = this.props
-    let { data } = this.props.productManage
-    const {
-      standardColumnTitleData,
-      standardRowTitleData,
-      standardParams,
-      productDetail,
-    } = this.props.productManage
+    console.info('standardColumnTitleData.length <= 0->', standardColumnTitleData.length <= 0)
 
     data = data.map((item, index) => {
       item.key = index
@@ -102,27 +112,38 @@ class ProductManage extends Component {
         width: '15%',
         render: text => (text === 0 ? '≤（小于等于）' : '≥（大于等于）'),
       },
-      {
-        title: 'I级指标',
-        dataIndex: 'oneLevel',
-        width: '15%',
-      },
-      {
-        title: 'II级指标',
-        dataIndex: 'twoLevel',
-        width: '15%',
-      },
-      {
-        title: 'III级指标',
-        dataIndex: 'threeLevel',
-        width: '15%',
-      },
-      {
-        title: '保留小数点位数',
-        dataIndex: 'pointNum',
-        width: '15%',
-      },
+      // {
+      //   title: 'I级指标',
+      //   dataIndex: 'oneLevel',
+      //   width: '15%',
+      // },
+      // {
+      //   title: 'II级指标',
+      //   dataIndex: 'twoLevel',
+      //   width: '15%',
+      // },
+      // {
+      //   title: 'III级指标',
+      //   dataIndex: 'threeLevel',
+      //   width: '15%',
+      // },
+
     ];
+    standardColumnTitleData.map((columnItem, index) => {
+      standardsColumns.push({
+        title: columnItem.name,
+        dataIndex: columnItem.id,
+        width: `${45 / standardColumnTitleData.length}%`,
+      })
+      if (index === standardColumnTitleData.length - 1) {
+        standardsColumns.push({
+          title: '保留小数点位数',
+          dataIndex: 'pointNum',
+          width: '15%',
+        })
+      }
+      return columnItem
+    })
 
     const fmFields = [
       {
