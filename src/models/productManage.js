@@ -140,6 +140,7 @@ export default {
       }
     },
     *queryStandardTitleList({ payload }, { call, put }) {
+      console.info('1')
       const res = yield call(queryStandardTitleList, payload)
       const { type } = payload
       if (res.code === 0) {

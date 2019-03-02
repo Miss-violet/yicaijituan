@@ -16,7 +16,7 @@ import {
   InputNumber,
 } from 'antd';
 import styles from './basicDataList.less';
-import commomStyles from '../../../assets/style/common.less'
+import commonStyles from '../../../assets/style/common.less'
 
 const { Option } = Select
 const FormItem = Form.Item;
@@ -117,7 +117,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -140,7 +140,7 @@ class BasicDataList extends Component {
                         <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -163,7 +163,7 @@ class BasicDataList extends Component {
                         <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -185,7 +185,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -206,7 +206,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
             </div>
@@ -230,7 +230,7 @@ class BasicDataList extends Component {
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -323,9 +323,9 @@ class BasicDataList extends Component {
       this.props.form.validateFields((err, values) => {
         if (err === null || !err.titleName) {
           const {
-          tableTitleModalType,
+            tableTitleModalType,
             selectedProductId,
-        } = this.state
+          } = this.state
           /* 【新增】列标题 */
           if (tableTitleModalType === 'add') {
             /* 与后端交互 - 【保存】列标题 */
@@ -440,7 +440,7 @@ class BasicDataList extends Component {
                       <div className={styles.columnNameListTitle}>第一步已创建好的列标题：</div>
                       <ul className={styles.columnNameList}>
                         {
-                          standardColumnTitleData.map(item => <li key={item.id}>{item.name}</li>)
+                          standardColumnTitleData.map(item => <li key={item.id} style={{ fontWeight: 'bold' }}>{item.name}</li>)
                         }
                       </ul>
                     </div>
@@ -454,7 +454,7 @@ class BasicDataList extends Component {
                       <div className={styles.columnNameListTitle}>第二步已创建好的行标题：</div>
                       <ul className={styles.columnNameList}>
                         {
-                          standardRowTitleData.map(item => <li key={item.id}>{item.name}</li>)
+                          standardRowTitleData.map(item => <li key={item.id} style={{ fontWeight: 'bold' }}>{item.name}</li>)
                         }
                       </ul>
                     </div>
@@ -536,7 +536,7 @@ class BasicDataList extends Component {
               /* 展示 第三步 内容 */
               progressPercent === 66 && (
                 <div>
-                  <table className={commomStyles.table} style={{ width: '100%', marginBottom: '10px' }}>
+                  <table className={commonStyles.table} style={{ width: '100%', marginBottom: '10px' }}>
                     <thead>
                       <tr>
                         <th>
@@ -584,7 +584,7 @@ class BasicDataList extends Component {
                                       <Option value="0">≤（小于等于）</Option>
                                       <Option value="1">≥（大于等于）</Option>
                                     </Select>
-                                    )
+                                  )
                                   }
                                 </FormItem>
                               </td>
@@ -615,7 +615,7 @@ class BasicDataList extends Component {
                                             min={this.props.min}
                                             max={this.props.max}
                                           />
-                                          )}
+                                        )}
                                       </FormItem>
                                     </td>
                                   )
@@ -637,7 +637,7 @@ class BasicDataList extends Component {
                                       min={this.props.min}
                                       max={this.props.max}
                                     />
-                                    )}
+                                  )}
                                 </FormItem>
                               </td>
                             </tr>

@@ -12,7 +12,9 @@ class Report extends Component {
     this.state = {};
   }
   render() {
-    const { detail } = this.props.report;
+    const { detail, standardColumnTitleData } = this.props.report;
+    console.info('detail->', detail)
+    console.info('standardColumnTitleData->', standardColumnTitleData)
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,
@@ -118,13 +120,17 @@ class Report extends Component {
             <thead>
               <tr>
                 <th rowSpan="2">项目</th>
-                <th colSpan="3">国家标准</th>
+                <th colSpan={standardColumnTitleData.length}>国家标准</th>
                 <th rowSpan="2">检验结果</th>
               </tr>
               <tr>
-                <th>I级</th>
-                <th>II级</th>
-                <th>III级</th>
+                {
+                  standardColumnTitleData && standardColumnTitleData.map(columnItem => (
+                    <th key={columnItem.id}>
+                      {columnItem.name}
+                    </th>
+                  ))
+                }
               </tr>
             </thead>
             <tbody>
@@ -137,18 +143,14 @@ class Report extends Component {
                 detail.standards.map(item => (
                   <tr>
                     <td>{item.standardName}</td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.oneLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.twoLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.threeLevel}
-                    </td>
+                    {
+                      item.params.map(paramsItem => (
+                        <td className={commonStyles.alignRight}>
+                          {paramsItem.type === 0 ? '≤' : '≥'}
+                          {paramsItem.val}
+                        </td>
+                      ))
+                    }
                     <td className={commonStyles.alignRight}>{item.parameter}</td>
                   </tr>
                 ))}
@@ -160,7 +162,7 @@ class Report extends Component {
                   <p>
                     GB/T 1596-2017 国家标准F类
                     <span className={styles.resultLevel}>
-                      {detail.level === 0 ? 'I' : detail.level === 1 ? 'II' : 'III'}
+                      {detail.columnName}
                     </span>级技术要求。
                   </p>
                   <p style={{ marginLeft: '30px' }}>{detail.remark}</p>

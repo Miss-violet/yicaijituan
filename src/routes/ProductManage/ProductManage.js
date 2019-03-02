@@ -14,6 +14,21 @@ class ProductManage extends Component {
     };
   }
   check = record => {
+    const { id } = record.id
+    this.props.dispatch({
+      type: 'productManage/queryStandardTitleList',
+      payload: {
+        productId: id,
+        type: 0,
+      },
+    })
+    this.props.dispatch({
+      type: 'productManage/queryStandardTitleList',
+      payload: {
+        productId: id,
+        type: 1,
+      },
+    })
     this.setState({
       standardsVisible: true,
       standardsData: record.standards,
@@ -90,39 +105,6 @@ class ProductManage extends Component {
       item.key = index
       return item
     })
-    const standardsColumns = [
-      {
-        title: '项目名称',
-        dataIndex: 'name',
-        width: '25%',
-      },
-      {
-        title: '类型',
-        dataIndex: 'type',
-        width: '15%',
-        render: text => (text === 0 ? '≤（小于等于）' : '≥（大于等于）'),
-      },
-      {
-        title: 'I级指标',
-        dataIndex: 'oneLevel',
-        width: '15%',
-      },
-      {
-        title: 'II级指标',
-        dataIndex: 'twoLevel',
-        width: '15%',
-      },
-      {
-        title: 'III级指标',
-        dataIndex: 'threeLevel',
-        width: '15%',
-      },
-      {
-        title: '保留小数点位数',
-        dataIndex: 'pointNum',
-        width: '15%',
-      },
-    ];
 
     const fmFields = [
       {
@@ -277,12 +259,50 @@ class ProductManage extends Component {
             </Button>,
           ]}
         >
-          <Table
-            columns={standardsColumns}
-            dataSource={standardsData}
-            pagination={false}
-            bordered
-          />
+          <table className={commonStyles.table}>
+            <thead>
+              <tr>
+                <th>项目名称</th>
+                <th>类型</th>
+                {
+                  standardColumnTitleData && standardColumnTitleData.map(columnItem => (
+                    <th key={columnItem.id}>
+                      {columnItem.name}
+                    </th>
+                  ))
+                }
+                <th>保留的小数点位数</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                standardsData && standardsData.map(dataItem => {
+                  return (
+                    <tr>
+                      <td>
+                        {dataItem.standardName}
+                      </td>
+                      <td>
+                        {dataItem.type === 0 ? '≤（小于等于）' : '≥（大于等于）'}
+                      </td>
+                      {
+                        dataItem.params.map(item => {
+                          return (
+                            <td>
+                              {item.val}
+                            </td>
+                          )
+                        })
+                      }
+                      <td>
+                        {dataItem.pointNum}
+                      </td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </table>
         </Modal>
       </div>
     );
