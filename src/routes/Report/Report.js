@@ -162,7 +162,7 @@ class Report extends Component {
                   <p>
                     GB/T 1596-2017 国家标准F类
                     <span className={styles.resultLevel}>
-                      {detail.columnName}
+                      {detail.columnTitle}
                     </span>级技术要求。
                   </p>
                   <p style={{ marginLeft: '30px' }}>{detail.remark}</p>

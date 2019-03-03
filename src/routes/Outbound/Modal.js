@@ -89,7 +89,7 @@ class EditModal extends Component {
       let { standards } = proSelected[0]
 
       if (type === 'add') {
-        standards = standards.map(item => {
+        standards = standards && standards.map(item => {
           /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
           return {
             ...item,
@@ -229,12 +229,12 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
               <FormItem label="级别" {...formItemLayout}>
-                {getFieldDecorator('columnName', {
+                {getFieldDecorator('columnTitle', {
                   rules: [
                     {
                       required: true,
@@ -242,7 +242,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                    selectedDetail.columnName !== undefined ? String(selectedDetail.columnName) : '',
+                    selectedDetail.columnTitle !== undefined ? String(selectedDetail.columnTitle) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     {
@@ -251,7 +251,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -285,7 +285,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={selectedDetail.allowModifyOutTime === 0}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -308,7 +308,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -326,7 +326,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -343,7 +343,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -370,7 +370,7 @@ class EditModal extends Component {
                   >
                     {options}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -388,7 +388,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -415,7 +415,7 @@ class EditModal extends Component {
     const { levelSelected, resultOk, remark, standardsData } = this.state;
     const { disabled, selectedDetail, standardColumnTitleData } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const { columnName, columnId } = selectedDetail;
+    const { columnTitle, columnId } = selectedDetail;
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -567,7 +567,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                              )}
+                            )}
                           </FormItem>
                         </td>
                       </tr>
@@ -583,7 +583,7 @@ class EditModal extends Component {
                       <p>
                         {resultOk ? '符合' : '不符合'}
                         GB/T 1596-2017 国家标准F类
-                        <span className={styles.resultLevel}>{columnName || ''}</span>级技术要求。
+                        <span className={styles.resultLevel}>{columnTitle || ''}</span>级技术要求。
                       </p>
                       <p>{remark}</p>
                     </div>
@@ -642,7 +642,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -662,7 +662,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -682,7 +682,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -788,7 +788,7 @@ class EditModal extends Component {
 
   /* 保存按钮事件 */
   handleSubmit = () => {
-    const { productName, distributorName, supplierName } = this.state;
+    let { productName, distributorName, supplierName } = this.state;
     this.setState({
       confirmLoading: true,
     });
@@ -832,15 +832,41 @@ class EditModal extends Component {
             },
           });
         } else if (this.props.type === 'edit') {
+          const { companyAllSelectList, manufacturerSelectList, productSelectList } = this.props
+          const { distributorId, supplierId, productId } = values
+          if (distributorName === '') {
+            companyAllSelectList.map(item => {
+              if (item.id === distributorId) {
+                distributorName = item.name;
+              }
+              return item;
+            });
+          }
+          if (supplierName === '') {
+            manufacturerSelectList.map(item => {
+              if (item.id === supplierId) {
+                supplierName = item.name;
+              }
+              return item
+            });
+          }
+          if (productName === '') {
+            productSelectList.map(item => {
+              if (item.id === productId) {
+                productName = item.name
+              }
+              return item
+            })
+          }
           this.props.dispatch({
             type: 'outbound/edit',
             payload: {
+              ...this.props.selectedDetail,
               ...values,
               standards: standardsData,
               productName,
               distributorName,
               supplierName,
-              id: this.props.selectedDetail.id,
             },
           });
         }

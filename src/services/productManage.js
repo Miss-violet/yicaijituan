@@ -30,10 +30,10 @@ export async function del(id) {
         body: id,
     });
 }
-export async function info(id) {
-    return request(`/api/product/info/${id}`, {
+export async function info(params) {
+    return request(`/api/product/info/${params.productId}`, {
         method: 'POST',
-        body: id,
+        body: params.productId,
     });
 }
 export async function productList(params) {

@@ -789,7 +789,7 @@ class BasicDataList extends Component {
     setTimeout(() => {
       const { selected, modalType, fmFields } = this.state;
       const { id } = selected
-      const { queryStandardParams, handleCheck, productDetail } = this.props
+      const { queryStandardParams, queryStandardTitle, handleCheck, productDetail } = this.props
       if (JSON.stringify(this.state.selected) === '{}') {
         /* 如果 this.state.selected 为空，则说明是 新增 */
         fmFields.map(fmItem => {
@@ -798,8 +798,16 @@ class BasicDataList extends Component {
         });
       } else {
         if (modalType === 'editStandard') {
-          queryStandardParams({
+          // queryStandardParams({
+          //   productId: id,
+          // })
+          queryStandardTitle({
             productId: id,
+            type: 0,
+          })
+          queryStandardTitle({
+            productId: id,
+            type: 1,
           })
         }
         /* 用接口查询商品详情 */

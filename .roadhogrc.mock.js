@@ -212,7 +212,7 @@ const proxy = {
   'POST /api/company/listAll': queryCompanyListAll,
 };
 
-export default (noProxy ? {} : delay(proxy, 1000));
-// export default {
-//   'GET /api/(.*)': 'http://119.23.210.125:8090/api/',
-// };
+// export default (noProxy ? {} : delay(proxy, 1000));
+export default {
+  'GET /api/(.*)': 'http://www.linhy.cn:8090/api/',
+};

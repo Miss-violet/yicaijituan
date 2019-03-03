@@ -25,7 +25,7 @@ export default {
           dispatch({
             type: 'queryStandardTitleList',
             payload: {
-              id: match[1],
+              productId: match[1],
               type: 1,
             },
           })
@@ -47,7 +47,6 @@ export default {
       }
     },
     *queryStandardTitleList({ payload }, { call, put }) {
-      console.info('1')
       const res = yield call(queryStandardTitleList, payload)
       const { type } = payload
       if (res.code === 0) {
