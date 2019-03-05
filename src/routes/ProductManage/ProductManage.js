@@ -109,7 +109,6 @@ class ProductManage extends Component {
         },
       },
     ];
-    console.info('standardColumnTitleData.length <= 0->', standardColumnTitleData.length <= 0)
 
     data = data.map((item, index) => {
       item.key = index

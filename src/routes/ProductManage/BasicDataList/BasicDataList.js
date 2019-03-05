@@ -581,8 +581,8 @@ class BasicDataList extends Component {
                                     initialValue: typeValue,
                                   })(
                                     <Select style={{ width: '100 %' }} placeholder="请选择">
-                                      <Option value="0">≤（小于等于）</Option>
-                                      <Option value="1">≥（大于等于）</Option>
+                                      <Option value={0}>≤（小于等于）</Option>
+                                      <Option value={1}>≥（大于等于）</Option>
                                     </Select>
                                   )
                                   }
@@ -624,7 +624,7 @@ class BasicDataList extends Component {
                               }
                               <td>
                                 <FormItem>
-                                  {getFieldDecorator(`pointerNum_${rowTitleItem.name}`, {
+                                  {getFieldDecorator(`pointNum_${rowTitleItem.id}`, {
                                     rules: [{ required: true, message: '此项必填' }, {
                                       validator: this.validatorNum,
                                     }],
@@ -899,6 +899,7 @@ class BasicDataList extends Component {
       standardRowTitleData.map(rowItem => {
         /* 可以找到 rowId 和 columnId */
         const rowId = rowItem.id
+        const rowTitle = rowItem.name
         const columnId = columnItem.id
         let type = ''
         let pointNum = ''
@@ -908,11 +909,11 @@ class BasicDataList extends Component {
             if (i === `type_${rowId}`) {
               type = values[i]
             }
-            if (i === `pointerNum_${rowId}`) {
+            if (i === `pointNum_${rowId}`) {
               pointNum = values[i]
             }
             if (i === `${columnItem.id}_${rowItem.id}`) {
-              val = values[i]
+              val = String(values[i])
             }
           }
         }
@@ -924,6 +925,8 @@ class BasicDataList extends Component {
           productId: selectedProductId,
           pointNum,
           val,
+          rowTitle,
+          id: '',
         })
         return rowItem
       })

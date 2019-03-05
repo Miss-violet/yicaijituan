@@ -48,10 +48,12 @@ export async function standardTitleCreate(params) {
         body: params,
     });
 }
-export async function standardTitleDelete(params) {
-    return request(`/api/standardTitle/delete/${params.id}`, {
+export async function standardTitleDelete(id) {
+    return request(`/api/standardTitle/delete/${id}`, {
         method: 'POST',
-        body: params,
+        body: {
+            id,
+        },
     });
 }
 export async function standardTitleEdit(params) {
