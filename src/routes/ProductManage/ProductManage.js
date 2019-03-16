@@ -8,13 +8,12 @@ class ProductManage extends Component {
   constructor() {
     super();
     this.state = {
-      standardsData: [],
       standardsVisible: false,
       proName: '',
     };
   }
   check = record => {
-    const { id } = record.id
+    const { id } = record
     this.props.dispatch({
       type: 'productManage/queryStandardTitleList',
       payload: {
@@ -29,9 +28,14 @@ class ProductManage extends Component {
         type: 1,
       },
     })
+    this.props.dispatch({
+      type: 'productManage/standardParamsQuery',
+      payload: {
+        productId: id,
+      },
+    })
     this.setState({
       standardsVisible: true,
-      standardsData: record.standards,
       proName: record.name,
     });
   };
@@ -49,8 +53,8 @@ class ProductManage extends Component {
     const { dispatch } = this.props
     let { data } = this.props.productManage
     const {
-      standardColumnTitleData,
       standardRowTitleData,
+      standardColumnTitleData,
       standardParams,
       productDetail,
     } = this.props.productManage
@@ -94,7 +98,7 @@ class ProductManage extends Component {
         title: '标准',
         dataIndex: 'standards',
         render: (text, record) => {
-          if (standardColumnTitleData.length <= 0) return (
+          if (!record.standardDataFlag) return (
             <Tooltip title="请先编辑标准后再查看">
               <span>
                 查看标准
@@ -190,7 +194,7 @@ class ProductManage extends Component {
         dispatch({
           type: 'productManage/create',
           payload: {
-            ...values,
+            values,
           },
         });
       },
@@ -241,7 +245,9 @@ class ProductManage extends Component {
       standardParamsCreate: payload => {
         dispatch({
           type: 'productManage/standardParamsCreate',
-          payload,
+          payload: {
+            str: JSON.stringify(payload)
+          },
         })
       },
       queryStandardParams: payload => {
@@ -251,7 +257,7 @@ class ProductManage extends Component {
         })
       },
     };
-    const { standardsVisible, standardsData, proName } = this.state;
+    const { standardsVisible, proName } = this.state;
 
     return (
       <div>
@@ -261,50 +267,50 @@ class ProductManage extends Component {
           visible={standardsVisible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          width="60%"
+          width="80%"
           footer={[
             <Button key="submit" type="primary" onClick={this.handleOk}>
               确定
             </Button>,
           ]}
         >
-          <table className={commonStyles.table}>
+          <table className={commonStyles.table} style={{ width: '100%' }}>
             <thead>
               <tr>
-                <th>项目名称</th>
-                <th>类型</th>
+                <th style={{ width: '15%' }}>项目名称</th>
+                <th style={{ width: '15%' }}>类型</th>
                 {
                   standardColumnTitleData && standardColumnTitleData.map(columnItem => (
-                    <th key={columnItem.id}>
+                    <th key={columnItem.id} style={{ width: `${60 / standardColumnTitleData.length}%` }}>
                       {columnItem.name}
                     </th>
                   ))
                 }
-                <th>保留的小数点位数</th>
+                <th style={{ width: '10%' }}>保留的小数点位数</th>
               </tr>
             </thead>
             <tbody>
               {
-                standardsData && standardsData.map(dataItem => {
+                standardParams && standardParams.map(dataItem => {
                   return (
                     <tr>
                       <td>
-                        {dataItem.standardName}
+                        {dataItem.rowTitle}
                       </td>
-                      <td>
-                        {dataItem.type === 0 ? '≤（小于等于）' : '≥（大于等于）'}
+                      <td >
+                        {dataItem.params[0].type === 0 ? '≤（小于等于）' : '≥（大于等于）'}
                       </td>
                       {
                         dataItem.params.map(item => {
                           return (
-                            <td>
+                            <td key={item.id}>
                               {item.val}
                             </td>
                           )
                         })
                       }
                       <td>
-                        {dataItem.pointNum}
+                        {dataItem.params[0].pointNum}
                       </td>
                     </tr>
                   )

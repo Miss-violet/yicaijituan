@@ -111,6 +111,10 @@ export default {
             type,
           },
         })
+        yield put({
+          type: 'queryList',
+          payload: {},
+        })
       }
     },
     *standardTitleDelete({ payload }, { call, put }) {
@@ -139,7 +143,7 @@ export default {
         })
       }
     },
-    *queryStandardTitleList({ payload }, { call, put }) {
+    *queryStandardTitleList({ payload, callback }, { call, put }) {
       const res = yield call(queryStandardTitleList, payload)
       const { type } = payload
       if (res.code === 0) {
@@ -161,6 +165,7 @@ export default {
             },
           })
         }
+        if (callback) callback(res)
       }
     },
     *standardParamsCreate({ payload }, { call, put }) {

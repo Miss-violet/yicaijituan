@@ -558,27 +558,22 @@ class BasicDataList extends Component {
                       </tr>
                     </thead>
                     <tbody>
+                      {console.info('standardParams->', standardParams)}
+                      {console.info('standardRowTitleData->', standardRowTitleData)}
                       {
-                        standardRowTitleData.map(rowTitleItem => {
+                        standardParams.map(standardParamsItem => {
                           /* 通过遍历 standardParams， 找出已知的类型值，填入表格中 */
                           let pointNumValue
-                          let typeValue
-                          standardParams.map(standardParamsItem => {
-                            if (standardParamsItem.rowId === rowTitleItem.id) {
-                              typeValue = standardParamsItem.type
-                            }
-                            return standardParamsItem
-                          })
                           return (
-                            <tr key={rowTitleItem.id}>
+                            <tr key={standardParamsItem.rowId}>
                               <td>
-                                {rowTitleItem.name}
+                                {standardParamsItem.rowTitle}
                               </td>
                               <td>
                                 <FormItem>
-                                  {getFieldDecorator(`type_${rowTitleItem.id}`, {
+                                  {getFieldDecorator(`type_${standardParamsItem.rowId}`, {
                                     rules: [{ required: true, message: '此项必填' }],
-                                    initialValue: typeValue,
+                                    initialValue: standardParamsItem.params[0].type,
                                   })(
                                     <Select style={{ width: '100 %' }} placeholder="请选择">
                                       <Option value={0}>≤（小于等于）</Option>
@@ -589,24 +584,18 @@ class BasicDataList extends Component {
                                 </FormItem>
                               </td>
                               {
-                                standardColumnTitleData.map(columnTitleItem => {
-                                  let cellValue
-                                  /* 通过遍历 standardParams，找出已知的标准模板值，填入表格中 */
-                                  standardParams.map(standardParamsItem => {
-                                    if (standardParamsItem.columnId === columnTitleItem.id && standardParamsItem.rowId === rowTitleItem.id) {
-                                      cellValue = standardParamsItem.val
-                                      pointNumValue = standardParamsItem.pointNum
-                                    }
-                                    return standardParamsItem
-                                  })
+                                standardParamsItem.params.map(paramsItem => {
+                                  console.info('paramsItem=>', paramsItem)
+                                  const { val, pointNum, columnId, rowId } = paramsItem
+                                  pointNumValue = pointNum
                                   return (
-                                    <td key={`${columnTitleItem.id}_${rowTitleItem.id}`}>
+                                    <td key={`${columnId}_${rowId}`}>
                                       <FormItem>
-                                        {getFieldDecorator(`${columnTitleItem.id}_${rowTitleItem.id}`, {
+                                        {getFieldDecorator(`${columnId}_${rowId}`, {
                                           rules: [{ required: true, message: '此项必填' }, {
                                             validator: this.validatorNum,
                                           }],
-                                          initialValue: cellValue,
+                                          initialValue: val,
                                         })(
                                           <InputNumber
                                             onBlur={this.inputNumberCheck}
@@ -619,12 +608,11 @@ class BasicDataList extends Component {
                                       </FormItem>
                                     </td>
                                   )
-                                }
-                                )
+                                })
                               }
                               <td>
                                 <FormItem>
-                                  {getFieldDecorator(`pointNum_${rowTitleItem.id}`, {
+                                  {getFieldDecorator(`pointNum_${standardParamsItem.rowId}`, {
                                     rules: [{ required: true, message: '此项必填' }, {
                                       validator: this.validatorNum,
                                     }],
@@ -798,9 +786,9 @@ class BasicDataList extends Component {
         });
       } else {
         if (modalType === 'editStandard') {
-          // queryStandardParams({
-          //   productId: id,
-          // })
+          queryStandardParams({
+            productId: id,
+          })
           queryStandardTitle({
             productId: id,
             type: 0,
@@ -828,9 +816,12 @@ class BasicDataList extends Component {
    */
   handleSubmit = modalType => {
     if (modalType !== 'editStandard') {
+      /* 编辑产品信息，不包括标准模板的编辑 */
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err || (Object.keys(err).length === 1 && err.titleName)) {
+          console.info('values->', values)
           switch (modalType) {
+
             case 'add':
               this.props.handleCreate({
                 ...values,
@@ -859,6 +850,7 @@ class BasicDataList extends Component {
       }
       );
     } else {
+      /* 标准模板的编辑，校验指标是否填写完整 */
       const values = this.props.form.getFieldsValue()
       for (const i in values) {
         if (values[i] === undefined && i !== 'titleName') {
@@ -926,15 +918,16 @@ class BasicDataList extends Component {
           pointNum,
           val,
           rowTitle,
-          id: '',
+          id: 0,
         })
         return rowItem
       })
       return columnItem
     })
-    this.props.standardParamsCreate({
-      ...standardTemplateData,
-    })
+    console.info('standardTemplateData->', standardTemplateData)
+    this.props.standardParamsCreate(
+      standardTemplateData,
+    )
     this.setState({
       selectedRowKeys: [],
     })
