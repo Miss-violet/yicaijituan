@@ -7,7 +7,7 @@ import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
 
-import { getProductList, getProductInfo, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList, createStandardParams, queryStandardParams } from './mock/productManage'
+import { getProductList, getProductInfo, createStandardTitle, delStandardTitle, editStandardTitle, getStandardTitleList, createStandardParams, updateStandardParams, queryStandardParams } from './mock/productManage'
 
 import { queryDeliveryList, queryDeliveryCarsList, queryDeliveryStatistics, queryDeliveryInfo, deliveryUpdate } from './mock/outbound'
 
@@ -202,6 +202,7 @@ const proxy = {
   'POST /api/standardTitle/delete/*': delStandardTitle,
   'POST /api/standardTitle/update': editStandardTitle,
   'POST /api/standardParams/create': createStandardParams,
+  'POST /api/standardParams/update': updateStandardParams,
   'POST /api/standardParams/list/*': queryStandardParams,
   'POST /api/delivery/list': queryDeliveryList,
   'POST /api/delivery/cars': queryDeliveryCarsList,

@@ -176,6 +176,19 @@ export function createStandardParams(req, res) {
     }
 }
 
+export function updateStandardParams(req, res) {
+    const result = {
+        code: 0,
+        msg: 'success',
+        data: standardsParams,
+    }
+    if (res && res.json) {
+        res.json(result)
+    } else {
+        return result
+    }
+}
+
 export function queryStandardParams(req, res) {
     const data = standardsParams.filter(item => item.productId === req.body.productId)
     const result = {

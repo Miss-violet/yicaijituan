@@ -74,6 +74,12 @@ export async function standardParamsCreate(params) {
         body: params,
     })
 }
+export async function standardParamsUpdate(params) {
+    return request(`/api/standardParams/update`, {
+        method: 'POST',
+        body: params,
+    })
+}
 export async function standardParamsQuery(params) {
     return request(`/api/standardParams/list/${params.productId}`, {
         method: 'POST',

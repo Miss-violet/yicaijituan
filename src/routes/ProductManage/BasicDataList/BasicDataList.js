@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'dva'
 import classNames from 'classnames'
 import {
   Button,
@@ -56,6 +57,8 @@ class BasicDataList extends Component {
       dialogTitle: '',                    /* 弹窗标题 */
       tableDialogType: '',                /* 弹窗操作对象类型：column/row */
       okBtnDisabled: true,                /* 标准行/列标题 弹窗 保存按钮是否可执行 */
+      newColumnTitle: [],                  /* 前端保存新增加的列标题 */
+      newRowTitle: [],                    /* 前端保存新增加的行标题 */
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -254,6 +257,9 @@ class BasicDataList extends Component {
       dialogTitle,
       tableDialogType,
       tableTitleModalVisible,
+      newColumnTitle,
+      newRowTitle,
+      selectedProductId,
     } = this.state
     const {
       standardColumnTitleData,
@@ -324,24 +330,52 @@ class BasicDataList extends Component {
         if (err === null || !err.titleName) {
           const {
             tableTitleModalType,
-            selectedProductId,
           } = this.state
           /* 【新增】列标题 */
           if (tableTitleModalType === 'add') {
-            /* 与后端交互 - 【保存】列标题 */
+            /* 前端保存列标题（用于生成空的标准值）。与后端交互 - 【保存】列标题 */
             if (type === 1) {
-              this.props.addStandardTitle({
-                name: values.titleName,
-                type,
-                productId: selectedProductId,
-                orderSort: standardColumnTitleData.length + 1,
+              this.setState({
+                newColumnTitle,
               })
-            } else if (type === 0) {
-              this.props.addStandardTitle({
-                name: values.titleName,
-                type,
-                productId: selectedProductId,
-                orderSort: standardRowTitleData.length + 1,
+              this.props.dispatch({
+                type: 'productManage/standardTitleCreate',
+                payload: {
+                  name: values.titleName,
+                  type,
+                  productId: selectedProductId,
+                  orderSort: standardColumnTitleData.length + 1,
+                },
+                callback: (data) => {
+                  newColumnTitle.push({
+                    columnTitle: data.name,
+                    columnId: data.id,
+                  })
+                  this.setState({
+                    newColumnTitle,
+                  })
+                }
+              })
+            }
+            /* 前端保存行标题（用于生成空的标准值）。与后端交互 - 【保存】行标题 */
+            else if (type === 0) {
+              this.props.dispatch({
+                type: 'productManage/standardTitleCreate',
+                payload: {
+                  name: values.titleName,
+                  type,
+                  productId: selectedProductId,
+                  orderSort: standardRowTitleData.length + 1,
+                },
+                callback: (data) => {
+                  newRowTitle.push({
+                    rowTitle: data.name,
+                    rowId: data.id
+                  })
+                  this.setState({
+                    newRowTitle,
+                  })
+                }
               })
             }
           }
@@ -391,9 +425,34 @@ class BasicDataList extends Component {
     }
     /* 第一步完成，跳转到 第二步 */
     const toStepTwo = () => {
+      /* 拿新创建的列标题，拼凑出空的标准值给后端 */
+      const createData = []
+      if (standardRowTitleData.length > 0 && newColumnTitle.length > 0) {
+        newColumnTitle.forEach(newItem => {
+          standardRowTitleData.forEach(rowItem => {
+            createData.push({
+              rowTitle: rowItem.name,
+              id: 0,
+              rowId: rowItem.id,
+              columnId: newItem.columnId,
+              type: 0,
+              productId: selectedProductId,
+              val: 0,
+              pointNum: 0,
+            })
+          })
+        })
+        this.props.dispatch({
+          type: 'productManage/standardParamsCreate',
+          payload: {
+            str: JSON.stringify(createData)
+          },
+        })
+      }
       this.setState({
         progressPercent: 33,
         selectedStandardTitleData: {},
+        newColumnTitle: []
       })
     }
     /* 第二步 跳转到 第一步 */
@@ -402,10 +461,45 @@ class BasicDataList extends Component {
         progressPercent: 0,
       })
     }
-    /* 第二步完成，跳转到 第三步 */
+    /* 第二步完成，跳转到 第三步，创建空的标准值数据给后端 */
     const toStepThree = () => {
+      /* 拿新创建的行标题，拼凑出空的标准值给后端 */
+      const createData = []
+      if (standardColumnTitleData.length > 0 && newRowTitle.length > 0) {
+        newRowTitle.forEach(newItem => {
+          standardColumnTitleData.forEach(columnItem => {
+            createData.push({
+              rowTitle: newItem.rowTitle,
+              id: 0,
+              rowId: newItem.rowId,
+              columnId: columnItem.id,
+              type: 0,
+              productId: selectedProductId,
+              val: 0,
+              pointNum: 0,
+            })
+          })
+        })
+        this.props.dispatch({
+          type: 'productManage/standardParamsCreate',
+          payload: {
+            str: JSON.stringify(createData)
+          },
+          callback: (status) => {
+            if (status === 0) {
+              this.props.dispatch({
+                type: 'productManage/standardParamsQuery',
+                payload: {
+                  productId: selectedProductId,
+                }
+              })
+            }
+          }
+        })
+      }
       this.setState({
         progressPercent: 66,
+        newRowTitle: [],
       })
     }
     const stepOne = classNames({
@@ -558,8 +652,6 @@ class BasicDataList extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {console.info('standardParams->', standardParams)}
-                      {console.info('standardRowTitleData->', standardRowTitleData)}
                       {
                         standardParams.map(standardParamsItem => {
                           /* 通过遍历 standardParams， 找出已知的类型值，填入表格中 */
@@ -568,6 +660,15 @@ class BasicDataList extends Component {
                             <tr key={standardParamsItem.rowId}>
                               <td>
                                 {standardParamsItem.rowTitle}
+                                <FormItem>
+                                  {getFieldDecorator(`id_${standardParamsItem.rowId}`, {
+                                    initialValue: standardParamsItem.rowId || 0,
+                                  })(
+                                    <InputNumber
+                                      disabled
+                                    />
+                                  )}
+                                </FormItem>
                               </td>
                               <td>
                                 <FormItem>
@@ -585,7 +686,6 @@ class BasicDataList extends Component {
                               </td>
                               {
                                 standardParamsItem.params.map(paramsItem => {
-                                  console.info('paramsItem=>', paramsItem)
                                   const { val, pointNum, columnId, rowId } = paramsItem
                                   pointNumValue = pointNum
                                   return (
@@ -819,7 +919,6 @@ class BasicDataList extends Component {
       /* 编辑产品信息，不包括标准模板的编辑 */
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err || (Object.keys(err).length === 1 && err.titleName)) {
-          console.info('values->', values)
           switch (modalType) {
 
             case 'add':
@@ -883,51 +982,38 @@ class BasicDataList extends Component {
    * @memberof BasicDataList
    */
   handleSubmitEditStandard = (values) => {
-    const { standardColumnTitleData, standardRowTitleData } = this.props
+    let { standardParams } = this.props.productManage
     const { selectedProductId } = this.state
     const standardTemplateData = []
     /* 填写完整以后 */
-    standardColumnTitleData.map(columnItem => {
-      standardRowTitleData.map(rowItem => {
-        /* 可以找到 rowId 和 columnId */
-        const rowId = rowItem.id
-        const rowTitle = rowItem.name
-        const columnId = columnItem.id
-        let type = ''
-        let pointNum = ''
-        let val = ''
-        for (const i in values) {
-          if (values) {
-            if (i === `type_${rowId}`) {
-              type = values[i]
-            }
-            if (i === `pointNum_${rowId}`) {
-              pointNum = values[i]
-            }
-            if (i === `${columnItem.id}_${rowItem.id}`) {
-              val = String(values[i])
-            }
-          }
-        }
-        /* 拼凑出后端需要的数据格式 */
-        standardTemplateData.push({
-          rowId,
-          columnId,
-          type,
-          productId: selectedProductId,
-          pointNum,
-          val,
-          rowTitle,
-          id: 0,
-        })
-        return rowItem
+    let paramsList = []
+    standardParams.forEach(standardItem => {
+      standardItem.params.forEach(paramsItem => {
+        paramsList.push(paramsItem)
       })
-      return columnItem
     })
-    console.info('standardTemplateData->', standardTemplateData)
-    this.props.standardParamsCreate(
-      standardTemplateData,
-    )
+
+    paramsList = paramsList.map(paramsItem => {
+      const { rowId, columnId } = paramsItem
+      for (let i in values) {
+        if (i === `${columnId}_${rowId}`) {
+          paramsItem.val = String(values[i])
+        }
+        if (i === `type_${rowId}`) {
+          paramsItem.type = values[i]
+        }
+        if (i === `pointNum_${rowId}`) {
+          paramsItem.pointNum = values[i]
+        }
+      }
+      return paramsItem
+    })
+    this.props.dispatch({
+      type: 'productManage/standardParamsUpdate',
+      payload: {
+        str: JSON.stringify(paramsList)
+      },
+    })
     this.setState({
       selectedRowKeys: [],
     })
@@ -1059,4 +1145,4 @@ class BasicDataList extends Component {
     );
   }
 }
-export default Form.create()(BasicDataList);
+export default connect(({ productManage }) => ({ productManage }))(Form.create()(BasicDataList));

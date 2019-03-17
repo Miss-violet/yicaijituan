@@ -242,14 +242,6 @@ class ProductManage extends Component {
           payload,
         })
       },
-      standardParamsCreate: payload => {
-        dispatch({
-          type: 'productManage/standardParamsCreate',
-          payload: {
-            str: JSON.stringify(payload)
-          },
-        })
-      },
       queryStandardParams: payload => {
         dispatch({
           type: 'productManage/standardParamsQuery',

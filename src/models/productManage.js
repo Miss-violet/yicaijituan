@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { create, update, del, info, productList, standardTitleCreate, standardTitleDelete, standardTitleEdit, queryStandardTitleList, standardParamsCreate, standardParamsQuery } from '../services/productManage'
+import { create, update, del, info, productList, standardTitleCreate, standardParamsUpdate, standardTitleDelete, standardTitleEdit, queryStandardTitleList, standardParamsCreate, standardParamsQuery } from '../services/productManage'
 
 export default {
   namespace: 'productManage',
@@ -94,7 +94,7 @@ export default {
         })
       }
     },
-    *standardTitleCreate({ payload }, { call, put }) {
+    *standardTitleCreate({ payload, callback }, { call, put }) {
       const res = yield call(standardTitleCreate, payload)
       if (res.code === 0) {
         const { productId, type } = res.data
@@ -115,6 +115,7 @@ export default {
           type: 'queryList',
           payload: {},
         })
+        if (callback) callback(res.data)
       }
     },
     *standardTitleDelete({ payload }, { call, put }) {
@@ -168,8 +169,18 @@ export default {
         if (callback) callback(res)
       }
     },
-    *standardParamsCreate({ payload }, { call, put }) {
+    *standardParamsCreate({ payload, callback }, { call, put }) {
       const res = yield call(standardParamsCreate, payload)
+      if (res.code === 0) {
+        yield put({
+          type: 'success',
+        })
+        if (callback) callback(res.code)
+      }
+    },
+    *standardParamsUpdate({ payload }, { call, put }) {
+      console.info('payload->', payload)
+      const res = yield call(standardParamsUpdate, payload)
       if (res.code === 0) {
         yield put({
           type: 'success',
