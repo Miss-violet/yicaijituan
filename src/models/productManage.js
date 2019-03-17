@@ -129,6 +129,12 @@ export default {
             type,
           },
         })
+        yield put({
+          type: 'standardParamsQuery',
+          payload: {
+            productId,
+          }
+        })
       }
     },
     *standardTitleEdit({ payload }, { call, put }) {
@@ -141,6 +147,12 @@ export default {
             productId,
             type,
           },
+        })
+        yield put({
+          type: 'standardParamsQuery',
+          payload: {
+            productId,
+          }
         })
       }
     },
@@ -179,7 +191,6 @@ export default {
       }
     },
     *standardParamsUpdate({ payload }, { call, put }) {
-      console.info('payload->', payload)
       const res = yield call(standardParamsUpdate, payload)
       if (res.code === 0) {
         yield put({
@@ -189,8 +200,10 @@ export default {
     },
     *standardParamsQuery({ payload }, { call, put }) {
       const res = yield call(standardParamsQuery, payload)
+      console.info('standardParamsQuery->', res)
       const { code, data } = res
       if (code === 0) {
+        console.info('dattta->', data)
         yield put({
           type: 'success',
           payload: {

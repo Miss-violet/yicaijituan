@@ -660,15 +660,6 @@ class BasicDataList extends Component {
                             <tr key={standardParamsItem.rowId}>
                               <td>
                                 {standardParamsItem.rowTitle}
-                                <FormItem>
-                                  {getFieldDecorator(`id_${standardParamsItem.rowId}`, {
-                                    initialValue: standardParamsItem.rowId || 0,
-                                  })(
-                                    <InputNumber
-                                      disabled
-                                    />
-                                  )}
-                                </FormItem>
                               </td>
                               <td>
                                 <FormItem>
