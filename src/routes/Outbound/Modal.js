@@ -3,6 +3,7 @@ import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button }
 import * as moment from 'moment';
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
+import { connect } from 'dva';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -54,8 +55,8 @@ class EditModal extends Component {
       selectedDetail,
       disabled,
       type,
-      standardColumnTitleData,
     } = this.props;
+    const { standardColumnTitleData } = this.props.productManage
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
     const productEnabled = productSelectList.filter(item => item.status === 0);
@@ -85,45 +86,72 @@ class EditModal extends Component {
      * 2、查询出对应的产品名称
      */
     const handleProductChange = productId => {
-      const proSelected = productEnabled.filter(item => item.id === productId);
-      let { standards } = proSelected[0]
-
-      if (type === 'add') {
-        standards = standards && standards.map(item => {
-          /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
-          return {
-            ...item,
-            parameter: '',
-          }
-        });
-      }
-      standards = standards.map(item => {
-        /* 如果不进行拷贝，则在修改id时，会将 standardId 也一起改掉 */
-        const copyItem = { ...item }
-        /* 每次切换产品的时候，把查询产品列表后的标准 id 和 name 分别赋给standardId 和 standardName */
-        /* 由于是新的标准，提交给后端保存的标准 id 应该 null */
-        return {
-          ...item,
-          standardId: copyItem.id,
-          standardName: copyItem.name,
-          id: null,
+      const proSelected = productEnabled.find(item => item.id === productId);
+      const { name, id, remark, printName } = proSelected
+      let standards
+      this.props.dispatch({
+        type: 'productManage/queryStandardTitleList',
+        payload: {
+          productId: id,
+          type: 0
+        }
+      })
+      this.props.dispatch({
+        type: 'productManage/queryStandardTitleList',
+        payload: {
+          productId: id,
+          type: 1
+        }
+      })
+      this.props.dispatch({
+        type: 'productManage/standardParamsQuery',
+        payload: {
+          productId: id,
+        },
+        callback: (standardParams) => {
+          // standards = standardParams
+          console.info('standardParams->', standardParams)
+          this.setState({
+            standardsData: standardParams,
+            productName: name,
+            remark,
+          });
         }
       })
 
-      const productName = proSelected[0].name;
-      const { remark } = proSelected[0];
-      const { printName } = proSelected[0];
 
-      setFields({
-        title: {
-          value: printName,
-        },
-      });
-      this.setState({
-        standardsData: standards,
-        productName,
-        remark,
-      });
+      // if (type === 'add') {
+      //   standards = standards && standards.map(item => {
+      //     /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
+      //     return {
+      //       ...item,
+      //       parameter: '',
+      //     }
+      //   });
+      // }
+      // standards = standards.map(item => {
+      //   /* 如果不进行拷贝，则在修改id时，会将 standardId 也一起改掉 */
+      //   const copyItem = { ...item }
+      //   /* 每次切换产品的时候，把查询产品列表后的标准 id 和 name 分别赋给standardId 和 standardName */
+      //   /* 由于是新的标准，提交给后端保存的标准 id 应该 null */
+      //   return {
+      //     ...item,
+      //     standardId: copyItem.id,
+      //     standardName: copyItem.name,
+      //     id: null,
+      //   }
+      // })
+
+      // setFields({
+      //   title: {
+      //     value: printName,
+      //   },
+      // });
+      // this.setState({
+      //   standardsData: standards,
+      //   productName: name,
+      //   remark,
+      // });
     };
 
     /**
@@ -412,8 +440,10 @@ class EditModal extends Component {
 
   /* 检查结果 */
   getResult = () => {
+    console.info('this.props->', this.props)
     const { levelSelected, resultOk, remark, standardsData } = this.state;
-    const { disabled, selectedDetail, standardColumnTitleData } = this.props;
+    const { disabled, selectedDetail } = this.props;
+    const { standardColumnTitleData, standardRowTitleData, standardParams } = this.props.productManage
     const { getFieldDecorator } = this.props.form;
     const { columnTitle, columnId } = selectedDetail;
 
@@ -540,9 +570,9 @@ class EditModal extends Component {
                 {
                   standardsData && standardsData.map(standardsItem => {
                     return (
-                      <tr key={standardsItem.standardId}>
+                      <tr key={standardsItem.rowId || standardsItem.standardId}>
                         <td>
-                          {standardsItem.standardName}
+                          {standardsItem.rowTitle || standardsItem.standardName}
                         </td>
                         {
                           standardsItem.params.map(item => {
@@ -927,4 +957,4 @@ class EditModal extends Component {
     );
   }
 }
-export default Form.create()(EditModal);
+export default connect(({ productManage }) => ({ productManage }))(Form.create()(EditModal));

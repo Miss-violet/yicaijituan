@@ -3,7 +3,7 @@ import { outboundList, create, update, status, info, cars, statistics } from '..
 
 import { manufacturerList } from '../services/manufacturerManage'
 import { companyListAll } from '../services/companyManage'
-import { productList, queryStandardTitleList } from '../services/productManage'
+import { productList } from '../services/productManage'
 
 
 
@@ -188,30 +188,6 @@ export default {
           },
         })
         if (callback) callback(res.code, res.data);
-      }
-    },
-    *queryStandardTitleList({ payload }, { call, put }) {
-      const res = yield call(queryStandardTitleList, payload)
-      const { type } = payload
-      if (res.code === 0) {
-        if (type === 0) {
-          /* 行标题 */
-          yield put({
-            type: 'success',
-            payload: {
-              standardRowTitleData: res.data,
-            },
-          })
-        }
-        else if (type === 1) {
-          /* 列标题 */
-          yield put({
-            type: 'success',
-            payload: {
-              standardColumnTitleData: res.data,
-            },
-          })
-        }
       }
     },
   },

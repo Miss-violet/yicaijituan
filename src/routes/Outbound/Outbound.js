@@ -54,17 +54,23 @@ class Outbound extends Component {
             /* 查询列标题 */
             const { productId } = selectedDetail
             this.props.dispatch({
-              type: 'outbound/queryStandardTitleList',
+              type: 'productManage/queryStandardTitleList',
               payload: {
                 productId,
                 type: 1,
               },
             })
             this.props.dispatch({
-              type: 'outbound/queryStandardTitleList',
+              type: 'productManage/queryStandardTitleList',
               payload: {
                 productId,
                 type: 0,
+              },
+            })
+            this.props.dispatch({
+              type: 'productManage/standardParamsQuery',
+              payload: {
+                productId,
               },
             })
             this.setState({
@@ -146,7 +152,7 @@ class Outbound extends Component {
   }
 
   render() {
-    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords, standardColumnTitleData, standardRowTitleData } = this.props.outbound
+    const { manufacturerSelectList, companyAllSelectList, productSelectList, total, cars, sumNetweight, totalRecords } = this.props.outbound
 
     let { listData } = this.props.outbound
 
@@ -221,8 +227,6 @@ class Outbound extends Component {
       resultOk: true,
       disabled: this.state.disabled,
       cars,
-      standardColumnTitleData,
-      standardRowTitleData,
     }
     return (
       <div>
@@ -233,4 +237,4 @@ class Outbound extends Component {
     )
   }
 }
-export default connect(({ outbound }) => ({ outbound }))(Outbound)
+export default connect(({ outbound, productManage }) => ({ outbound, productManage }))(Outbound)

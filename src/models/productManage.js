@@ -198,18 +198,17 @@ export default {
         })
       }
     },
-    *standardParamsQuery({ payload }, { call, put }) {
+    *standardParamsQuery({ payload, callback }, { call, put }) {
       const res = yield call(standardParamsQuery, payload)
-      console.info('standardParamsQuery->', res)
       const { code, data } = res
       if (code === 0) {
-        console.info('dattta->', data)
         yield put({
           type: 'success',
           payload: {
             standardParams: data,
           },
         })
+        if (callback) callback(data)
       }
     },
   },
