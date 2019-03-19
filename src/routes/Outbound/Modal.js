@@ -57,6 +57,7 @@ class EditModal extends Component {
       productSelectList,
       selectedDetail,
       disabled,
+      productDisabled,
       type,
     } = this.props;
     const { standardColumnTitleData } = this.props.productManage
@@ -122,21 +123,6 @@ class EditModal extends Component {
           productId: id,
         },
         callback: (standardParams) => {
-          // let { standardsData } = this.state
-          // standardsData = standardsData.map(standardsItem => {
-          //   let { standardName, standardId, params, parameter } = standardsItem
-          //   standardParams.forEach(paramsItem => {
-          //     const { rowTitle, rowId } = paramsItem
-          //     standardName = rowTitle
-          //     standardId = rowId
-          //     params = paramsItem.params
-          //     parameter = ''
-          //   })
-          //   return standardsItem
-          // })
-          // console.info('callback-standardsData->', standardsData)
-
-
           this.setState({
             standardsData: standardParams,
             productName: name,
@@ -280,11 +266,11 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.productId,
                 })(
-                  <Select onChange={handleProductChange} disabled={disabled}>
+                  <Select onChange={handleProductChange} disabled={productDisabled}>
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -306,7 +292,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -340,7 +326,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={selectedDetail.allowModifyOutTime === 0}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -363,7 +349,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -381,7 +367,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -398,7 +384,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -425,7 +411,7 @@ class EditModal extends Component {
                   >
                     {options}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -443,7 +429,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -472,9 +458,6 @@ class EditModal extends Component {
     const { standardColumnTitleData, standardRowTitleData, standardParams } = this.props.productManage
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const { columnTitle, columnId } = selectedDetail;
-
-    console.info('检查结果-standardsData', standardsData)
-    console.info('检查结果-standardParams', standardParams)
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -642,7 +625,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                              )}
+                            )}
                           </FormItem>
                         </td>
                       </tr>
@@ -658,7 +641,7 @@ class EditModal extends Component {
                       <p>
                         {resultOk ? '符合' : '不符合'}
                         GB/T 1596-2017 国家标准F类
-                        <span className={styles.resultLevel}>{levelSelectedName || ''}</span>级技术要求。
+                        <span className={styles.resultLevel}>{levelSelectedName || ''}</span>技术要求。
                       </p>
                       <p>{remark}</p>
                     </div>
@@ -717,7 +700,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -737,7 +720,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -757,7 +740,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -887,44 +870,39 @@ class EditModal extends Component {
         }
         /* 把填写的检验结果值填入，传给后端 */
 
-        // for (const i in values) {
-        //   if (Number(i)) {
-        //     standardsData = standardsData.map(standardsItem => {
-        //       if (standardsItem.id === Number(i)) {
-        //         const { id, standardId, standardName } = standardsItem
-        //         return {
-        //           id,
-        //           standardId,
-        //           standardName,
-        //           parameter: String(values[i]) || '',
-        //         }
-        //       }
-        //       return standardsItem
-        //     });
-        //   }
-        // }
         for (const i in values) {
           if (Number(i)) {
             standardsData = standardsData.map(standardsItem => {
-              const { rowId, rowTitle, params } = standardsItem
-              if (rowId === Number(i)) {
+              if (standardsItem.id === Number(i)) {
+                const { id, standardId, standardName } = standardsItem
                 return {
-                  standardId: rowId,
-                  standardName: rowTitle,
+                  id,
+                  standardId,
+                  standardName,
                   parameter: String(values[i]) || '',
-                  type: params[0].type,
-                  params,
                 }
               }
               return standardsItem
             });
           }
         }
+        const { standardColumnTitleData } = this.props.productManage
+        const { columnTitle, ...restValue } = values
+        let columnName = ''
+        standardColumnTitleData.forEach(item => {
+          if (item.id === columnTitle) {
+            columnName = item.name
+          }
+        })
         if (this.props.type === 'add') {
+          console.info('standardsData->', standardsData
+          )
           this.props.dispatch({
             type: 'outbound/create',
             payload: {
-              ...values,
+              ...restValue,
+              columnName,
+              columnId: columnTitle,
               standards: standardsData,
               productName,
               distributorName,

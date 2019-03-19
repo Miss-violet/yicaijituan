@@ -36,7 +36,7 @@ class Report extends Component {
             <li>
               <span className={styles.label}>级别：</span>
               <div className={styles.content}>
-                <span>{detail.level === 0 ? 'I级' : detail.level === 1 ? 'II级' : 'III级'}</span>
+                <span>{detail.columnTitle}</span>
               </div>
             </li>
             <li>
@@ -90,7 +90,7 @@ class Report extends Component {
                   <li>
                     <span className={styles.label}>类别：</span>
                     <span className={styles.content}>
-                      {detail.level === 0 ? 'I类' : detail.level === 1 ? 'II类' : 'III类'}
+                      {detail.columnTitle}
                     </span>
                   </li>
                 </ul>
@@ -151,7 +151,7 @@ class Report extends Component {
                         </td>
                       ))
                     }
-                    <td className={commonStyles.alignRight}>{item.parameter}</td>
+                    <td className={commonStyles.alignRight}>{item.parameter || ''}</td>
                   </tr>
                 ))}
             </tbody>
@@ -163,7 +163,7 @@ class Report extends Component {
                     GB/T 1596-2017 国家标准F类
                     <span className={styles.resultLevel}>
                       {detail.columnTitle}
-                    </span>级技术要求。
+                    </span>技术要求。
                   </p>
                   <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
                 </td>

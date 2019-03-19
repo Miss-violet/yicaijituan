@@ -22,13 +22,7 @@ export default {
               id: match[1],
             },
           })
-          dispatch({
-            type: 'queryStandardTitleList',
-            payload: {
-              productId: Number(match[1]),
-              type: 1,
-            },
-          })
+
         }
       })
     },
@@ -42,6 +36,13 @@ export default {
           type: 'success',
           payload: {
             detail: res.data,
+          },
+        })
+        yield put({
+          type: 'queryStandardTitleList',
+          payload: {
+            productId: res.data.productId,
+            type: 1,
           },
         })
       }
