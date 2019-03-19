@@ -137,6 +137,7 @@ export default {
       }
     },
     *create({ payload }, { call, put }) {
+      return
       const res = yield call(create, payload)
       if (res.code === 0) {
         yield put({
@@ -152,6 +153,7 @@ export default {
       }
     },
     *edit({ payload }, { call, put }) {
+      return
       const res = yield call(update, payload)
       if (res.code === 0) {
         yield put({

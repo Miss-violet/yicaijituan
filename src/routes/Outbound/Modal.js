@@ -15,8 +15,9 @@ class EditModal extends Component {
       visible: false,
       confirmLoading: false,
       carData: [],
-      standardsData: props.selectedDetail.standards,
-      levelSelected: '',
+      standardsData: '',
+      levelSelected: '',                /* 选中的级别 id */
+      levelSelectedName: '',            /* 选中的级别 name */
       resultOk: this.props.resultOk || false,
       productName: '',                  /* 选中的产品名称 */
       distributorName: '',              /* 选中的客户名称 */
@@ -35,6 +36,8 @@ class EditModal extends Component {
     if (this.props.selectedDetail !== nextProps.selectedDetail) {
       this.setState({
         standardsData: nextProps.selectedDetail.standards,
+        levelSelected: nextProps.selectedDetail.columnId,
+        levelSelectedName: nextProps.selectedDetail.columnTitle,
       });
     }
 
@@ -47,7 +50,7 @@ class EditModal extends Component {
 
   /* 出厂合格证 */
   getCertificateFields = () => {
-    const { getFieldDecorator, setFields } = this.props.form;
+    const { getFieldDecorator, setFieldsValue } = this.props.form;
     const {
       manufacturerSelectList,
       companyAllSelectList,
@@ -84,6 +87,7 @@ class EditModal extends Component {
      * 产品下拉框变化事件：
      * 1、加载产品对应的标准
      * 2、查询出对应的产品名称
+     * 3、级别下拉框的值也需要做修改
      */
     const handleProductChange = productId => {
       const proSelected = productEnabled.find(item => item.id === productId);
@@ -93,15 +97,24 @@ class EditModal extends Component {
         type: 'productManage/queryStandardTitleList',
         payload: {
           productId: id,
-          type: 0
-        }
+          type: 0,
+        },
       })
       this.props.dispatch({
         type: 'productManage/queryStandardTitleList',
         payload: {
           productId: id,
-          type: 1
-        }
+          type: 1,
+        },
+        callback: (res) => {
+          if (res.code === 0) {
+            setFieldsValue({ columnTitle: '' })
+            this.setState({
+              levelSelected: '',
+              levelSelectedName: '',
+            })
+          }
+        },
       })
       this.props.dispatch({
         type: 'productManage/standardParamsQuery',
@@ -109,14 +122,27 @@ class EditModal extends Component {
           productId: id,
         },
         callback: (standardParams) => {
-          // standards = standardParams
-          console.info('standardParams->', standardParams)
+          // let { standardsData } = this.state
+          // standardsData = standardsData.map(standardsItem => {
+          //   let { standardName, standardId, params, parameter } = standardsItem
+          //   standardParams.forEach(paramsItem => {
+          //     const { rowTitle, rowId } = paramsItem
+          //     standardName = rowTitle
+          //     standardId = rowId
+          //     params = paramsItem.params
+          //     parameter = ''
+          //   })
+          //   return standardsItem
+          // })
+          // console.info('callback-standardsData->', standardsData)
+
+
           this.setState({
             standardsData: standardParams,
             productName: name,
             remark,
           });
-        }
+        },
       })
 
 
@@ -158,9 +184,10 @@ class EditModal extends Component {
      * 级别下拉框变化事件：
      * 查询出当前选中的值，用于后续的判断
      */
-    const handleLevelChange = levelSelected => {
+    const handleLevelChange = (levelSelected, option) => {
       this.setState({
         levelSelected,
+        levelSelectedName: option.props.children,
       });
     };
 
@@ -257,7 +284,7 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -279,7 +306,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -313,7 +340,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={selectedDetail.allowModifyOutTime === 0}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -336,7 +363,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -354,7 +381,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -371,7 +398,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -398,7 +425,7 @@ class EditModal extends Component {
                   >
                     {options}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -416,7 +443,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -440,12 +467,14 @@ class EditModal extends Component {
 
   /* 检查结果 */
   getResult = () => {
-    console.info('this.props->', this.props)
-    const { levelSelected, resultOk, remark, standardsData } = this.state;
+    const { levelSelected, levelSelectedName, resultOk, remark, standardsData } = this.state;
     const { disabled, selectedDetail } = this.props;
     const { standardColumnTitleData, standardRowTitleData, standardParams } = this.props.productManage
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
     const { columnTitle, columnId } = selectedDetail;
+
+    console.info('检查结果-standardsData', standardsData)
+    console.info('检查结果-standardParams', standardParams)
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -456,20 +485,35 @@ class EditModal extends Component {
     const inputOnBlur = (event, standardsItem) => {
       window.event.cancelBubble = true;
 
+      if (!levelSelected) {
+        Modal.warning({
+          title: '警告',
+          content: `请先选择级别`,
+          okText: '知道了',
+        });
+        return
+      }
+
       let levelStandards = 0;
       const { value } = event.target
-      const { type, pointNum, standardName } = standardsItem
+
+      let { type, pointNum, standardName } = standardsItem
+      /* 如果修改了品名，standardsItem 中没有standardName,则需要取 rowTitle 的值 */
+      standardName = standardName || standardsItem.rowTitle
+
+      /* 如果修改了品名，standardsItem 中没有 type 和 pointNum */
+      type = type || standardsItem.params[0].type
+      pointNum = pointNum || standardsItem.params[0].pointNum
 
       standardsItem.params.map(paramsItem => {
-        const { val } = paramsItem
-
         if (paramsItem.columnId === columnId || paramsItem.columnId === levelSelected) {
+          const { val } = paramsItem
           levelStandards = Number(val)
         }
         return paramsItem
       })
       /* 检验是否为空 */
-      if (standardsItem.standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+      if (standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
         this.setState({
           resultOk: false,
         });
@@ -569,6 +613,7 @@ class EditModal extends Component {
               <tbody>
                 {
                   standardsData && standardsData.map(standardsItem => {
+                    const parameterId = standardsItem.id || standardsItem.rowId
                     return (
                       <tr key={standardsItem.rowId || standardsItem.standardId}>
                         <td>
@@ -577,13 +622,13 @@ class EditModal extends Component {
                         {
                           standardsItem.params.map(item => {
                             return (
-                              <td>{item.type === '0' ? '≤' : '≥'}{item.val}</td>
+                              <td>{item.type === 0 ? '≤' : '≥'}{item.val}</td>
                             )
                           })
                         }
                         <td>
                           <FormItem>
-                            {getFieldDecorator(`${standardsItem.id}`, {
+                            {getFieldDecorator(`${parameterId}`, {
                               rules: [
                                 {
                                   validator: (rule, value, callback) =>
@@ -597,7 +642,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                            )}
+                              )}
                           </FormItem>
                         </td>
                       </tr>
@@ -613,7 +658,7 @@ class EditModal extends Component {
                       <p>
                         {resultOk ? '符合' : '不符合'}
                         GB/T 1596-2017 国家标准F类
-                        <span className={styles.resultLevel}>{columnTitle || ''}</span>级技术要求。
+                        <span className={styles.resultLevel}>{levelSelectedName || ''}</span>级技术要求。
                       </p>
                       <p>{remark}</p>
                     </div>
@@ -672,7 +717,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -692,7 +737,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -712,7 +757,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
         </Row>
@@ -761,25 +806,33 @@ class EditModal extends Component {
     );
   };
 
-  /* 检验结果 文本框 输入时的校验 */
+  /* 检验结果 文本框 输入时的校验  */
   validateParameter = (rule, value, callback, standardsItem) => {
     if (isNaN(Number(value))) {
       callback('请输入数字')
       return
     }
-    let levelStandards = 0;
-    const { type, pointNum, standardName } = standardsItem
-    const { columnId } = this.props.selectedDetail;
     const { levelSelected } = this.state
-
-    standardsItem.params.map(paramsItem => {
-      const { val } = paramsItem
-
+    if (!levelSelected) {
+      callback('请先选择级别')
+      return
+    }
+    let levelStandards = 0;
+    let { type, pointNum, standardName } = standardsItem
+    const { columnId } = this.props.selectedDetail;
+    standardsItem.params.forEach(paramsItem => {
       if (paramsItem.columnId === columnId || paramsItem.columnId === levelSelected) {
+        const { val } = paramsItem
         levelStandards = Number(val)
       }
-      return paramsItem
     })
+
+    /* 如果修改了品名，standardsItem 中没有standardName,则需要取 rowTitle 的值 */
+    standardName = standardName || standardsItem.rowTitle
+
+    /* 如果修改了品名，standardsItem 中没有 type 和 pointNum */
+    type = type || standardsItem.params[0].type
+    pointNum = pointNum || standardsItem.params[0].pointNum
 
     /* 检验是否为空 */
     if (standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
@@ -809,7 +862,7 @@ class EditModal extends Component {
         return
       }
       if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
-        callback({ message: `小数位与产品设置不符合，小数点后需保留${standardsItem.pointNum}位小数` })
+        callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` })
         return
       }
     }
@@ -833,16 +886,34 @@ class EditModal extends Component {
           outTime: moment(values.outTime).format('YYYY-MM-DD HH:mm:ss'),
         }
         /* 把填写的检验结果值填入，传给后端 */
+
+        // for (const i in values) {
+        //   if (Number(i)) {
+        //     standardsData = standardsData.map(standardsItem => {
+        //       if (standardsItem.id === Number(i)) {
+        //         const { id, standardId, standardName } = standardsItem
+        //         return {
+        //           id,
+        //           standardId,
+        //           standardName,
+        //           parameter: String(values[i]) || '',
+        //         }
+        //       }
+        //       return standardsItem
+        //     });
+        //   }
+        // }
         for (const i in values) {
           if (Number(i)) {
             standardsData = standardsData.map(standardsItem => {
-              if (standardsItem.id === Number(i)) {
-                const { id, standardId, standardName } = standardsItem
+              const { rowId, rowTitle, params } = standardsItem
+              if (rowId === Number(i)) {
                 return {
-                  id,
-                  standardId,
-                  standardName,
-                  parameter: String(values[i]),
+                  standardId: rowId,
+                  standardName: rowTitle,
+                  parameter: String(values[i]) || '',
+                  type: params[0].type,
+                  params,
                 }
               }
               return standardsItem
@@ -850,7 +921,6 @@ class EditModal extends Component {
           }
         }
         if (this.props.type === 'add') {
-
           this.props.dispatch({
             type: 'outbound/create',
             payload: {
@@ -861,7 +931,8 @@ class EditModal extends Component {
               supplierName,
             },
           });
-        } else if (this.props.type === 'edit') {
+        }
+        else if (this.props.type === 'edit') {
           const { companyAllSelectList, manufacturerSelectList, productSelectList } = this.props
           const { distributorId, supplierId, productId } = values
           if (distributorName === '') {
@@ -888,6 +959,7 @@ class EditModal extends Component {
               return item
             })
           }
+
           this.props.dispatch({
             type: 'outbound/edit',
             payload: {
