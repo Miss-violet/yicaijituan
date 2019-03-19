@@ -13,8 +13,6 @@ class Report extends Component {
   }
   render() {
     const { detail, standardColumnTitleData } = this.props.report;
-    console.info('detail->', detail)
-    console.info('standardColumnTitleData->', standardColumnTitleData)
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,

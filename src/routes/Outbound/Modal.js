@@ -860,7 +860,6 @@ class EditModal extends Component {
     });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
         let { standardsData } = this.state;
         /* 日期格式转化 */
         values = {
@@ -868,24 +867,7 @@ class EditModal extends Component {
           deliveryTime: moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
           outTime: moment(values.outTime).format('YYYY-MM-DD HH:mm:ss'),
         }
-        /* 把填写的检验结果值填入，传给后端 */
 
-        for (const i in values) {
-          if (Number(i)) {
-            standardsData = standardsData.map(standardsItem => {
-              if (standardsItem.id === Number(i)) {
-                const { id, standardId, standardName } = standardsItem
-                return {
-                  id,
-                  standardId,
-                  standardName,
-                  parameter: String(values[i]) || '',
-                }
-              }
-              return standardsItem
-            });
-          }
-        }
         const { standardColumnTitleData } = this.props.productManage
         const { columnTitle, ...restValue } = values
         let columnName = ''
@@ -895,15 +877,30 @@ class EditModal extends Component {
           }
         })
         if (this.props.type === 'add') {
-          console.info('standardsData->', standardsData
-          )
+          /* 把填写的检验结果值填入，传给后端 */
+          const standards = []
+          for (const i in values) {
+            if (Number(i)) {
+              standardsData.forEach(standardsItem => {
+                if (standardsItem.rowId === Number(i)) {
+                  const { rowTitle, params } = standardsItem
+                  standards.push({
+                    id: '',
+                    standardId: params.find(item => item.columnId === columnTitle).id,
+                    standardName: rowTitle,
+                    parameter: String(values[i]) || '',
+                  })
+                }
+              });
+            }
+          }
           this.props.dispatch({
             type: 'outbound/create',
             payload: {
               ...restValue,
               columnName,
               columnId: columnTitle,
-              standards: standardsData,
+              standards,
               productName,
               distributorName,
               supplierName,
@@ -936,6 +933,24 @@ class EditModal extends Component {
               }
               return item
             })
+          }
+
+          /* 把填写的检验结果值填入，传给后端 */
+          for (const i in values) {
+            if (Number(i)) {
+              standardsData = standardsData.map(standardsItem => {
+                if (standardsItem.id === Number(i)) {
+                  const { id, standardId, standardName } = standardsItem
+                  return {
+                    id,
+                    standardId,
+                    standardName,
+                    parameter: String(values[i]) || '',
+                  }
+                }
+                return standardsItem
+              });
+            }
           }
 
           this.props.dispatch({
