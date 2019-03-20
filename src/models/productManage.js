@@ -148,12 +148,6 @@ export default {
             type,
           },
         })
-        yield put({
-          type: 'standardParamsQuery',
-          payload: {
-            productId,
-          }
-        })
       }
     },
     *queryStandardTitleList({ payload, callback }, { call, put }) {

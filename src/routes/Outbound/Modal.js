@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button } from 'antd';
 import * as moment from 'moment';
+import { connect } from 'dva';
+import classNames from 'classnames'
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
-import { connect } from 'dva';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -131,39 +132,11 @@ class EditModal extends Component {
         },
       })
 
-
-      // if (type === 'add') {
-      //   standards = standards && standards.map(item => {
-      //     /* 防止点击编辑-新增后，新增弹窗内的标准检验值被带入 */
-      //     return {
-      //       ...item,
-      //       parameter: '',
-      //     }
-      //   });
-      // }
-      // standards = standards.map(item => {
-      //   /* 如果不进行拷贝，则在修改id时，会将 standardId 也一起改掉 */
-      //   const copyItem = { ...item }
-      //   /* 每次切换产品的时候，把查询产品列表后的标准 id 和 name 分别赋给standardId 和 standardName */
-      //   /* 由于是新的标准，提交给后端保存的标准 id 应该 null */
-      //   return {
-      //     ...item,
-      //     standardId: copyItem.id,
-      //     standardName: copyItem.name,
-      //     id: null,
-      //   }
-      // })
-
-      // setFields({
-      //   title: {
-      //     value: printName,
-      //   },
-      // });
-      // this.setState({
-      //   standardsData: standards,
-      //   productName: name,
-      //   remark,
-      // });
+      this.props.form.setFields({
+        title: {
+          value: printName,
+        },
+      });
     };
 
     /**
@@ -171,10 +144,19 @@ class EditModal extends Component {
      * 查询出当前选中的值，用于后续的判断
      */
     const handleLevelChange = (levelSelected, option) => {
-      this.setState({
-        levelSelected,
-        levelSelectedName: option.props.children,
-      });
+      const selected = selectedDetail.columnId
+      if (selected !== levelSelected) {
+        let { standardsData } = this.state
+        standardsData = standardsData.map(data => {
+          data.parameter = ''
+          return data
+        })
+        this.setState({
+          levelSelected,
+          levelSelectedName: option.props.children,
+          standardsData,
+        });
+      }
     };
 
     /**
@@ -270,7 +252,7 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -292,7 +274,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -326,7 +308,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={selectedDetail.allowModifyOutTime === 0}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -349,7 +331,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -367,7 +349,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -384,7 +366,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -411,7 +393,7 @@ class EditModal extends Component {
                   >
                     {options}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -429,7 +411,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -518,7 +500,7 @@ class EditModal extends Component {
           });
           Modal.warning({
             title: '警告',
-            content: `${standardName}的检验结果须大于等于国家标准值`,
+            content: `${standardName}的检验结果须大于等于国家标准值${levelStandards}`,
             okText: '知道了',
           });
           return
@@ -529,7 +511,7 @@ class EditModal extends Component {
           });
           Modal.warning({
             title: '警告',
-            content: `${standardName}的检验结果须小于等于国家标准值`,
+            content: `${standardName}的检验结果须小于等于国家标准值${levelStandards}`,
             okText: '知道了',
           });
           return
@@ -573,6 +555,12 @@ class EditModal extends Component {
       });
     };
 
+    const tableStyle =
+      classNames({
+        [commonStyles.table]: true,
+        [commonStyles.standardsTable]: true,
+      })
+
     return (
       <div>
         <fieldset>
@@ -580,16 +568,16 @@ class EditModal extends Component {
         </fieldset>
         <Row>
           <Col {...tableColLayout}>
-            <table className={commonStyles.table}>
+            <table className={tableStyle}>
               <thead>
                 <tr>
-                  <th rowSpan="2">项目</th>
-                  <th colSpan={standardColumnTitleData.length}>国家标准</th>
-                  <th rowSpan="2">检验结果</th>
+                  <th rowSpan="2" style={{ width: '16%' }}>项目</th>
+                  <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>国家标准</th>
+                  <th rowSpan="2" style={{ width: '10%' }}>检验结果</th>
                 </tr>
                 <tr>
                   {
-                    standardColumnTitleData && standardColumnTitleData.map(item => <th key={item.id}>{item.name}</th>)
+                    standardColumnTitleData && standardColumnTitleData.map(item => <th key={item.id} style={{ width: `${74 / standardColumnTitleData.length}%` }}>{item.name}</th>)
                   }
                 </tr>
               </thead>
@@ -625,7 +613,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                            )}
+                              )}
                           </FormItem>
                         </td>
                       </tr>
@@ -636,7 +624,7 @@ class EditModal extends Component {
               <tfoot>
                 <tr>
                   <td>结果评定</td>
-                  <td colSpan="4">
+                  <td colSpan={standardColumnTitleData.length + 4}>
                     <div>
                       <p>
                         {resultOk ? '符合' : '不符合'}
@@ -700,7 +688,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -720,7 +708,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -740,7 +728,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
         </Row>
@@ -829,11 +817,11 @@ class EditModal extends Component {
      */
     if (value !== '' && value !== null) {
       if (type === 1 && value && Number(value) < levelStandards) {
-        callback({ message: '检验结果须大于等于国家标准值' });
+        callback({ message: `检验结果须大于等于国家标准值${levelStandards}` });
         return;
       }
       if (type === 0 && value && Number(value) > levelStandards) {
-        callback({ message: '检验结果须小于等于国家标准值' });
+        callback({ message: `检验结果须小于等于国家标准值${levelStandards}` });
         return;
       }
       if (pointNum === 0 && value.indexOf('.') !== -1) {

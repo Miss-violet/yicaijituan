@@ -53,7 +53,7 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                <span>
+                  <span>
                     <Icon type="check" />启用
                   </span>
                 )}
@@ -143,8 +143,7 @@ class List extends Component {
       },
       {
         title: '级别',
-        dataIndex: 'level',
-        render: text => (text === 0 ? 'I级' : text === 1 ? 'II级' : 'III级'),
+        dataIndex: 'columnTitle',
         width: 150,
       },
       {

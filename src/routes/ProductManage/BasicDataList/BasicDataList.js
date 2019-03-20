@@ -28,12 +28,12 @@ const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
     sm: { span: 24 },
-    md: { span: 4 },
+    md: { span: 2 },
   },
   wrapperCol: {
     xs: { span: 24 },
     sm: { span: 24 },
-    md: { span: 20 },
+    md: { span: 22 },
   },
 };
 
@@ -59,6 +59,7 @@ class BasicDataList extends Component {
       okBtnDisabled: true,                /* 标准行/列标题 弹窗 保存按钮是否可执行 */
       newColumnTitle: [],                  /* 前端保存新增加的列标题 */
       newRowTitle: [],                    /* 前端保存新增加的行标题 */
+      autoFocus: true,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -120,7 +121,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -143,7 +144,7 @@ class BasicDataList extends Component {
                         <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -166,7 +167,7 @@ class BasicDataList extends Component {
                         <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -188,7 +189,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -209,7 +210,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
             </div>
@@ -233,7 +234,7 @@ class BasicDataList extends Component {
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -260,6 +261,7 @@ class BasicDataList extends Component {
       newColumnTitle,
       newRowTitle,
       selectedProductId,
+      autoFocus,
     } = this.state
     const {
       standardColumnTitleData,
@@ -293,6 +295,7 @@ class BasicDataList extends Component {
         tableTitleModalVisible: true,
         tableTitleModalType: 'add',
         tableDialogType: type,
+        autoFocus: true,
       })
       if (type === 0) {
         this.setState({
@@ -354,7 +357,7 @@ class BasicDataList extends Component {
                   this.setState({
                     newColumnTitle,
                   })
-                }
+                },
               })
             }
             /* 前端保存行标题（用于生成空的标准值）。与后端交互 - 【保存】行标题 */
@@ -370,12 +373,12 @@ class BasicDataList extends Component {
                 callback: (data) => {
                   newRowTitle.push({
                     rowTitle: data.name,
-                    rowId: data.id
+                    rowId: data.id,
                   })
                   this.setState({
                     newRowTitle,
                   })
-                }
+                },
               })
             }
           }
@@ -394,6 +397,9 @@ class BasicDataList extends Component {
         } else if (err.titleName) {
           message.error(err.titleName.errors[0].message, 3)
         }
+        this.setState({
+          autoFocus: false,
+        })
       })
     }
     /* 新增/修改 表头字段弹窗 文本框有内容时，确定按钮可点击 */
@@ -445,14 +451,14 @@ class BasicDataList extends Component {
         this.props.dispatch({
           type: 'productManage/standardParamsCreate',
           payload: {
-            str: JSON.stringify(createData)
+            str: JSON.stringify(createData),
           },
         })
       }
       this.setState({
         progressPercent: 33,
         selectedStandardTitleData: {},
-        newColumnTitle: []
+        newColumnTitle: [],
       })
     }
     /* 第二步 跳转到 第一步 */
@@ -483,20 +489,16 @@ class BasicDataList extends Component {
         this.props.dispatch({
           type: 'productManage/standardParamsCreate',
           payload: {
-            str: JSON.stringify(createData)
+            str: JSON.stringify(createData),
           },
-          callback: (status) => {
-            if (status === 0) {
-              this.props.dispatch({
-                type: 'productManage/standardParamsQuery',
-                payload: {
-                  productId: selectedProductId,
-                }
-              })
-            }
-          }
         })
       }
+      this.props.dispatch({
+        type: 'productManage/standardParamsQuery',
+        payload: {
+          productId: selectedProductId,
+        },
+      })
       this.setState({
         progressPercent: 66,
         newRowTitle: [],
@@ -630,102 +632,104 @@ class BasicDataList extends Component {
               /* 展示 第三步 内容 */
               progressPercent === 66 && (
                 <div>
-                  <table className={commonStyles.table} style={{ width: '100%', marginBottom: '10px' }}>
-                    <thead>
-                      <tr>
-                        <th>
-                          &nbsp;
+                  <div style={{ width: '100%', overflowX: 'auto' }}>
+                    <table className={commonStyles.table} style={{ width: '100%', marginBottom: '10px' }}>
+                      <thead>
+                        <tr>
+                          <th>
+                            &nbsp;
                         </th>
-                        <th>
-                          类型
+                          <th>
+                            类型
                         </th>
+                          {
+                            standardColumnTitleData.map(item => (
+                              <th key={item.id}>
+                                {item.name}
+                              </th>
+                            ))
+                          }
+                          <th>
+                            保留小数点位数
+                        </th>
+                        </tr>
+                      </thead>
+                      <tbody>
                         {
-                          standardColumnTitleData.map(item => (
-                            <th key={item.id}>
-                              {item.name}
-                            </th>
-                          ))
-                        }
-                        <th>
-                          保留小数点位数
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        standardParams.map(standardParamsItem => {
-                          /* 通过遍历 standardParams， 找出已知的类型值，填入表格中 */
-                          let pointNumValue
-                          return (
-                            <tr key={standardParamsItem.rowId}>
-                              <td>
-                                {standardParamsItem.rowTitle}
-                              </td>
-                              <td>
-                                <FormItem>
-                                  {getFieldDecorator(`type_${standardParamsItem.rowId}`, {
-                                    rules: [{ required: true, message: '此项必填' }],
-                                    initialValue: standardParamsItem.params[0].type,
-                                  })(
-                                    <Select style={{ width: '100 %' }} placeholder="请选择">
-                                      <Option value={0}>≤（小于等于）</Option>
-                                      <Option value={1}>≥（大于等于）</Option>
-                                    </Select>
-                                  )
-                                  }
-                                </FormItem>
-                              </td>
-                              {
-                                standardParamsItem.params.map(paramsItem => {
-                                  const { val, pointNum, columnId, rowId } = paramsItem
-                                  pointNumValue = pointNum
-                                  return (
-                                    <td key={`${columnId}_${rowId}`}>
-                                      <FormItem>
-                                        {getFieldDecorator(`${columnId}_${rowId}`, {
-                                          rules: [{ required: true, message: '此项必填' }, {
-                                            validator: this.validatorNum,
-                                          }],
-                                          initialValue: val,
-                                        })(
-                                          <InputNumber
-                                            onBlur={this.inputNumberCheck}
-                                            disabled={this.props.disabled}
-                                            step={this.props.step}
-                                            min={this.props.min}
-                                            max={this.props.max}
-                                          />
-                                        )}
-                                      </FormItem>
-                                    </td>
-                                  )
-                                })
-                              }
-                              <td>
-                                <FormItem>
-                                  {getFieldDecorator(`pointNum_${standardParamsItem.rowId}`, {
-                                    rules: [{ required: true, message: '此项必填' }, {
-                                      validator: this.validatorNum,
-                                    }],
-                                    initialValue: pointNumValue,
-                                  })(
-                                    <InputNumber
-                                      onBlur={this.inputNumberCheck}
-                                      disabled={this.props.disabled}
-                                      step={this.props.step}
-                                      min={this.props.min}
-                                      max={this.props.max}
-                                    />
-                                  )}
-                                </FormItem>
-                              </td>
-                            </tr>
+                          standardParams.map(standardParamsItem => {
+                            /* 通过遍历 standardParams， 找出已知的类型值，填入表格中 */
+                            let pointNumValue
+                            return (
+                              <tr key={standardParamsItem.rowId}>
+                                <td>
+                                  {standardParamsItem.rowTitle}
+                                </td>
+                                <td>
+                                  <FormItem>
+                                    {getFieldDecorator(`type_${standardParamsItem.rowId}`, {
+                                      rules: [{ required: true, message: '此项必填' }],
+                                      initialValue: standardParamsItem.params[0].type,
+                                    })(
+                                      <Select style={{ width: '100 %' }} placeholder="请选择">
+                                        <Option value={0}>≤（小于等于）</Option>
+                                        <Option value={1}>≥（大于等于）</Option>
+                                      </Select>
+                                      )
+                                    }
+                                  </FormItem>
+                                </td>
+                                {
+                                  standardParamsItem.params.map(paramsItem => {
+                                    const { val, pointNum, columnId, rowId } = paramsItem
+                                    pointNumValue = pointNum
+                                    return (
+                                      <td key={`${columnId}_${rowId}`}>
+                                        <FormItem>
+                                          {getFieldDecorator(`${columnId}_${rowId}`, {
+                                            rules: [{ required: true, message: '此项必填' }, {
+                                              validator: this.validatorNum,
+                                            }],
+                                            initialValue: val,
+                                          })(
+                                            <InputNumber
+                                              onBlur={this.inputNumberCheck}
+                                              disabled={this.props.disabled}
+                                              step={this.props.step}
+                                              min={this.props.min}
+                                              max={this.props.max}
+                                            />
+                                            )}
+                                        </FormItem>
+                                      </td>
+                                    )
+                                  })
+                                }
+                                <td>
+                                  <FormItem>
+                                    {getFieldDecorator(`pointNum_${standardParamsItem.rowId}`, {
+                                      rules: [{ required: true, message: '此项必填' }, {
+                                        validator: this.validatorNum,
+                                      }],
+                                      initialValue: pointNumValue,
+                                    })(
+                                      <InputNumber
+                                        onBlur={this.inputNumberCheck}
+                                        disabled={this.props.disabled}
+                                        step={this.props.step}
+                                        min={this.props.min}
+                                        max={this.props.max}
+                                      />
+                                      )}
+                                  </FormItem>
+                                </td>
+                              </tr>
 
-                          )
-                        })
-                      }
-                    </tbody>
-                  </table>
+                            )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </div>
                   <Button onClick={toStepTwo}>
                     上一步
                   </Button>
@@ -771,7 +775,7 @@ class BasicDataList extends Component {
                       ],
                   }
                 )
-                  (<Input placeholder="请输入字段内容" onChange={handleChangeName} />)
+                  (<Input placeholder="请输入字段内容" onChange={handleChangeName} autoFocus={autoFocus} />)
               }
             </Modal>
           </div>
@@ -868,7 +872,7 @@ class BasicDataList extends Component {
     setTimeout(() => {
       const { selected, modalType, fmFields } = this.state;
       const { id } = selected
-      const { queryStandardParams, queryStandardTitle, handleCheck, productDetail } = this.props
+      const { handleCheck, productDetail, dispatch } = this.props
       if (JSON.stringify(this.state.selected) === '{}') {
         /* 如果 this.state.selected 为空，则说明是 新增 */
         fmFields.map(fmItem => {
@@ -877,17 +881,36 @@ class BasicDataList extends Component {
         });
       } else {
         if (modalType === 'editStandard') {
-          queryStandardParams({
-            productId: id,
+          let getTitle
+          dispatch({
+            type: 'productManage/queryStandardTitleList',
+            payload: {
+              productId: id,
+              type: 0,
+            },
+            callback: (res) => {
+              if (!res.data) getTitle = false
+            },
           })
-          queryStandardTitle({
-            productId: id,
-            type: 0,
+          dispatch({
+            type: 'productManage/queryStandardTitleList',
+            payload: {
+              productId: id,
+              type: 1,
+            },
+            callback: (res) => {
+              if (!res.data) getTitle = false
+            },
           })
-          queryStandardTitle({
-            productId: id,
-            type: 1,
-          })
+          /* 有 title 时再请求 params */
+          if (getTitle) {
+            dispatch({
+              type: 'productManage/standardParamsQuery',
+              payload: {
+                productId: id,
+              },
+            })
+          }
         }
         /* 用接口查询商品详情 */
         handleCheck({
@@ -1002,7 +1025,7 @@ class BasicDataList extends Component {
     this.props.dispatch({
       type: 'productManage/standardParamsUpdate',
       payload: {
-        str: JSON.stringify(paramsList)
+        str: JSON.stringify(paramsList),
       },
     })
     this.setState({

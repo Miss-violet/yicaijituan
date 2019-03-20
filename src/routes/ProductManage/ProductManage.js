@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Modal, Table, Tooltip, Badge, Button } from 'antd';
+
+import classNames from 'classnames'
+
 import BasicDataList from './BasicDataList/BasicDataList';
 import commonStyles from '../../assets/style/common.less';
 
@@ -194,7 +197,7 @@ class ProductManage extends Component {
         dispatch({
           type: 'productManage/create',
           payload: {
-            values,
+            ...values,
           },
         });
       },
@@ -236,20 +239,15 @@ class ProductManage extends Component {
           payload,
         })
       },
-      queryStandardTitle: payload => {
-        dispatch({
-          type: 'productManage/queryStandardTitleList',
-          payload,
-        })
-      },
-      queryStandardParams: payload => {
-        dispatch({
-          type: 'productManage/standardParamsQuery',
-          payload,
-        })
-      },
     };
     const { standardsVisible, proName } = this.state;
+
+    const tableStyle =
+      classNames({
+        [commonStyles.table]: true,
+        [commonStyles.standardsTable]: true,
+      })
+
 
     return (
       <div>
@@ -266,7 +264,7 @@ class ProductManage extends Component {
             </Button>,
           ]}
         >
-          <table className={commonStyles.table} style={{ width: '100%' }}>
+          <table className={tableStyle}>
             <thead>
               <tr>
                 <th style={{ width: '15%' }}>项目名称</th>

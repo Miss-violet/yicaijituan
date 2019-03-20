@@ -117,14 +117,14 @@ class Report extends Component {
           <table className={table}>
             <thead>
               <tr>
-                <th rowSpan="2">项目</th>
-                <th colSpan={standardColumnTitleData.length}>国家标准</th>
-                <th rowSpan="2">检验结果</th>
+                <th rowSpan="2" style={{ width: '16%' }}>项目</th>
+                <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>国家标准</th>
+                <th rowSpan="2" style={{ width: '10%' }}>检验结果</th>
               </tr>
               <tr>
                 {
                   standardColumnTitleData && standardColumnTitleData.map(columnItem => (
-                    <th key={columnItem.id}>
+                    <th key={columnItem.id} style={{ width: `${74 / standardColumnTitleData.length}%` }}>
                       {columnItem.name}
                     </th>
                   ))
@@ -156,7 +156,7 @@ class Report extends Component {
             <tfoot>
               <tr>
                 <td>结果评定</td>
-                <td colSpan="4">
+                <td colSpan={standardColumnTitleData.length + 4}>
                   <p>
                     GB/T 1596-2017 国家标准F类
                     <span className={styles.resultLevel}>
