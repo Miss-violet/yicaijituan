@@ -7,7 +7,7 @@ import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
+const { Option } = Select;
 
 class EditModal extends Component {
   constructor(props) {
@@ -94,7 +94,6 @@ class EditModal extends Component {
     const handleProductChange = productId => {
       const proSelected = productEnabled.find(item => item.id === productId);
       const { name, id, remark, printName } = proSelected
-      let standards
       this.props.dispatch({
         type: 'productManage/queryStandardTitleList',
         payload: {
@@ -437,9 +436,9 @@ class EditModal extends Component {
   getResult = () => {
     const { levelSelected, levelSelectedName, resultOk, remark, standardsData } = this.state;
     const { disabled, selectedDetail } = this.props;
-    const { standardColumnTitleData, standardRowTitleData, standardParams } = this.props.productManage
-    const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { columnTitle, columnId } = selectedDetail;
+    const { standardColumnTitleData } = this.props.productManage
+    const { getFieldDecorator } = this.props.form;
+    const { columnId } = selectedDetail;
 
     const tableColLayout = {
       xs: { offset: 0 },

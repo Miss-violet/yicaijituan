@@ -117,7 +117,7 @@ class Outbound extends Component {
   }
   /* 修改 出库单 状态 */
   changeStatus = () => {
-    const id = this.state.selectedRows.id
+    const { id } = this.state.selectedRows
     const status = this.state.selectedRows.status === 0 ? 1 : 0
 
     this.props.dispatch({

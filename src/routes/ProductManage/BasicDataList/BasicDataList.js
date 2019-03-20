@@ -638,10 +638,10 @@ class BasicDataList extends Component {
                         <tr>
                           <th>
                             &nbsp;
-                        </th>
+                          </th>
                           <th>
                             类型
-                        </th>
+                          </th>
                           {
                             standardColumnTitleData.map(item => (
                               <th key={item.id}>
@@ -651,7 +651,7 @@ class BasicDataList extends Component {
                           }
                           <th>
                             保留小数点位数
-                        </th>
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -872,7 +872,7 @@ class BasicDataList extends Component {
     setTimeout(() => {
       const { selected, modalType, fmFields } = this.state;
       const { id } = selected
-      const { handleCheck, productDetail, dispatch } = this.props
+      const { handleCheck, dispatch } = this.props
       if (JSON.stringify(this.state.selected) === '{}') {
         /* 如果 this.state.selected 为空，则说明是 新增 */
         fmFields.map(fmItem => {
@@ -996,9 +996,7 @@ class BasicDataList extends Component {
    * @memberof BasicDataList
    */
   handleSubmitEditStandard = (values) => {
-    let { standardParams } = this.props.productManage
-    const { selectedProductId } = this.state
-    const standardTemplateData = []
+    const { standardParams } = this.props.productManage
     /* 填写完整以后 */
     let paramsList = []
     standardParams.forEach(standardItem => {
@@ -1009,15 +1007,17 @@ class BasicDataList extends Component {
 
     paramsList = paramsList.map(paramsItem => {
       const { rowId, columnId } = paramsItem
-      for (let i in values) {
-        if (i === `${columnId}_${rowId}`) {
-          paramsItem.val = String(values[i])
-        }
-        if (i === `type_${rowId}`) {
-          paramsItem.type = values[i]
-        }
-        if (i === `pointNum_${rowId}`) {
-          paramsItem.pointNum = values[i]
+      for (const i in values) {
+        if (values[i]) {
+          if (i === `${columnId}_${rowId}`) {
+            paramsItem.val = String(values[i])
+          }
+          if (i === `type_${rowId}`) {
+            paramsItem.type = values[i]
+          }
+          if (i === `pointNum_${rowId}`) {
+            paramsItem.pointNum = values[i]
+          }
         }
       }
       return paramsItem
