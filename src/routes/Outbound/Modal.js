@@ -24,6 +24,8 @@ class EditModal extends Component {
       distributorName: '',              /* 选中的客户名称 */
       supplierName: '',                 /* 选中的生厂商名称 */
       remark: '',                       /* 打印备注 */
+      changeLevel: false,               /* 修改了级别 */
+      validateStatus: [],                  /* 设置标准值校验提示 */
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -143,19 +145,11 @@ class EditModal extends Component {
      * 查询出当前选中的值，用于后续的判断
      */
     const handleLevelChange = (levelSelected, option) => {
-      const selected = selectedDetail.columnId
-      if (selected !== levelSelected) {
-        let { standardsData } = this.state
-        standardsData = standardsData.map(data => {
-          data.parameter = ''
-          return data
-        })
-        this.setState({
-          levelSelected,
-          levelSelectedName: option.props.children,
-          standardsData,
-        });
-      }
+      this.setState({
+        levelSelected,
+        levelSelectedName: option.props.children,
+        changeLevel: true,
+      });
     };
 
     /**
@@ -434,7 +428,7 @@ class EditModal extends Component {
 
   /* 检查结果 */
   getResult = () => {
-    const { levelSelected, levelSelectedName, resultOk, remark, standardsData } = this.state;
+    const { levelSelected, levelSelectedName, resultOk, remark, standardsData, validateStatus } = this.state;
     const { disabled, selectedDetail } = this.props;
     const { standardColumnTitleData } = this.props.productManage
     const { getFieldDecorator } = this.props.form;
@@ -478,8 +472,13 @@ class EditModal extends Component {
       })
       /* 检验是否为空 */
       if (standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+        validateStatus[standardsItem.orderSort - 1] = {
+          status: 'error',
+          help: `${standardName}的检验结果不能为空值`,
+        }
         this.setState({
           resultOk: false,
+          validateStatus,
         });
         Modal.warning({
           title: '警告',
@@ -494,8 +493,13 @@ class EditModal extends Component {
        */
       if (value !== '' && value !== null) {
         if (type === 1 && value && Number(value) < levelStandards) {
+          validateStatus[standardsItem.orderSort - 1] = {
+            status: 'error',
+            help: `${standardName}的检验结果须大于等于国家标准值${levelStandards}`,
+          }
           this.setState({
             resultOk: false,
+            validateStatus,
           });
           Modal.warning({
             title: '警告',
@@ -505,8 +509,13 @@ class EditModal extends Component {
           return
         }
         if (type === 0 && value && Number(value) > levelStandards) {
+          validateStatus[standardsItem.orderSort - 1] = {
+            status: 'error',
+            help: `${standardName}的检验结果须小于等于国家标准值${levelStandards}`,
+          }
           this.setState({
             resultOk: false,
+            validateStatus,
           });
           Modal.warning({
             title: '警告',
@@ -516,8 +525,13 @@ class EditModal extends Component {
           return
         }
         if (pointNum === 0 && value.indexOf('.') !== -1) {
+          validateStatus[standardsItem.orderSort - 1] = {
+            status: 'error',
+            help: `${standardName}的小数位与产品设置不符合，请填写整数`,
+          }
           this.setState({
             resultOk: false,
+            validateStatus,
           });
           Modal.warning({
             title: '警告',
@@ -527,8 +541,13 @@ class EditModal extends Component {
           return
         }
         if (pointNum > 0 && value.indexOf('.') === -1) {
+          validateStatus[standardsItem.orderSort - 1] = {
+            status: 'error',
+            help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
+          }
           this.setState({
             resultOk: false,
+            validateStatus,
           });
           Modal.warning({
             title: '警告',
@@ -538,8 +557,13 @@ class EditModal extends Component {
           return
         }
         if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
+          validateStatus[standardsItem.orderSort - 1] = {
+            status: 'error',
+            help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
+          }
           this.setState({
             resultOk: false,
+            validateStatus,
           });
           Modal.warning({
             title: '警告',
@@ -551,6 +575,7 @@ class EditModal extends Component {
       }
       this.setState({
         resultOk: true,
+        validateStatus: [],
       });
     };
 
@@ -582,7 +607,7 @@ class EditModal extends Component {
               </thead>
               <tbody>
                 {
-                  standardsData && standardsData.map(standardsItem => {
+                  standardsData && standardsData.map((standardsItem, index) => {
                     const parameterId = standardsItem.id || standardsItem.rowId
                     return (
                       <tr key={standardsItem.rowId || standardsItem.standardId}>
@@ -597,7 +622,7 @@ class EditModal extends Component {
                           })
                         }
                         <td>
-                          <FormItem>
+                          <FormItem validateStatus={validateStatus[index] && validateStatus[index].status} help={validateStatus[index] && validateStatus[index].help}>
                             {getFieldDecorator(`${parameterId}`, {
                               rules: [
                                 {
@@ -847,7 +872,7 @@ class EditModal extends Component {
     });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let { standardsData } = this.state;
+        let { standardsData, validateStatus } = this.state;
         /* 日期格式转化 */
         values = {
           ...values,
@@ -863,6 +888,48 @@ class EditModal extends Component {
             columnName = item.name
           }
         })
+        const { changeLevel } = this.state
+        /* 如果级别被做了修改，则需要在提交前校验一遍 */
+        if (changeLevel) {
+          const validateName = []
+          for (const i in values) {
+            if (Number(i)) {
+              standardsData.forEach(dataItem => {
+                if (Number(i) === dataItem.id) {
+                  const { params, standardName } = dataItem
+                  const { val, type } = params.find(paramsItem => paramsItem.columnId === values.columnTitle)
+                  /**
+                   *  type===1：大于等于
+                   *  type===0：小于等于
+                   */
+                  if ((type === 0 && values[i] > val) || (type === 1 && values[i] < val)) {
+                    this.setState({
+                      resultOk: false,
+                    })
+                    validateName.push(standardName)
+                    validateStatus.push({ status: 'error', help: `${values[i]}的值应该${type === 0 ? '小于等于' : '大于等于'}${val}` })
+                  } else {
+                    validateStatus.push({ status: 'success' })
+                  }
+                }
+              })
+
+            }
+          }
+          if (validateName.length > 0) {
+            this.setState({
+              validateStatus,
+            })
+            Modal.warning({
+              title: '警告',
+              content: `请检查以下标准值${validateName.join(',')}后再保存`,
+              okText: '知道了',
+            });
+          }
+          return
+        }
+
+
         if (this.props.type === 'add') {
           /* 把填写的检验结果值填入，传给后端 */
           const standards = []
@@ -956,6 +1023,8 @@ class EditModal extends Component {
         setTimeout(() => {
           this.setState({
             confirmLoading: false,
+            changeLevel: false,
+            validateStatus: [],
           });
           this.props.closeModal();
         }, 0);
@@ -969,16 +1038,25 @@ class EditModal extends Component {
     });
   };
 
+  closeModal = () => {
+    const { closeModal } = this.props
+    this.setState({
+      changeLevel: false,
+      validateStatus: [],
+    })
+    closeModal()
+  }
+
   render() {
     const { visible, confirmLoading } = this.state;
-    const { closeModal, title, type } = this.props;
+    const { title, type } = this.props;
     return (
       <div>
         <Modal
           title={title}
           visible={visible}
           confirmLoading={confirmLoading}
-          onCancel={closeModal}
+          onCancel={this.closeModal}
           width="90%"
           className={styles.modal}
           footer={null}
@@ -989,7 +1067,7 @@ class EditModal extends Component {
             {this.getResult()}
             {this.getInfo()}
             <FormItem className={styles.fmBtn}>
-              <Button type="default" onClick={closeModal} className={styles.backBtn}>
+              <Button type="default" onClick={this.closeModal} className={styles.backBtn}>
                 返回
               </Button>
               {type !== 'check' && (
