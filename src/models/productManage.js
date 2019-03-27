@@ -118,7 +118,7 @@ export default {
         if (callback) callback(res.data)
       }
     },
-    *standardTitleDelete({ payload }, { call, put }) {
+    *standardTitleDelete({ payload, callback }, { call, put }) {
       const res = yield call(standardTitleDelete, payload.id)
       if (res.code === 0) {
         const { productId, type } = payload
@@ -129,13 +129,8 @@ export default {
             type,
           },
         })
-        yield put({
-          type: 'standardParamsQuery',
-          payload: {
-            productId,
-          }
-        })
       }
+      if (callback) callback(res)
     },
     *standardTitleEdit({ payload }, { call, put }) {
       const res = yield call(standardTitleEdit, payload)

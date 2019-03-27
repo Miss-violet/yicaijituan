@@ -393,6 +393,7 @@ class BasicDataList extends Component {
           }
           this.setState({
             tableTitleModalVisible: false,
+            selectedStandardTitleData: {},
           })
         } else if (err.titleName) {
           message.error(err.titleName.errors[0].message, 3)
@@ -422,12 +423,33 @@ class BasicDataList extends Component {
     }
     /* 删除 表头字段弹窗 */
     const handleDelName = () => {
-      const { id, productId, type } = this.state.selectedStandardTitleData
-      this.props.delStandardTitle({
-        id,
-        productId,
-        type,
-      })
+      confirm({
+        title: '删除',
+        content: '确定要删除选中的数据？',
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          const { id, productId, type } = this.state.selectedStandardTitleData
+          this.props.dispatch({
+            type: 'productManage/standardTitleDelete',
+            payload: {
+              id,
+              productId,
+              type,
+            },
+            callback: (res) => {
+              if (res.code === 0) {
+                this.setState({
+                  selectedStandardTitleData: {},
+                })
+              }
+            },
+          })
+        },
+        onCancel() { },
+      });
+
+
     }
     /* 第一步完成，跳转到 第二步 */
     const toStepTwo = () => {
@@ -516,6 +538,11 @@ class BasicDataList extends Component {
       [styles.currentStep]: this.state.progressPercent === 66,
       [styles.normalStep]: true,
     })
+    const tableStyle =
+      classNames({
+        [commonStyles.table]: true,
+        [commonStyles.standardsTable]: true,
+      })
 
     return (
       <Col span={24}>
@@ -633,7 +660,7 @@ class BasicDataList extends Component {
               progressPercent === 66 && (
                 <div>
                   <div style={{ width: '100%', overflowX: 'auto' }}>
-                    <table className={commonStyles.table} style={{ width: '100%', marginBottom: '10px' }}>
+                    <table className={tableStyle}>
                       <thead>
                         <tr>
                           <th>
@@ -656,15 +683,15 @@ class BasicDataList extends Component {
                       </thead>
                       <tbody>
                         {
-                          standardParams.map(standardParamsItem => {
+                          standardParams.map((standardParamsItem, index) => {
                             /* 通过遍历 standardParams， 找出已知的类型值，填入表格中 */
                             let pointNumValue
                             return (
                               <tr key={standardParamsItem.rowId}>
-                                <td>
+                                <td key={`rowTitle_${standardParamsItem.rowId}`}>
                                   {standardParamsItem.rowTitle}
                                 </td>
-                                <td>
+                                <td key={`item_${standardParamsItem.rowId}`}>
                                   <FormItem>
                                     {getFieldDecorator(`type_${standardParamsItem.rowId}`, {
                                       rules: [{ required: true, message: '此项必填' }],
@@ -704,7 +731,7 @@ class BasicDataList extends Component {
                                     )
                                   })
                                 }
-                                <td>
+                                <td key={standardParamsItem.rowId}>
                                   <FormItem>
                                     {getFieldDecorator(`pointNum_${standardParamsItem.rowId}`, {
                                       rules: [{ required: true, message: '此项必填' }, {

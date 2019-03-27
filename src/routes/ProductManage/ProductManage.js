@@ -227,12 +227,6 @@ class ProductManage extends Component {
           payload,
         })
       },
-      delStandardTitle: payload => {
-        dispatch({
-          type: 'productManage/standardTitleDelete',
-          payload,
-        })
-      },
       editStandardTitle: payload => {
         dispatch({
           type: 'productManage/standardTitleEdit',
