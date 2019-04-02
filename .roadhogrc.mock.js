@@ -215,5 +215,5 @@ const proxy = {
 
 // export default (noProxy ? {} : delay(proxy, 1000));
 export default {
-  'GET /api/(.*)': 'http://www.linhy.cn:8090/api/',
+  'GET /api/(.*)': 'http://www.yicaijituan.cn:8090/api/',
 };
