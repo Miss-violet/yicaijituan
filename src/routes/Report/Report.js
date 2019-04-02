@@ -12,7 +12,7 @@ class Report extends Component {
     this.state = {};
   }
   render() {
-    const { detail } = this.props.report;
+    const { detail, standardColumnTitleData } = this.props.report;
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,
@@ -34,7 +34,7 @@ class Report extends Component {
             <li>
               <span className={styles.label}>级别：</span>
               <div className={styles.content}>
-                <span>{detail.level === 0 ? 'I级' : detail.level === 1 ? 'II级' : 'III级'}</span>
+                <span>{detail.columnTitle}</span>
               </div>
             </li>
             <li>
@@ -88,7 +88,7 @@ class Report extends Component {
                   <li>
                     <span className={styles.label}>类别：</span>
                     <span className={styles.content}>
-                      {detail.level === 0 ? 'I类' : detail.level === 1 ? 'II类' : 'III类'}
+                      {detail.columnTitle}
                     </span>
                   </li>
                 </ul>
@@ -117,14 +117,18 @@ class Report extends Component {
           <table className={table}>
             <thead>
               <tr>
-                <th rowSpan="2">项目</th>
-                <th colSpan="3">国家标准</th>
-                <th rowSpan="2">检验结果</th>
+                <th rowSpan="2" style={{ width: '16%' }}>项目</th>
+                <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>国家标准</th>
+                <th rowSpan="2" style={{ width: '10%' }}>检验结果</th>
               </tr>
               <tr>
-                <th>I级</th>
-                <th>II级</th>
-                <th>III级</th>
+                {
+                  standardColumnTitleData && standardColumnTitleData.map(columnItem => (
+                    <th key={columnItem.id} style={{ width: `${74 / standardColumnTitleData.length}%` }}>
+                      {columnItem.name}
+                    </th>
+                  ))
+                }
               </tr>
             </thead>
             <tbody>
@@ -137,31 +141,27 @@ class Report extends Component {
                 detail.standards.map(item => (
                   <tr>
                     <td>{item.standardName}</td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.oneLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.twoLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>
-                      {item.type === 0 ? '≤' : '≥'}
-                      {item.threeLevel}
-                    </td>
-                    <td className={commonStyles.alignRight}>{item.parameter}</td>
+                    {
+                      item.params.map(paramsItem => (
+                        <td className={commonStyles.alignRight}>
+                          {paramsItem.type === 0 ? '≤' : '≥'}
+                          {paramsItem.val}
+                        </td>
+                      ))
+                    }
+                    <td className={commonStyles.alignRight}>{item.parameter || ''}</td>
                   </tr>
                 ))}
             </tbody>
             <tfoot>
               <tr>
                 <td>结果评定</td>
-                <td colSpan="4">
+                <td colSpan={standardColumnTitleData.length + 4}>
                   <p>
                     GB/T 1596-2017 国家标准F类
                     <span className={styles.resultLevel}>
-                      {detail.level === 0 ? 'I' : detail.level === 1 ? 'II' : 'III'}
-                    </span>级技术要求。
+                      {detail.columnTitle}
+                    </span>技术要求。
                   </p>
                   <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
                 </td>

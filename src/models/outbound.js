@@ -16,6 +16,8 @@ export default {
     manufacturerSelectList: [],
     companyAllSelectList: [],
     productSelectList: [],
+    standardColumnTitleData: [],
+    standardRowTitleData: [],
     selectedDetail: {},
     cars: [],
     sumNetweight: '',

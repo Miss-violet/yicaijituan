@@ -2,6 +2,7 @@
 import request from '../utils/request';
 
 export async function fakeAccountLogin(params) {
+  console.info('login')
   return request('/api/loginSubmit', {
     method: 'POST',
     body: params,

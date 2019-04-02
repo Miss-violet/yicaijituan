@@ -12,6 +12,7 @@ class Outbound extends Component {
       role: sessionStorage.getItem('role'), // 当前用户的角色
       modalVisible: false,
       disabled: false,
+      productDisabled: false,     /* 只有新增产品时才是 false */
       title: '',
       type: '',
       selectedRows: {},
@@ -33,6 +34,7 @@ class Outbound extends Component {
       this.setState({
         selectedDetail: {},     /* 如果是新增，则打开的弹窗里没有单据详情。防止选中后打开带入数据 */
         disabled: false,
+        productDisabled: false,
         title: "合格证数据新增",
         modalVisible: true,
         type,
@@ -51,6 +53,28 @@ class Outbound extends Component {
         callback: (code, selectedDetail) => {
           if (code === 0) {
             /* selectedDetail     - 获取选中的单据详情 */
+            /* 查询列标题 */
+            const { productId } = selectedDetail
+            this.props.dispatch({
+              type: 'productManage/queryStandardTitleList',
+              payload: {
+                productId,
+                type: 1,
+              },
+            })
+            this.props.dispatch({
+              type: 'productManage/queryStandardTitleList',
+              payload: {
+                productId,
+                type: 0,
+              },
+            })
+            this.props.dispatch({
+              type: 'productManage/standardParamsQuery',
+              payload: {
+                productId,
+              },
+            })
             this.setState({
               selectedDetail,
             })
@@ -62,6 +86,7 @@ class Outbound extends Component {
       this.setState({
         title: '合格证数据编辑',
         disabled: false,
+        productDisabled: true,
         modalVisible: true,
         type,
       })
@@ -69,6 +94,7 @@ class Outbound extends Component {
       this.setState({
         title: '合格证数据查看',
         disabled: true,
+        productDisabled: true,
         modalVisible: true,
         type,
       })
@@ -91,7 +117,7 @@ class Outbound extends Component {
   }
   /* 修改 出库单 状态 */
   changeStatus = () => {
-    const id = this.state.selectedRows.id
+    const { id } = this.state.selectedRows
     const status = this.state.selectedRows.status === 0 ? 1 : 0
 
     this.props.dispatch({
@@ -112,7 +138,7 @@ class Outbound extends Component {
   }
 
   handleSearch = (values) => {
-    const {params} = values
+    const { params } = values
     this.setState({
       filterValue: params,
     })
@@ -204,6 +230,7 @@ class Outbound extends Component {
       productSelectList,
       resultOk: true,
       disabled: this.state.disabled,
+      productDisabled: this.state.productDisabled,
       cars,
     }
     return (
@@ -215,4 +242,4 @@ class Outbound extends Component {
     )
   }
 }
-export default connect(({ outbound }) => ({ outbound }))(Outbound)
+export default connect(({ outbound, productManage }) => ({ outbound, productManage }))(Outbound)

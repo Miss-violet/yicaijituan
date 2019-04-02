@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Modal, Table, Tooltip, Badge, Button } from 'antd';
+
+import classNames from 'classnames'
+
 import BasicDataList from './BasicDataList/BasicDataList';
 import commonStyles from '../../assets/style/common.less';
 
@@ -8,15 +11,34 @@ class ProductManage extends Component {
   constructor() {
     super();
     this.state = {
-      standardsData: [],
       standardsVisible: false,
       proName: '',
     };
   }
   check = record => {
+    const { id } = record
+    this.props.dispatch({
+      type: 'productManage/queryStandardTitleList',
+      payload: {
+        productId: id,
+        type: 0,
+      },
+    })
+    this.props.dispatch({
+      type: 'productManage/queryStandardTitleList',
+      payload: {
+        productId: id,
+        type: 1,
+      },
+    })
+    this.props.dispatch({
+      type: 'productManage/standardParamsQuery',
+      payload: {
+        productId: id,
+      },
+    })
     this.setState({
       standardsVisible: true,
-      standardsData: record.standards,
       proName: record.name,
     });
   };
@@ -31,6 +53,14 @@ class ProductManage extends Component {
     });
   };
   render() {
+    const { dispatch } = this.props
+    let { data } = this.props.productManage
+    const {
+      standardRowTitleData,
+      standardColumnTitleData,
+      standardParams,
+      productDetail,
+    } = this.props.productManage
     const columns = [
       {
         title: '名称',
@@ -70,51 +100,27 @@ class ProductManage extends Component {
       {
         title: '标准',
         dataIndex: 'standards',
-        render: (text, record) => (
-          <a href="javascript: void(0)" onClick={() => this.check(record)}>
-            查看标准
-          </a>
-        ),
+        render: (text, record) => {
+          if (!record.standardDataFlag) return (
+            <Tooltip title="请先编辑标准后再查看">
+              <span>
+                查看标准
+              </span>
+            </Tooltip>
+          )
+          else return (
+            <a href="javascript: void(0)" onClick={() => this.check(record)}>
+              查看标准
+            </a>
+          )
+        },
       },
     ];
-    let { data } = this.props.productManage;
+
     data = data.map((item, index) => {
       item.key = index
       return item
     })
-    const standardsColumns = [
-      {
-        title: '项目名称',
-        dataIndex: 'name',
-        width: '25%',
-      },
-      {
-        title: '类型',
-        dataIndex: 'type',
-        width: '15%',
-        render: text => (text === 0 ? '≤（小于等于）' : '≥（大于等于）'),
-      },
-      {
-        title: 'I级指标',
-        dataIndex: 'oneLevel',
-        width: '15%',
-      },
-      {
-        title: 'II级指标',
-        dataIndex: 'twoLevel',
-        width: '15%',
-      },
-      {
-        title: 'III级指标',
-        dataIndex: 'threeLevel',
-        width: '15%',
-      },
-      {
-        title: '保留小数点位数',
-        dataIndex: 'pointNum',
-        width: '15%',
-      },
-    ];
 
     const fmFields = [
       {
@@ -175,7 +181,7 @@ class ProductManage extends Component {
         ],
       },
     ];
-    const companyProps = {
+    const productProps = {
       columns,
       data,
       fmFields,
@@ -183,8 +189,12 @@ class ProductManage extends Component {
       updateBtn: true,
       checkBtn: false,
       deleteBtn: true,
+      standardColumnTitleData,
+      standardRowTitleData,
+      standardParams,
+      productDetail,
       handleCreate: values => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/create',
           payload: {
             ...values,
@@ -192,7 +202,7 @@ class ProductManage extends Component {
         });
       },
       handleEdit: values => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/edit',
           payload: {
             ...values,
@@ -200,35 +210,98 @@ class ProductManage extends Component {
         });
       },
       handleDelete: id => {
-        this.props.dispatch({
+        dispatch({
           type: 'productManage/delete',
           payload: id,
         });
       },
+      handleCheck: payload => {
+        dispatch({
+          type: 'productManage/info',
+          payload,
+        })
+      },
+      addStandardTitle: payload => {
+        dispatch({
+          type: 'productManage/standardTitleCreate',
+          payload,
+        })
+      },
+      editStandardTitle: payload => {
+        dispatch({
+          type: 'productManage/standardTitleEdit',
+          payload,
+        })
+      },
     };
-    const { standardsVisible, standardsData, proName } = this.state;
+    const { standardsVisible, proName } = this.state;
+
+    const tableStyle =
+      classNames({
+        [commonStyles.table]: true,
+        [commonStyles.standardsTable]: true,
+      })
+
 
     return (
       <div>
-        <BasicDataList {...companyProps} />
+        <BasicDataList {...productProps} />
         <Modal
           title={`${proName} 标准`}
           visible={standardsVisible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          width="60%"
+          width="80%"
           footer={[
             <Button key="submit" type="primary" onClick={this.handleOk}>
               确定
             </Button>,
           ]}
         >
-          <Table
-            columns={standardsColumns}
-            dataSource={standardsData}
-            pagination={false}
-            bordered
-          />
+          <table className={tableStyle}>
+            <thead>
+              <tr>
+                <th style={{ width: '15%' }}>项目名称</th>
+                <th style={{ width: '15%' }}>类型</th>
+                {
+                  standardColumnTitleData && standardColumnTitleData.map(columnItem => (
+                    <th key={columnItem.id} style={{ width: `${60 / standardColumnTitleData.length}%` }}>
+                      {columnItem.name}
+                    </th>
+                  ))
+                }
+                <th style={{ width: '10%' }}>保留的小数点位数</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                standardParams && standardParams.map(dataItem => {
+                  return (
+                    <tr key={dataItem.id}>
+                      <td>
+                        {dataItem.rowTitle}
+                      </td>
+                      <td >
+                        {dataItem.params[0].type === 0 ? '≤（小于等于）' : '≥（大于等于）'}
+                      </td>
+                      {
+                        dataItem.params.map(item => {
+                          return (
+                            <td key={item.id}>
+                              {item.val}
+                            </td>
+                          )
+                        })
+                      }
+                      <td>
+                        {dataItem.params[0].pointNum}
+                      </td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </table>
         </Modal>
       </div>
     );

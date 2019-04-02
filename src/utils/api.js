@@ -4,7 +4,7 @@ module.exports = {
             list: `/api/delivery/list`,
             create: `/api/delivery/create`,
             update: `/api/delivery/update`,
-            cars: `api/delivery/cars`,
+            cars: `/api/delivery/cars`,
             statistics: `/api/delivery/statistics`,
         },
         userManage: {
@@ -24,6 +24,7 @@ module.exports = {
             list: `/api/product/list`,
             create: `/api/product/create`,
             update: `/api/product/update`,
+            standardTitleCreate: `/api/standardTitle/create`,
         },
         manufacturerManage: {
             list: `/api/mft/list`,

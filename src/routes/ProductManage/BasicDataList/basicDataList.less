@@ -8,7 +8,11 @@
 .fm {
     :global {
         .ant-form-item {
+            height: 40px;
             margin-bottom: 10px;
+        }
+        .ant-form-explain-holder {
+            line-height: 0;
         }
     }
     .fmBtn {
@@ -18,4 +22,64 @@
             margin-right: 10px;
         }
     }
+}
+
+.step {
+    border-bottom: 1px dashed #ddd;
+    display: flex;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    .progress {
+        flex: 1;
+        margin-top: 20px;
+        text-align: center;
+    }
+    .stepDetail {
+        flex: 4;
+        li {
+            line-height: 30px;
+        }
+    }
+}
+
+.columnNameListWrap {
+    display: flex;
+    .columnNameListTitle {
+        flex: 1;
+        line-height: 30px;
+        max-width: 200px;
+        min-width: 200px;
+    }
+    .columnNameList {
+        flex: 2;
+        max-height: 50px;
+        margin-bottom: 0;
+        overflow-y: auto;
+        padding: 0;
+        li {
+            float: left;
+            line-height: 30px;
+            list-style-type: none;
+            &:after {
+                content: '，';
+            }
+            &:last-child:after {
+                content: ' '
+            }
+        }
+    }
+}
+
+.normalStep {
+    color: #333;
+}
+
+.currentStep {
+    color: rgb(16, 142, 233);
+    font-weight: bold;
+}
+
+.editStandardModalBtnBar {
+    margin-bottom: 16px;
+    margin-right: 10px;
 }
