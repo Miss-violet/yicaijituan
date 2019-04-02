@@ -296,6 +296,11 @@ class BasicDataList extends Component {
         tableTitleModalType: 'add',
         tableDialogType: type,
         autoFocus: true,
+      }, () => {
+        /* 多次打开弹窗，文本框聚焦 */
+        if (this.input) {
+          this.input.focus()
+        }
       })
       if (type === 0) {
         this.setState({
@@ -325,6 +330,12 @@ class BasicDataList extends Component {
         tableTitleModalVisible: true,
         tableTitleModalType: 'edit',
         tableDialogType: type,
+        autoFocus: true,
+      }, () => {
+        /* 多次打开弹窗，文本框聚焦 */
+        if (this.input) {
+          this.input.focus()
+        }
       })
     }
     /* 新增/修改 表头字段弹窗 - 保存 */
@@ -419,6 +430,7 @@ class BasicDataList extends Component {
     const handleCancelName = () => {
       this.setState({
         tableTitleModalVisible: false,
+        autoFocus: false,
       })
     }
     /* 删除 表头字段弹窗 */
@@ -671,7 +683,7 @@ class BasicDataList extends Component {
                           </th>
                           {
                             standardColumnTitleData.map(item => (
-                              <th key={item.id}>
+                              <th key={item.name}>
                                 {item.name}
                               </th>
                             ))
@@ -683,7 +695,7 @@ class BasicDataList extends Component {
                       </thead>
                       <tbody>
                         {
-                          standardParams.map((standardParamsItem, index) => {
+                          standardParams.map(standardParamsItem => {
                             /* 通过遍历 standardParams， 找出已知的类型值，填入表格中 */
                             let pointNumValue
                             return (
@@ -750,7 +762,6 @@ class BasicDataList extends Component {
                                   </FormItem>
                                 </td>
                               </tr>
-
                             )
                           })
                         }
@@ -802,7 +813,15 @@ class BasicDataList extends Component {
                       ],
                   }
                 )
-                  (<Input placeholder="请输入字段内容" onChange={handleChangeName} autoFocus={autoFocus} />)
+                  (<Input
+                    placeholder="请输入字段内容，敲回车可以直接保存"
+                    onChange={handleChangeName}
+                    onPressEnter={() => handleSaveName(tableDialogType)}
+                    /* 首次打开弹窗，文本框聚焦 */
+                    autoFocus={autoFocus}
+                    /* 多次打开弹窗，文本框聚焦 */
+                    ref={refs => { this.input = refs }}
+                  />)
               }
             </Modal>
           </div>
@@ -843,6 +862,11 @@ class BasicDataList extends Component {
       selectedRowKeys: [],
       selected: {},
     });
+    /* 查询一次列表，如果有设置了列行标题，则可以“查看标准” */
+    this.props.dispatch({
+      type: 'productManage/queryList',
+      payload: {},
+    })
   };
 
   /**
@@ -1111,6 +1135,7 @@ class BasicDataList extends Component {
       updateBtn,
       checkBtn,
       deleteBtn,
+      standardRowTitleData,
     } = this.props;
 
     const rowSelection = {
@@ -1167,7 +1192,7 @@ class BasicDataList extends Component {
             }
             <FormItem className={styles.fmBtn}>
               <Button type="default" onClick={() => this.handleCancel(modalType)} className={styles.backBtn}>
-                返回
+                关闭
               </Button>
               {this.state.modalType !== 'check' && (
                 <Button
@@ -1175,6 +1200,7 @@ class BasicDataList extends Component {
                   htmlType="submit"
                   className={styles.submitBtn}
                   onClick={() => this.handleSubmit(modalType)}
+                  disabled={standardRowTitleData.length < 1}
                 >
                   保存
                 </Button>

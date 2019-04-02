@@ -277,7 +277,7 @@ class ProductManage extends Component {
               {
                 standardParams && standardParams.map(dataItem => {
                   return (
-                    <tr>
+                    <tr key={dataItem.id}>
                       <td>
                         {dataItem.rowTitle}
                       </td>
