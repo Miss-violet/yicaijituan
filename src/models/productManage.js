@@ -1,5 +1,5 @@
 import {
-  routerRedux
+  routerRedux,
 } from 'dva/router';
 import {
   create,
@@ -13,7 +13,7 @@ import {
   standardTitleEdit,
   queryStandardTitleList,
   standardParamsCreate,
-  standardParamsQuery
+  standardParamsQuery,
 } from '../services/productManage'
 
 export default {
@@ -30,7 +30,7 @@ export default {
   subscriptions: {
     setup({
       dispatch,
-      history
+      history,
     }) {
       return history.listen((location) => {
         if (location.pathname === '/productManage') {
@@ -51,10 +51,10 @@ export default {
 
   effects: {
     * create({
-      payload
+      payload,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(create, payload)
       if (res.code === 0) {
@@ -71,10 +71,10 @@ export default {
       }
     },
     * edit({
-      payload
+      payload,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(update, payload)
       if (res.code === 0) {
@@ -91,10 +91,10 @@ export default {
       }
     },
     * delete({
-      payload
+      payload,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(del, payload)
       if (res.code === 0) {
@@ -106,10 +106,9 @@ export default {
     },
     * info({
       payload,
-      callback
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(info, payload)
       if (res.code === 0) {
@@ -122,10 +121,10 @@ export default {
       }
     },
     * queryList({
-      payload
+      payload,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(productList, payload)
       if (res.code === 0) {
@@ -139,21 +138,22 @@ export default {
     },
     * standardTitleCreate({
       payload,
-      callback
+      callback,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(standardTitleCreate, payload)
       if (res.code === 0) {
         const {
           productId,
-          type
+          type,
         } = res.data
         yield put({
           type: 'success',
           payload: {
-            newStandardTitle: { ...res.data
+            newStandardTitle: {
+              ...res.data,
             },
           },
         })
@@ -164,25 +164,21 @@ export default {
             type,
           },
         })
-        // yield put({
-        //   type: 'queryList',
-        //   payload: {},
-        // })
         if (callback) callback(res.data)
       }
     },
     * standardTitleDelete({
       payload,
-      callback
+      callback,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(standardTitleDelete, payload.id)
       if (res.code === 0) {
         const {
           productId,
-          type
+          type,
         } = payload
         yield put({
           type: 'queryStandardTitleList',
@@ -195,16 +191,16 @@ export default {
       if (callback) callback(res)
     },
     * standardTitleEdit({
-      payload
+      payload,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(standardTitleEdit, payload)
       if (res.code === 0) {
         const {
           productId,
-          type
+          type,
         } = payload
         yield put({
           type: 'queryStandardTitleList',
@@ -217,14 +213,14 @@ export default {
     },
     * queryStandardTitleList({
       payload,
-      callback
+      callback,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(queryStandardTitleList, payload)
       const {
-        type
+        type,
       } = payload
       if (res.code === 0) {
         if (type === 0) {
@@ -249,10 +245,10 @@ export default {
     },
     * standardParamsCreate({
       payload,
-      callback
+      callback,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(standardParamsCreate, payload)
       if (res.code === 0) {
@@ -263,10 +259,10 @@ export default {
       }
     },
     * standardParamsUpdate({
-      payload
+      payload,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(standardParamsUpdate, payload)
       if (res.code === 0) {
@@ -277,15 +273,15 @@ export default {
     },
     * standardParamsQuery({
       payload,
-      callback
+      callback,
     }, {
       call,
-      put
+        put,
     }) {
       const res = yield call(standardParamsQuery, payload)
       const {
         code,
-        data
+        data,
       } = res
       if (code === 0) {
         yield put({
@@ -301,10 +297,11 @@ export default {
 
   reducers: {
     success(state, {
-      payload
+      payload,
     }) {
-      return { ...state,
-        ...payload
+      return {
+        ...state,
+        ...payload,
       }
     },
   },
