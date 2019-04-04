@@ -256,8 +256,8 @@ export default {
         yield put({
           type: 'success',
         })
-        if (callback) callback(res.code)
       }
+      if (callback) callback(res)
     },
     * standardParamsUpdate({
       payload,

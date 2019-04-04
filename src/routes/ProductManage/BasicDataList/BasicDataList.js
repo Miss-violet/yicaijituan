@@ -539,18 +539,34 @@ class BasicDataList extends Component {
           payload: {
             str: JSON.stringify(createData),
           },
+          callback: (res) => {
+            if (res.code === 0) {
+              this.props.dispatch({
+                type: 'productManage/standardParamsQuery',
+                payload: {
+                  productId: selectedProductId,
+                },
+              })
+              this.setState({
+                progressPercent: 66,
+                newRowTitle: [],
+              })
+            }
+          },
         })
       }
-      this.props.dispatch({
-        type: 'productManage/standardParamsQuery',
-        payload: {
-          productId: selectedProductId,
-        },
-      })
-      this.setState({
-        progressPercent: 66,
-        newRowTitle: [],
-      })
+      else {
+        this.props.dispatch({
+          type: 'productManage/standardParamsQuery',
+          payload: {
+            productId: selectedProductId,
+          },
+        })
+        this.setState({
+          progressPercent: 66,
+          newRowTitle: [],
+        })
+      }
     }
     const stepOne = classNames({
       [styles.currentStep]: this.state.progressPercent === 0,
