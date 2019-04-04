@@ -415,7 +415,6 @@ class BasicDataList extends Component {
                 if (res.code === 0) {
                   this.setState({
                     tableTitleModalVisible: false,
-                    selectedStandardTitleData: {},
                   })
                 }
               },
