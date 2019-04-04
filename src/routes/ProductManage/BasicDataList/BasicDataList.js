@@ -57,7 +57,7 @@ class BasicDataList extends Component {
       dialogTitle: '',                    /* 弹窗标题 */
       tableDialogType: '',                /* 弹窗操作对象类型：column/row */
       okBtnDisabled: true,                /* 标准行/列标题 弹窗 保存按钮是否可执行 */
-      newColumnTitle: [],                  /* 前端保存新增加的列标题 */
+      newColumnTitle: [],                 /* 前端保存新增加的列标题 */
       newRowTitle: [],                    /* 前端保存新增加的行标题 */
       autoFocus: true,
     };
@@ -360,14 +360,18 @@ class BasicDataList extends Component {
                   productId: selectedProductId,
                   orderSort: standardColumnTitleData.length + 1,
                 },
-                callback: (data) => {
-                  newColumnTitle.push({
-                    columnTitle: data.name,
-                    columnId: data.id,
-                  })
-                  this.setState({
-                    newColumnTitle,
-                  })
+                callback: (res) => {
+                  if (res.code === 0) {
+                    const { name, id } = res.data
+                    newColumnTitle.push({
+                      columnTitle: name,
+                      columnId: id,
+                    })
+                    this.setState({
+                      newColumnTitle,
+                      tableTitleModalVisible: false,
+                    })
+                  }
                 },
               })
             }
@@ -381,31 +385,42 @@ class BasicDataList extends Component {
                   productId: selectedProductId,
                   orderSort: standardRowTitleData.length + 1,
                 },
-                callback: (data) => {
-                  newRowTitle.push({
-                    rowTitle: data.name,
-                    rowId: data.id,
-                  })
-                  this.setState({
-                    newRowTitle,
-                  })
+                callback: (res) => {
+                  if (res.code === 0) {
+                    const { name, id } = res.data
+                    newRowTitle.push({
+                      rowTitle: name,
+                      rowId: id,
+                    })
+                    this.setState({
+                      newRowTitle,
+                      tableTitleModalVisible: false,
+                    })
+                  }
                 },
               })
             }
           }
           else if (tableTitleModalType === 'edit') {
             const { id } = selectedStandardTitleData
-            this.props.editStandardTitle({
-              name: values.titleName,
-              id,
-              type,
-              productId: selectedProductId,
+            this.props.dispatch({
+              type: 'productManage/standardTitleEdit',
+              payload: {
+                name: values.titleName,
+                id,
+                type,
+                productId: selectedProductId,
+              },
+              callback: (res) => {
+                if (res.code === 0) {
+                  this.setState({
+                    tableTitleModalVisible: false,
+                    selectedStandardTitleData: {},
+                  })
+                }
+              },
             })
           }
-          this.setState({
-            tableTitleModalVisible: false,
-            selectedStandardTitleData: {},
-          })
         } else if (err.titleName) {
           message.error(err.titleName.errors[0].message, 3)
         }

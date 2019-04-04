@@ -227,12 +227,6 @@ class ProductManage extends Component {
           payload,
         })
       },
-      editStandardTitle: payload => {
-        dispatch({
-          type: 'productManage/standardTitleEdit',
-          payload,
-        })
-      },
     };
     const { standardsVisible, proName } = this.state;
 

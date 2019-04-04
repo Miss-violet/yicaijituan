@@ -164,8 +164,8 @@ export default {
             type,
           },
         })
-        if (callback) callback(res.data)
       }
+      if (callback) callback(res)
     },
     * standardTitleDelete({
       payload,
@@ -191,7 +191,7 @@ export default {
       if (callback) callback(res)
     },
     * standardTitleEdit({
-      payload,
+      payload, callback,
     }, {
       call,
         put,
@@ -210,6 +210,7 @@ export default {
           },
         })
       }
+      if (callback) callback(res)
     },
     * queryStandardTitleList({
       payload,
