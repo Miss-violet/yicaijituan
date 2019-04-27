@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Button, Input, Select, DatePicker, Icon } from 'antd'
+import { Form, Row, Col, Button, Input, Select, DatePicker, Icon, AutoComplete } from 'antd'
 import * as moment from 'moment'
 import styles from './outbound.less'
 
@@ -40,7 +40,7 @@ class OutboundFilter extends Component {
 
     /* 车牌 */
     let timeout;
-    const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
+    // const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
     const fetch = (value) => {
       if (timeout) {
         clearTimeout(timeout);
@@ -94,25 +94,34 @@ class OutboundFilter extends Component {
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder={['请选择开始时间', '请选择结束时间']}
                   className={styles.datepicker}
-                  />
+                />
               )}
             </FormItem>
           </Col>
           <Col {...filterFormLayout}>
             <FormItem label='运输车号' {...formItemLayout} className={styles.formItem}>
               {getFieldDecorator('carNo')(
-                <Select
-                  mode="combobox"
+                // 在 antd 更高版本中 combobox 属性将被移除 2019/04/27
+                // <Select
+                //   mode="combobox"
+                //   placeholder={this.props.placeholder}
+                //   style={this.props.style}
+                //   defaultActiveFirstOption={false}
+                //   showArrow={false}
+                //   filterOption={false}
+                //   onChange={handleChange}
+                //   onFocus={handleFocus}
+                //   >
+                //   {options}
+                // </Select>
+                <AutoComplete
+                  dataSource={this.state.carData}
+                  onSelect={handleChange}
+                  onSearch={handleChange}
+                  onFocus={handleFocus}
                   placeholder={this.props.placeholder}
                   style={this.props.style}
-                  defaultActiveFirstOption={false}
-                  showArrow={false}
-                  filterOption={false}
-                  onChange={handleChange}
-                  onFocus={handleFocus}
-                  >
-                  {options}
-                </Select>
+                />
               )}
             </FormItem>
           </Col>
@@ -239,7 +248,7 @@ class OutboundFilter extends Component {
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
-          >
+        >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>

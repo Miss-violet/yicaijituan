@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button } from 'antd';
+import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button, AutoComplete } from 'antd';
 import * as moment from 'moment';
 import { connect } from 'dva';
 import classNames from 'classnames'
@@ -19,7 +19,6 @@ class EditModal extends Component {
       standardsData: '',
       levelSelected: '',                /* 选中的级别 id */
       levelSelectedName: '',            /* 选中的级别 name */
-      resultOk: this.props.resultOk || false,
       productName: '',                  /* 选中的产品名称 */
       distributorName: '',              /* 选中的客户名称 */
       supplierName: '',                 /* 选中的生厂商名称 */
@@ -200,7 +199,7 @@ class EditModal extends Component {
     };
     /* 车牌 */
     let timeout;
-    const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
+    // const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
     const fetch = value => {
       if (timeout) {
         clearTimeout(timeout);
@@ -230,6 +229,7 @@ class EditModal extends Component {
       fetch(value);
     };
     const handleFocus = () => {
+      console.info('focus')
       const { cars } = this.props
       this.setState({
         carData: cars,
@@ -325,7 +325,7 @@ class EditModal extends Component {
                   ],
                   initialValue: type !== 'add'
                     ? moment(selectedDetail.deliveryTime)
-                    : '',
+                    : moment(''),
                 })(
                   <DatePicker
                     showTime
@@ -383,19 +383,30 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.carNo,
                 })(
-                  <Select
-                    mode="combobox"
+                  // 在 antd 更高版本中 combobox 属性将被移除 2019/04/27
+                  // <Select
+                  //   mode="combobox"
+                  //   placeholder={this.props.placeholder}
+                  //   style={this.props.style}
+                  //   defaultActiveFirstOption={false}
+                  //   showArrow={false}
+                  //   filterOption={false}
+                  //   onChange={handleChange}
+                  //   onFocus={handleFocus}
+                  //   disabled={disabled}
+                  // >
+                  //   {options}
+                  // </Select>
+
+                  <AutoComplete
+                    dataSource={this.state.carData}
+                    onSelect={handleChange}
+                    onSearch={handleChange}
+                    onFocus={handleFocus}
                     placeholder={this.props.placeholder}
                     style={this.props.style}
-                    defaultActiveFirstOption={false}
-                    showArrow={false}
-                    filterOption={false}
-                    onChange={handleChange}
-                    onFocus={handleFocus}
                     disabled={disabled}
-                  >
-                    {options}
-                  </Select>
+                  />
                 )}
               </FormItem>
             </Col>
@@ -438,7 +449,7 @@ class EditModal extends Component {
 
   /* 检查结果 */
   getResult = () => {
-    const { levelSelected, levelSelectedName, resultOk, remark, standardsData, validateStatus } = this.state;
+    const { levelSelected, levelSelectedName, remark, standardsData, validateStatus } = this.state;
     const { disabled, selectedDetail } = this.props;
     const { standardColumnTitleData, productDetail } = this.props.productManage
     const { getFieldDecorator } = this.props.form;
@@ -488,7 +499,6 @@ class EditModal extends Component {
           help: `${standardName}的检验结果不能为空值`,
         }
         this.setState({
-          resultOk: false,
           validateStatus,
         });
         Modal.warning({
@@ -509,7 +519,6 @@ class EditModal extends Component {
             help: `${standardName}的检验结果须大于等于国家标准值${levelStandards}`,
           }
           this.setState({
-            resultOk: false,
             validateStatus,
           });
           Modal.warning({
@@ -525,7 +534,6 @@ class EditModal extends Component {
             help: `${standardName}的检验结果须小于等于国家标准值${levelStandards}`,
           }
           this.setState({
-            resultOk: false,
             validateStatus,
           });
           Modal.warning({
@@ -541,7 +549,6 @@ class EditModal extends Component {
             help: `${standardName}的小数位与产品设置不符合，请填写整数`,
           }
           this.setState({
-            resultOk: false,
             validateStatus,
           });
           Modal.warning({
@@ -557,7 +564,6 @@ class EditModal extends Component {
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
           }
           this.setState({
-            resultOk: false,
             validateStatus,
           });
           Modal.warning({
@@ -573,7 +579,6 @@ class EditModal extends Component {
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
           }
           this.setState({
-            resultOk: false,
             validateStatus,
           });
           Modal.warning({
@@ -585,7 +590,6 @@ class EditModal extends Component {
         }
       }
       this.setState({
-        resultOk: true,
         validateStatus: [],
       });
     };
@@ -626,14 +630,19 @@ class EditModal extends Component {
                           {standardsItem.rowTitle || standardsItem.standardName}
                         </td>
                         {
-                          standardsItem.params.map(item => {
+                          standardsItem.params.map((item, itemIndex) => {
                             return (
-                              <td>{item.type === 0 ? '≤' : '≥'}{item.val}</td>
+                              <td key={itemIndex}>
+                                {item.type === 0 ? '≤' : '≥'}{item.val}
+                              </td>
                             )
                           })
                         }
                         <td>
-                          <FormItem validateStatus={validateStatus[index] && validateStatus[index].status} help={validateStatus[index] && validateStatus[index].help}>
+                          <FormItem
+                            validateStatus={validateStatus[index] && validateStatus[index].status}
+                            help={validateStatus[index] && validateStatus[index].help}
+                          >
                             {getFieldDecorator(`${parameterId}`, {
                               rules: [
                                 {
@@ -658,13 +667,11 @@ class EditModal extends Component {
               </tbody>
               <tfoot>
                 <tr>
-                  <td>{footName || ''}</td>
+                  <td>{footName}</td>
                   <td colSpan={standardColumnTitleData.length + 4}>
                     <div>
                       <p>
-                        {resultOk ? '符合' : '不符合'}
-                        {footContent || ''}
-                        <span className={styles.resultLevel}>{levelSelectedName || ''}</span>技术要求。
+                        {footContent} <span className={styles.resultLevel}>{levelSelectedName}</span>技术要求。
                       </p>
                       <p>{remark}</p>
                     </div>

@@ -156,32 +156,32 @@ class ProductManage extends Component {
         label: '表头名称',
         name: 'headName',
         type: 'text',
-        required: false,
+        required: true,
       },
       {
         label: '表头标题',
         name: 'headTitle',
         type: 'text',
-        required: false,
+        required: true,
       },
       {
         label: '表头结果',
         name: 'headResult',
         type: 'text',
-        required: false,
+        required: true,
       },
       {
         label: '表格底部内容',
         name: 'footContent',
         type: 'text',
-        required: false,
+        required: true,
       },
 
       {
         label: '表格底部名称',
         name: 'footName',
         type: 'text',
-        required: false,
+        required: true,
       },
       {
         label: '打印备注',
