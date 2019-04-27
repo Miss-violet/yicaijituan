@@ -28,12 +28,12 @@ const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
     sm: { span: 24 },
-    md: { span: 2 },
+    md: { span: 4 },
   },
   wrapperCol: {
     xs: { span: 24 },
     sm: { span: 24 },
-    md: { span: 22 },
+    md: { span: 20 },
   },
 };
 
@@ -121,7 +121,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -144,7 +144,7 @@ class BasicDataList extends Component {
                         <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -167,7 +167,7 @@ class BasicDataList extends Component {
                         <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -189,7 +189,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -210,7 +210,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
             </div>
@@ -234,7 +234,7 @@ class BasicDataList extends Component {
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -743,7 +743,7 @@ class BasicDataList extends Component {
                                         <Option value={0}>≤（小于等于）</Option>
                                         <Option value={1}>≥（大于等于）</Option>
                                       </Select>
-                                      )
+                                    )
                                     }
                                   </FormItem>
                                 </td>
@@ -767,7 +767,7 @@ class BasicDataList extends Component {
                                               min={this.props.min}
                                               max={this.props.max}
                                             />
-                                            )}
+                                          )}
                                         </FormItem>
                                       </td>
                                     )
@@ -788,7 +788,7 @@ class BasicDataList extends Component {
                                         min={this.props.min}
                                         max={this.props.max}
                                       />
-                                      )}
+                                    )}
                                   </FormItem>
                                 </td>
                               </tr>

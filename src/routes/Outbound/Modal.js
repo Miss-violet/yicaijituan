@@ -94,16 +94,26 @@ class EditModal extends Component {
      * 3、级别下拉框的值也需要做修改
      */
     const handleProductChange = productId => {
+      const { dispatch, form } = this.props
       const proSelected = productEnabled.find(item => item.id === productId);
       const { name, id, remark, printName } = proSelected
-      this.props.dispatch({
+
+      dispatch({
+        type: 'productManage/info',
+        payload: {
+          productId,
+        }
+      })
+
+
+      dispatch({
         type: 'productManage/queryStandardTitleList',
         payload: {
           productId: id,
           type: 0,
         },
       })
-      this.props.dispatch({
+      dispatch({
         type: 'productManage/queryStandardTitleList',
         payload: {
           productId: id,
@@ -119,7 +129,7 @@ class EditModal extends Component {
           }
         },
       })
-      this.props.dispatch({
+      dispatch({
         type: 'productManage/standardParamsQuery',
         payload: {
           productId: id,
@@ -133,7 +143,7 @@ class EditModal extends Component {
         },
       })
 
-      this.props.form.setFields({
+      form.setFields({
         title: {
           value: printName,
         },
@@ -245,7 +255,7 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -267,7 +277,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -301,7 +311,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={selectedDetail.allowModifyOutTime === 0}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -324,7 +334,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -342,7 +352,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -359,7 +369,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -386,7 +396,7 @@ class EditModal extends Component {
                   >
                     {options}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -404,7 +414,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -430,9 +440,10 @@ class EditModal extends Component {
   getResult = () => {
     const { levelSelected, levelSelectedName, resultOk, remark, standardsData, validateStatus } = this.state;
     const { disabled, selectedDetail } = this.props;
-    const { standardColumnTitleData } = this.props.productManage
+    const { standardColumnTitleData, productDetail } = this.props.productManage
     const { getFieldDecorator } = this.props.form;
     const { columnId } = selectedDetail;
+    const { footContent, footName, headName, headResult, headTitle } = productDetail
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -595,9 +606,9 @@ class EditModal extends Component {
             <table className={tableStyle}>
               <thead>
                 <tr>
-                  <th rowSpan="2" style={{ width: '16%' }}>项目</th>
-                  <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>国家标准</th>
-                  <th rowSpan="2" style={{ width: '10%' }}>检验结果</th>
+                  <th rowSpan="2" style={{ width: '16%' }}>{headName}</th>
+                  <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>{headTitle}</th>
+                  <th rowSpan="2" style={{ width: '10%' }}>{headResult}</th>
                 </tr>
                 <tr>
                   {
@@ -637,7 +648,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                              )}
+                            )}
                           </FormItem>
                         </td>
                       </tr>
@@ -647,12 +658,12 @@ class EditModal extends Component {
               </tbody>
               <tfoot>
                 <tr>
-                  <td>结果评定</td>
+                  <td>{footName || ''}</td>
                   <td colSpan={standardColumnTitleData.length + 4}>
                     <div>
                       <p>
                         {resultOk ? '符合' : '不符合'}
-                        GB/T 1596-2017 国家标准F类
+                        {footContent || ''}
                         <span className={styles.resultLevel}>{levelSelectedName || ''}</span>技术要求。
                       </p>
                       <p>{remark}</p>
@@ -712,7 +723,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -732,7 +743,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -752,7 +763,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
         </Row>

@@ -120,8 +120,8 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
                     disabled={(item.name === 'loginName' || item.name === 'tenantCode') ? itemDisabled() : disabled}
                     onChange={(event) => handleChange(event, item)}
-                    />
-                  )}
+                  />
+                )}
               </FormItem>
             </Col>
           )
@@ -142,7 +142,7 @@ class BasicDataList extends Component {
                       item.data && item.data.map(selectItem => <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>)
                     }
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
           )
@@ -162,7 +162,7 @@ class BasicDataList extends Component {
                       item.data && item.data.map(radioItem => <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>)
                     }
                   </RadioGroup>
-                  )}
+                )}
               </FormItem>
             </Col>
           )
@@ -195,7 +195,7 @@ class BasicDataList extends Component {
                           }],
                         })(
                           <Input type="password" placeholder={modalType === 'check' ? '' : '请输入密码'} disabled={disabled} />
-                          )}
+                        )}
                       </FormItem>
                     </Col>
                     <Col span={24}>
@@ -210,7 +210,7 @@ class BasicDataList extends Component {
                           }],
                         })(
                           <Input type="password" placeholder={modalType === 'check' ? '' : '请再次输入密码'} disabled={disabled} />
-                          )}
+                        )}
                       </FormItem>
                     </Col>
                   </div>
@@ -230,7 +230,7 @@ class BasicDataList extends Component {
                           }],
                         })(
                           <Input type="password" placeholder={modalType === 'check' ? '' : '请输入密码'} disabled={disabled} />
-                          )}
+                        )}
                       </FormItem>
                     </Col>
                     <Col span={24}>
@@ -245,7 +245,7 @@ class BasicDataList extends Component {
                           }],
                         })(
                           <Input type="password" placeholder={modalType === 'check' ? '' : '请再次输入密码'} disabled={disabled} />
-                          )}
+                        )}
                       </FormItem>
                     </Col>
                   </div>
@@ -269,8 +269,8 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请选择${item.label}`}
                     disabled={disabled}
                     style={{ width: '100%' }}
-                    />
-                  )}
+                  />
+                )}
               </FormItem>
             </Col>
           )
@@ -459,7 +459,7 @@ class BasicDataList extends Component {
           pagination={pagination}
           onChange={handleTableChange}
           scroll={{ x: scrollX, y: scrollY }}
-          />
+        />
 
         <Modal
           title={title}
@@ -469,7 +469,7 @@ class BasicDataList extends Component {
           footer={null}
           width="60%"
           destroyOnClose
-          >
+        >
           <Form className={styles.fm}>
             <Row gutter={24}>{this.getFields()}</Row>
             <FormItem className={styles.fmBtn}>

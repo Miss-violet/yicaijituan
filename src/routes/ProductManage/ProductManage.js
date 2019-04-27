@@ -122,16 +122,14 @@ class ProductManage extends Component {
       return item
     })
 
-    const fmFields = [
+    let fmFields = [
       {
-        key: 1,
         label: '名称',
         name: 'name',
         type: 'text',
         required: true,
       },
       {
-        key: 2,
         label: '类型',
         name: 'type',
         type: 'radio',
@@ -149,21 +147,49 @@ class ProductManage extends Component {
         ],
       },
       {
-        key: 3,
         label: '打印抬头',
         name: 'printName',
         type: 'text',
         required: true,
       },
       {
-        key: 4,
+        label: '表头名称',
+        name: 'headName',
+        type: 'text',
+        required: false,
+      },
+      {
+        label: '表头标题',
+        name: 'headTitle',
+        type: 'text',
+        required: false,
+      },
+      {
+        label: '表头结果',
+        name: 'headResult',
+        type: 'text',
+        required: false,
+      },
+      {
+        label: '表格底部内容',
+        name: 'footContent',
+        type: 'text',
+        required: false,
+      },
+
+      {
+        label: '表格底部名称',
+        name: 'footName',
+        type: 'text',
+        required: false,
+      },
+      {
         label: '打印备注',
         name: 'remark',
         type: 'text',
         required: false,
       },
       {
-        key: 5,
         label: '状态',
         name: 'status',
         type: 'radio',
@@ -181,6 +207,10 @@ class ProductManage extends Component {
         ],
       },
     ];
+    fmFields = fmFields.map((item, index) => {
+      item.key = index
+      return item
+    })
     const productProps = {
       columns,
       data,

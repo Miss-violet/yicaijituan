@@ -30,6 +30,7 @@ class Outbound extends Component {
     })
   }
   showModal = (type) => {
+    const { dispatch } = this.props
     if (type === 'add') {
       this.setState({
         selectedDetail: {},     /* 如果是新增，则打开的弹窗里没有单据详情。防止选中后打开带入数据 */
@@ -45,7 +46,7 @@ class Outbound extends Component {
         message.warning('请选择数据后再进行操作', 2);
         return
       }
-      this.props.dispatch({
+      dispatch({
         type: 'outbound/info',
         payload: {
           id: this.state.selectedRows.id,
@@ -55,25 +56,31 @@ class Outbound extends Component {
             /* selectedDetail     - 获取选中的单据详情 */
             /* 查询列标题 */
             const { productId } = selectedDetail
-            this.props.dispatch({
+            dispatch({
               type: 'productManage/queryStandardTitleList',
               payload: {
                 productId,
                 type: 1,
               },
             })
-            this.props.dispatch({
+            dispatch({
               type: 'productManage/queryStandardTitleList',
               payload: {
                 productId,
                 type: 0,
               },
             })
-            this.props.dispatch({
+            dispatch({
               type: 'productManage/standardParamsQuery',
               payload: {
                 productId,
               },
+            })
+            dispatch({
+              type: 'productManage/info',
+              payload: {
+                productId,
+              }
             })
             this.setState({
               selectedDetail,
