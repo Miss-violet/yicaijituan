@@ -255,7 +255,7 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -277,7 +277,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -311,7 +311,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={selectedDetail.allowModifyOutTime === 0}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -334,7 +334,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -352,7 +352,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -369,7 +369,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -407,7 +407,7 @@ class EditModal extends Component {
                     style={this.props.style}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -425,7 +425,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -439,6 +439,51 @@ class EditModal extends Component {
                   ],
                   initialValue: selectedDetail.customer,
                 })(<Input placeholder="请填写客户名称" disabled={disabled} />)}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="灰源" {...formItemLayout}>
+                {getFieldDecorator('flyashSource', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写灰源',
+                    },
+                  ],
+                  initialValue: selectedDetail.flyashSource,
+                })(
+                  <Select disabled={disabled}>
+                    <Option value='麦特'>麦特</Option>
+                    <Option value='嵩屿'>嵩屿</Option>
+                    <Option value='后石'>后石</Option>
+                  </Select>
+                  )}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="关联编号" {...formItemLayout}>
+                {getFieldDecorator('relationCode', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写关联编号',
+                    },
+                  ],
+                  initialValue: selectedDetail.relationCode,
+                })(<Input placeholder="请填写关联编号" disabled={disabled} />)}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="磅单号" {...formItemLayout}>
+                {getFieldDecorator('poundCode', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写磅单号',
+                    },
+                  ],
+                  initialValue: selectedDetail.poundCode,
+                })(<Input placeholder="请填写磅单号" disabled={disabled} />)}
               </FormItem>
             </Col>
           </Row>
@@ -657,7 +702,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                            )}
+                              )}
                           </FormItem>
                         </td>
                       </tr>
@@ -730,7 +775,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -750,7 +795,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -770,7 +815,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
         </Row>
@@ -812,6 +857,20 @@ class EditModal extends Component {
                 ],
                 initialValue: selectedDetail.batchNo,
               })(<Input disabled={disabled} />)}
+            </FormItem>
+          </Col>
+
+          <Col {...formColLayout}>
+            <FormItem label="审批员" {...formItemLayout}>
+              {getFieldDecorator('approver', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请填写审批员',
+                  },
+                ],
+                initialValue: selectedDetail.approver,
+              })(<Input disabled={selectedDetail.allowApprover === 0} />)}
             </FormItem>
           </Col>
         </Row>
