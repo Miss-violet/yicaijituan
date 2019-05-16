@@ -1,5 +1,9 @@
 const path = require('path');
 
+console.info('process->', process.env)
+
+const { NODE_ENV } = process.env
+
 export default {
   entry: 'src/index.js',
   extraBabelPlugins: [
@@ -21,7 +25,7 @@ export default {
   disableDynamicImport: true,
   publicPath: '/',
   hash: true,
-  proxy: {
+  proxy: NODE_ENV === 'development' ? {
     "/api": {
       "target": "http://www.linhy.cn:8090/api/",
       "changeOrigin": true,
@@ -29,5 +33,13 @@ export default {
         "^/api": ""
       }
     }
-  }
+  } : {
+      "/api": {
+        "target": "http://www.linhy.cn:8090/api/",
+        "changeOrigin": true,
+        "pathRewrite": {
+          "^/api": ""
+        }
+      }
+    }
 };
