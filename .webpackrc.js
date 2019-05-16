@@ -1,7 +1,5 @@
 const path = require('path');
 
-console.info('process->', process.env)
-
 const { NODE_ENV } = process.env
 
 export default {
@@ -35,7 +33,7 @@ export default {
     }
   } : {
       "/api": {
-        "target": "http://www.linhy.cn:8090/api/",
+        "target": "http://www.yicaijituan.cn:8090/api/",
         "changeOrigin": true,
         "pathRewrite": {
           "^/api": ""
