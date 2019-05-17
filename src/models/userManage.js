@@ -27,7 +27,9 @@ export default {
             /* 加载下拉框选项 */
             dispatch({
               type: 'querySelectList',
-              payload: {},
+              payload: {
+                pageSize: 999999999,
+              },
             })
           }
         }
@@ -89,9 +91,9 @@ export default {
         })
       }
     },
-    *vaildateLoginName({payload, callback}, {call}) {
+    *vaildateLoginName({ payload, callback }, { call }) {
       const res = yield call(vaildateLoginName, payload)
-      if(callback) callback(res.code)
+      if (callback) callback(res.code)
     },
   },
 

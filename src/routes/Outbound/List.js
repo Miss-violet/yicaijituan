@@ -55,7 +55,7 @@ class List extends Component {
               ) : (
                   <span>
                     <Icon type="check" />启用
-                  </span>
+                </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>

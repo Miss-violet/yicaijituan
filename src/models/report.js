@@ -1,6 +1,5 @@
 import pathToRegexp from 'path-to-regexp'
 import { info } from '../services/outbound'
-import { queryStandardTitleList } from '../services/productManage'
 
 
 export default {
@@ -39,36 +38,18 @@ export default {
           },
         })
         yield put({
-          type: 'queryStandardTitleList',
+          type: 'productManage/queryStandardTitleList',
           payload: {
             productId: res.data.productId,
             type: 1,
           },
         })
-      }
-    },
-    *queryStandardTitleList({ payload }, { call, put }) {
-      const res = yield call(queryStandardTitleList, payload)
-      const { type } = payload
-      if (res.code === 0) {
-        if (type === 0) {
-          /* 行标题 */
-          yield put({
-            type: 'success',
-            payload: {
-              standardRowTitleData: res.data,
-            },
-          })
-        }
-        else if (type === 1) {
-          /* 列标题 */
-          yield put({
-            type: 'success',
-            payload: {
-              standardColumnTitleData: res.data,
-            },
-          })
-        }
+        yield put({
+          type: 'productManage/info',
+          payload: {
+            productId: res.data.productId,
+          },
+        })
       }
     },
   },
