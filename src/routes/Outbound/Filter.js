@@ -258,7 +258,7 @@ class OutboundFilter extends Component {
                 <Icon type="reload" />重置
               </Button>
               {
-                (role === '0' || role === '1') && (
+                (role === '0') && (
                   <span>
                     <a className={styles.exportBtn} onClick={this.handleExport}>
                       <Icon type="export" /> 导出

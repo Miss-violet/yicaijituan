@@ -49,7 +49,9 @@ export default {
             /* 加载下拉框选项 */
             dispatch({
               type: 'querySelectList',
-              payload: {},
+              payload: {
+                pageSize: 999999999,
+              },
             })
           }
         }

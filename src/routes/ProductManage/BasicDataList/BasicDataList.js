@@ -102,84 +102,85 @@ class BasicDataList extends Component {
       }
     };
     const fmItem = fmFields.map(item => {
+      const { type, key, label, name, initialValue, required, defaultValue, data } = item
       const { modalType } = this.state;
-      switch (item.type) {
+      switch (type) {
         case 'text':
           return (
-            <Col span={24} key={item.key}>
-              <FormItem label={item.label} {...formItemLayout}>
-                {getFieldDecorator(`${item.name}`, {
+            <Col span={24} key={key}>
+              <FormItem label={label} {...formItemLayout}>
+                {getFieldDecorator(`${name}`, {
                   rules: [
                     {
-                      required: item.required,
-                      message: `请输入${item.label}`,
+                      required,
+                      message: `请输入${label}`,
                     },
                   ],
-                  initialValue: item.initialValue,
+                  initialValue,
                 })(
                   <Input
-                    placeholder={modalType === 'check' ? '' : `请输入${item.label}`}
+                    placeholder={modalType === 'check' ? '' : `请输入${label}`}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
         case 'select':
           return (
-            <Col span={24} key={item.key}>
-              <FormItem label={item.label} {...formItemLayout}>
-                {getFieldDecorator(`${item.name}`, {
+            <Col span={24} key={key}>
+              <FormItem label={label} {...formItemLayout}>
+                {getFieldDecorator(`${name}`, {
                   rules: [
                     {
-                      required: item.required,
-                      message: `请选择${item.label}`,
+                      required,
+                      message: `请选择${label}`,
                     },
                   ],
-                  initialValue: item.initialValue,
+                  initialValue,
                 })(
                   <Select disabled={disabled}>
-                    {item.data &&
-                      item.data.map(selectItem => (
+                    {data &&
+                      data.map(selectItem => (
                         <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
         case 'radio':
           return (
-            <Col span={24} key={item.key}>
-              <FormItem label={item.label} {...formItemLayout}>
-                {getFieldDecorator(`${item.name}`, {
+            <Col span={24} key={key}>
+              <FormItem label={label} {...formItemLayout}>
+                {getFieldDecorator(`${name}`, {
                   rules: [
                     {
-                      required: item.required,
-                      message: `请选择${item.label}`,
+                      required,
+                      message: `请选择${label}`,
                     },
                   ],
-                  initialValue: item.initialValue || item.defaultValue,
+                  initialValue: initialValue || defaultValue,
                 })(
-                  <RadioGroup name={item.name} disabled={disabled}>
-                    {item.data &&
-                      item.data.map(radioItem => (
+                  <RadioGroup name={name} disabled={disabled}>
+                    {data &&
+                      data.map(radioItem => (
                         <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                )}
+                  )}
               </FormItem>
             </Col>
           );
         case 'password':
           return (
-            <div key={item.key}>
+            <div key={key}>
               <Col span={24}>
-                <FormItem label={item.label} {...formItemLayout}>
+                <FormItem label={label} {...formItemLayout}>
                   {getFieldDecorator('password', {
                     rules: [
                       {
-                        required: item.required,
+                        required,
                         message: '请输入密码',
                       },
                     ],
@@ -189,7 +190,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -197,7 +198,7 @@ class BasicDataList extends Component {
                   {getFieldDecorator('comfirmPsw', {
                     rules: [
                       {
-                        required: item.required,
+                        required,
                         message: '请再次输入密码',
                       },
                       {
@@ -210,31 +211,31 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                  )}
+                    )}
                 </FormItem>
               </Col>
             </div>
           );
         case 'datepicker':
           return (
-            <Col span={24} key={item.key}>
-              <FormItem label={item.label} {...formItemLayout}>
-                {getFieldDecorator(`${item.name}`, {
+            <Col span={24} key={key}>
+              <FormItem label={label} {...formItemLayout}>
+                {getFieldDecorator(`${name}`, {
                   rules: [
                     {
-                      required: item.required,
-                      message: `请输入${item.label}`,
+                      required,
+                      message: `请输入${label}`,
                     },
                   ],
-                  initialValue: item.initialValue,
+                  initialValue,
                 })(
                   <DatePicker
                     format="YYYY-MM-DD"
-                    placeholder={modalType === 'check' ? '' : `请选择${item.label}`}
+                    placeholder={modalType === 'check' ? '' : `请选择${label}`}
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
           );
@@ -743,7 +744,7 @@ class BasicDataList extends Component {
                                         <Option value={0}>≤（小于等于）</Option>
                                         <Option value={1}>≥（大于等于）</Option>
                                       </Select>
-                                    )
+                                      )
                                     }
                                   </FormItem>
                                 </td>
@@ -767,7 +768,7 @@ class BasicDataList extends Component {
                                               min={this.props.min}
                                               max={this.props.max}
                                             />
-                                          )}
+                                            )}
                                         </FormItem>
                                       </td>
                                     )
@@ -788,7 +789,7 @@ class BasicDataList extends Component {
                                         min={this.props.min}
                                         max={this.props.max}
                                       />
-                                    )}
+                                      )}
                                   </FormItem>
                                 </td>
                               </tr>
@@ -1230,7 +1231,7 @@ class BasicDataList extends Component {
                   htmlType="submit"
                   className={styles.submitBtn}
                   onClick={() => this.handleSubmit(modalType)}
-                  disabled={standardRowTitleData.length < 1}
+                  disabled={modalType === 'editStandard' && standardRowTitleData.length < 1}
                 >
                   保存
                 </Button>

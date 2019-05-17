@@ -7,7 +7,16 @@ import classNames from 'classnames'
 import BasicDataList from './BasicDataList/BasicDataList';
 import commonStyles from '../../assets/style/common.less';
 
-class ProductManage extends Component {
+@connect(({ productManage }) => ({
+  standardRowTitleData: productManage.standardRowTitleData,
+  standardColumnTitleData: productManage.standardColumnTitleData,
+  standardParams: productManage.standardParams,
+  productDetail: productManage.productDetail,
+  data: productManage.data,
+}))
+
+
+export default class ProductManage extends Component {
   constructor() {
     super();
     this.state = {
@@ -15,7 +24,8 @@ class ProductManage extends Component {
       proName: '',
     };
   }
-  check = record => {
+  check = (record, e) => {
+    e.preventDefault()
     const { id } = record
     this.props.dispatch({
       type: 'productManage/queryStandardTitleList',
@@ -53,14 +63,14 @@ class ProductManage extends Component {
     });
   };
   render() {
-    const { dispatch } = this.props
-    let { data } = this.props.productManage
     const {
+       dispatch,
       standardRowTitleData,
       standardColumnTitleData,
       standardParams,
       productDetail,
-    } = this.props.productManage
+     } = this.props
+    let { data } = this.props
     const columns = [
       {
         title: '名称',
@@ -109,18 +119,13 @@ class ProductManage extends Component {
             </Tooltip>
           )
           else return (
-            <a href="javascript: void(0)" onClick={() => this.check(record)}>
+            <a href="#" onClick={(e) => this.check(record, e)}>
               查看标准
             </a>
           )
         },
       },
     ];
-
-    data = data.map((item, index) => {
-      item.key = index
-      return item
-    })
 
     let fmFields = [
       {
@@ -288,11 +293,14 @@ class ProductManage extends Component {
                 <th style={{ width: '15%' }}>项目名称</th>
                 <th style={{ width: '15%' }}>类型</th>
                 {
-                  standardColumnTitleData && standardColumnTitleData.map(columnItem => (
-                    <th key={columnItem.id} style={{ width: `${60 / standardColumnTitleData.length}%` }}>
-                      {columnItem.name}
-                    </th>
-                  ))
+                  standardColumnTitleData && standardColumnTitleData.map(columnItem => {
+                    const { id: columnId, name } = columnItem
+                    return (
+                      <th key={columnId} style={{ width: `${60 / standardColumnTitleData.length}%` }}>
+                        {name}
+                      </th>
+                    )
+                  })
                 }
                 <th style={{ width: '10%' }}>保留的小数点位数</th>
               </tr>
@@ -300,16 +308,17 @@ class ProductManage extends Component {
             <tbody>
               {
                 standardParams && standardParams.map(dataItem => {
+                  const { rowId: id, rowTitle, params } = dataItem
                   return (
-                    <tr key={dataItem.id}>
+                    <tr key={id}>
                       <td>
-                        {dataItem.rowTitle}
+                        {rowTitle}
                       </td>
                       <td >
-                        {dataItem.params[0].type === 0 ? '≤（小于等于）' : '≥（大于等于）'}
+                        {params[0].type === 0 ? '≤（小于等于）' : '≥（大于等于）'}
                       </td>
                       {
-                        dataItem.params.map(item => {
+                        params.map(item => {
                           return (
                             <td key={item.id}>
                               {item.val}
@@ -318,7 +327,7 @@ class ProductManage extends Component {
                         })
                       }
                       <td>
-                        {dataItem.params[0].pointNum}
+                        {params[0].pointNum}
                       </td>
                     </tr>
                   )
@@ -331,4 +340,3 @@ class ProductManage extends Component {
     );
   }
 }
-export default connect(({ productManage }) => ({ productManage }))(ProductManage);

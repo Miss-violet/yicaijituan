@@ -128,10 +128,15 @@ export default {
     }) {
       const res = yield call(productList, payload)
       if (res.code === 0) {
+        let { data } = res
+        data = data.map((item, index) => {
+          item.key = index
+          return item
+        })
         yield put({
           type: 'success',
           payload: {
-            data: res.data,
+            data,
           },
         })
       }

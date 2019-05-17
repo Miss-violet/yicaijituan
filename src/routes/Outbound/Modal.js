@@ -9,6 +9,11 @@ import commonStyles from '../../assets/style/common.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 
+@connect(({ productManage }) => ({
+  standardColumnTitleData: productManage.standardColumnTitleData,
+  productDetail: productManage.productDetail,
+}))
+
 class EditModal extends Component {
   constructor(props) {
     super(props);
@@ -61,11 +66,14 @@ class EditModal extends Component {
       disabled,
       productDisabled,
       type,
+      standardColumnTitleData,
     } = this.props;
-    const { standardColumnTitleData } = this.props.productManage
+
+    const { productId, columnTitle, title, outTime, allowModifyOutTime, deliveryTime, supplierId, techno, carNo, distributorId, customer, flyashSource, relationCode, poundCode } = selectedDetail
+
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
-    const productEnabled = productSelectList.filter(item => item.status === 0);
+    const productEnabled = productSelectList.filter(item => item.status === 0 && item.standardDataFlag !== 0);
 
 
     const formItemLayout = {
@@ -92,16 +100,16 @@ class EditModal extends Component {
      * 2、查询出对应的产品名称
      * 3、级别下拉框的值也需要做修改
      */
-    const handleProductChange = productId => {
+    const handleProductChange = proId => {
       const { dispatch, form } = this.props
-      const proSelected = productEnabled.find(item => item.id === productId);
+      const proSelected = productEnabled.find(item => item.id === proId);
       const { name, id, remark, printName } = proSelected
 
       dispatch({
         type: 'productManage/info',
         payload: {
-          productId,
-        }
+          productId: proId,
+        },
       })
 
 
@@ -165,10 +173,10 @@ class EditModal extends Component {
      * 客户名称下拉框变化事件：
      * 查询出当前选中的名称，用于保存
      */
-    const handleDistributorChange = distributorId => {
+    const handleDistributorChange = DistributorId => {
       let distributorName;
       companyAllSelectList.map(item => {
-        if (item.id === distributorId) {
+        if (item.id === DistributorId) {
           distributorName = item.name;
         }
         return item;
@@ -185,10 +193,10 @@ class EditModal extends Component {
      * 生产厂家下拉框变化事件：
      * 查询出当前选中的名称，用于保存
      */
-    const handleSupplierChange = supplierId => {
+    const handleSupplierChange = SupplierId => {
       let supplierName;
       manufacturerSelectList.map(item => {
-        if (item.id === supplierId) {
+        if (item.id === SupplierId) {
           supplierName = item.name;
         }
         return item
@@ -229,7 +237,6 @@ class EditModal extends Component {
       fetch(value);
     };
     const handleFocus = () => {
-      console.info('focus')
       const { cars } = this.props
       this.setState({
         carData: cars,
@@ -249,7 +256,7 @@ class EditModal extends Component {
                       message: '请选择品名',
                     },
                   ],
-                  initialValue: selectedDetail.productId,
+                  initialValue: productId,
                 })(
                   <Select onChange={handleProductChange} disabled={productDisabled}>
                     {productEnabled &&
@@ -268,7 +275,7 @@ class EditModal extends Component {
                     },
                   ],
                   initialValue:
-                    selectedDetail.columnTitle !== undefined ? String(selectedDetail.columnTitle) : '',
+                    columnTitle !== undefined ? String(columnTitle) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
                     {
@@ -289,7 +296,7 @@ class EditModal extends Component {
                       message: '请填写公司抬头',
                     },
                   ],
-                  initialValue: selectedDetail.title,
+                  initialValue: title,
                 })(<Input placeholder="请填写公司抬头" disabled={disabled} />)}
               </FormItem>
             </Col>
@@ -302,14 +309,14 @@ class EditModal extends Component {
                       message: '请选择出厂时间',
                     },
                   ],
-                  initialValue: moment(selectedDetail.outTime),
+                  initialValue: moment(outTime),
                 })(
                   <DatePicker
                     showTime
                     format="YYYY-MM-DD HH:mm:ss"
                     placeholder="请选择出厂时间"
                     className={styles.datepicker}
-                    disabled={selectedDetail.allowModifyOutTime === 0}
+                    disabled={allowModifyOutTime === 0}
                   />
                   )}
               </FormItem>
@@ -323,9 +330,7 @@ class EditModal extends Component {
                       message: '请选择生产日期',
                     },
                   ],
-                  initialValue: type !== 'add'
-                    ? moment(selectedDetail.deliveryTime)
-                    : moment(''),
+                  initialValue: type !== 'add' && moment(deliveryTime),
                 })(
                   <DatePicker
                     showTime
@@ -346,7 +351,7 @@ class EditModal extends Component {
                       message: '请选择生产厂家',
                     },
                   ],
-                  initialValue: selectedDetail.supplierId,
+                  initialValue: supplierId,
                 })(
                   <Select onChange={handleSupplierChange} disabled={disabled}>
                     {manufacturerEnabled &&
@@ -364,7 +369,7 @@ class EditModal extends Component {
                       message: '请选择工艺',
                     },
                   ],
-                  initialValue: selectedDetail.techno === 0 ? '0' : '',
+                  initialValue: techno === 0 ? '0' : '',
                 })(
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
@@ -381,7 +386,7 @@ class EditModal extends Component {
                       message: '请填写运输车号',
                     },
                   ],
-                  initialValue: selectedDetail.carNo,
+                  initialValue: carNo,
                 })(
                   // 在 antd 更高版本中 combobox 属性将被移除 2019/04/27
                   // <Select
@@ -419,7 +424,7 @@ class EditModal extends Component {
                       message: '请填写公司名称',
                     },
                   ],
-                  initialValue: selectedDetail.distributorId,
+                  initialValue: distributorId,
                 })(
                   <Select onChange={handleDistributorChange} disabled={disabled} allowClear showSearch optionFilterProp="children">
                     {companyEnabled &&
@@ -437,7 +442,7 @@ class EditModal extends Component {
                       message: '请填写客户名称',
                     },
                   ],
-                  initialValue: selectedDetail.customer,
+                  initialValue: customer,
                 })(<Input placeholder="请填写客户名称" disabled={disabled} />)}
               </FormItem>
             </Col>
@@ -450,7 +455,7 @@ class EditModal extends Component {
                       message: '请填写灰源',
                     },
                   ],
-                  initialValue: selectedDetail.flyashSource,
+                  initialValue: flyashSource,
                 })(
                   <Select disabled={disabled}>
                     <Option value='麦特'>麦特</Option>
@@ -469,7 +474,7 @@ class EditModal extends Component {
                       message: '请填写关联编号',
                     },
                   ],
-                  initialValue: selectedDetail.relationCode,
+                  initialValue: relationCode,
                 })(<Input placeholder="请填写关联编号" disabled={disabled} />)}
               </FormItem>
             </Col>
@@ -482,7 +487,7 @@ class EditModal extends Component {
                       message: '请填写磅单号',
                     },
                   ],
-                  initialValue: selectedDetail.poundCode,
+                  initialValue: poundCode,
                 })(<Input placeholder="请填写磅单号" disabled={disabled} />)}
               </FormItem>
             </Col>
@@ -495,8 +500,7 @@ class EditModal extends Component {
   /* 检查结果 */
   getResult = () => {
     const { levelSelected, levelSelectedName, remark, standardsData, validateStatus } = this.state;
-    const { disabled, selectedDetail } = this.props;
-    const { standardColumnTitleData, productDetail } = this.props.productManage
+    const { disabled, selectedDetail, standardColumnTitleData, productDetail } = this.props;
     const { getFieldDecorator } = this.props.form;
     const { columnId } = selectedDetail;
     const { footContent, footName, headName, headResult, headTitle } = productDetail
@@ -668,17 +672,19 @@ class EditModal extends Component {
               <tbody>
                 {
                   standardsData && standardsData.map((standardsItem, index) => {
-                    const parameterId = standardsItem.id || standardsItem.rowId
+                    const { id, rowId, rowTitle, standardName, standardId, params, parameter } = standardsItem
+                    const parameterId = id || rowId
                     return (
-                      <tr key={standardsItem.rowId || standardsItem.standardId}>
+                      <tr key={rowId || standardId}>
                         <td>
-                          {standardsItem.rowTitle || standardsItem.standardName}
+                          {rowTitle || standardName}
                         </td>
                         {
-                          standardsItem.params.map((item, itemIndex) => {
+                          params.map((item) => {
+                            const { id: itemId, val, type } = item
                             return (
-                              <td key={itemIndex}>
-                                {item.type === 0 ? '≤' : '≥'}{item.val}
+                              <td key={itemId}>
+                                {type === 0 ? '≤' : '≥'}{val}
                               </td>
                             )
                           })
@@ -695,7 +701,7 @@ class EditModal extends Component {
                                     this.validateParameter(rule, value, callback, standardsItem),
                                 },
                               ],
-                              initialValue: standardsItem.parameter,
+                              initialValue: parameter,
                             })(
                               <Input
                                 className={styles.inputNumber}
@@ -734,6 +740,7 @@ class EditModal extends Component {
   getInfo = () => {
     const { getFieldDecorator } = this.props.form;
     const { selectedDetail, disabled } = this.props;
+    const { grossWeight, tareWeight, netWeight, checker, auditor, batchNo, allowApprover, approver } = selectedDetail
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -767,7 +774,7 @@ class EditModal extends Component {
                     message: '请填写毛重',
                   },
                 ],
-                initialValue: selectedDetail.grossWeight,
+                initialValue: grossWeight,
               })(
                 <InputNumber
                   className={styles.inputNumber}
@@ -787,7 +794,7 @@ class EditModal extends Component {
                     message: '请填写皮重',
                   },
                 ],
-                initialValue: selectedDetail.tareWeight,
+                initialValue: tareWeight,
               })(
                 <InputNumber
                   className={styles.inputNumber}
@@ -807,7 +814,7 @@ class EditModal extends Component {
                     message: '请填写净重',
                   },
                 ],
-                initialValue: selectedDetail.netWeight,
+                initialValue: netWeight,
               })(
                 <InputNumber
                   className={styles.inputNumber}
@@ -829,7 +836,7 @@ class EditModal extends Component {
                     message: '请填写检验员',
                   },
                 ],
-                initialValue: selectedDetail.checker,
+                initialValue: checker,
               })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
@@ -842,7 +849,7 @@ class EditModal extends Component {
                     message: '请填写审核人',
                   },
                 ],
-                initialValue: selectedDetail.auditor,
+                initialValue: auditor,
               })(<Input placeholder="请填写审核人" disabled={disabled} />)}
             </FormItem>
           </Col>
@@ -855,24 +862,27 @@ class EditModal extends Component {
                     message: '请填写出厂批号',
                   },
                 ],
-                initialValue: selectedDetail.batchNo,
+                initialValue: batchNo,
               })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
-
-          <Col {...formColLayout}>
-            <FormItem label="审批员" {...formItemLayout}>
-              {getFieldDecorator('approver', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请填写审批员',
-                  },
-                ],
-                initialValue: selectedDetail.approver,
-              })(<Input disabled={selectedDetail.allowApprover === 0} />)}
-            </FormItem>
-          </Col>
+          {
+            allowApprover === 1 && (
+              <Col {...formColLayout}>
+                <FormItem label="审批员" {...formItemLayout}>
+                  {getFieldDecorator('approver', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请填写审批员',
+                      },
+                    ],
+                    initialValue: approver,
+                  })(<Input />)}
+                </FormItem>
+              </Col>
+            )
+          }
         </Row>
       </div>
     );
@@ -947,17 +957,18 @@ class EditModal extends Component {
     this.setState({
       confirmLoading: true,
     });
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    this.props.form.validateFieldsAndScroll((err, fmValues) => {
       if (!err) {
-        let { standardsData, validateStatus } = this.state;
+        let { standardsData } = this.state;
+        const { validateStatus } = this.state
         /* 日期格式转化 */
-        values = {
-          ...values,
-          deliveryTime: moment(values.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
-          outTime: moment(values.outTime).format('YYYY-MM-DD HH:mm:ss'),
+        const values = {
+          ...fmValues,
+          deliveryTime: moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
+          outTime: moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss'),
         }
 
-        const { standardColumnTitleData } = this.props.productManage
+        const { standardColumnTitleData } = this.props
         const { columnTitle, ...restValue } = values
         let columnName = ''
         standardColumnTitleData.forEach(item => {
@@ -980,9 +991,6 @@ class EditModal extends Component {
                    *  type===0：小于等于
                    */
                   if ((type === 0 && values[i] > val) || (type === 1 && values[i] < val)) {
-                    this.setState({
-                      resultOk: false,
-                    })
                     validateName.push(standardName)
                     validateStatus.push({ status: 'error', help: `${values[i]}的值应该${type === 0 ? '小于等于' : '大于等于'}${val}` })
                   } else {
@@ -1002,10 +1010,9 @@ class EditModal extends Component {
               content: `请检查以下标准值${validateName.join(',')}后再保存`,
               okText: '知道了',
             });
+            return
           }
-          return
         }
-
 
         if (this.props.type === 'add') {
           /* 把填写的检验结果值填入，传给后端 */
@@ -1083,7 +1090,6 @@ class EditModal extends Component {
               });
             }
           }
-
           this.props.dispatch({
             type: 'outbound/edit',
             payload: {
@@ -1164,4 +1170,4 @@ class EditModal extends Component {
     );
   }
 }
-export default connect(({ productManage }) => ({ productManage }))(Form.create()(EditModal));
+export default Form.create()(EditModal)

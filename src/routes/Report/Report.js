@@ -6,13 +6,20 @@ import * as moment from 'moment';
 import styles from './report.less';
 import commonStyles from '../../assets/style/common.less';
 
-class Report extends Component {
+@connect(({ report, productManage }) => ({
+  detail: report.detail,
+  productDetail: productManage.productDetail,
+  standardColumnTitleData: productManage.standardColumnTitleData,
+}))
+
+export default class Report extends Component {
   constructor() {
     super();
     this.state = {};
   }
   render() {
-    const { detail, standardColumnTitleData } = this.props.report;
+    const { detail, productDetail, standardColumnTitleData } = this.props
+    const { footContent, footName, headName, headResult, headTitle } = productDetail
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,
@@ -117,9 +124,9 @@ class Report extends Component {
           <table className={table}>
             <thead>
               <tr>
-                <th rowSpan="2" style={{ width: '16%' }}>项目</th>
-                <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>国家标准</th>
-                <th rowSpan="2" style={{ width: '10%' }}>检验结果</th>
+                <th rowSpan="2" style={{ width: '16%' }}>{headName}</th>
+                <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>{headTitle}</th>
+                <th rowSpan="2" style={{ width: '10%' }}>{headResult}</th>
               </tr>
               <tr>
                 {
@@ -155,10 +162,10 @@ class Report extends Component {
             </tbody>
             <tfoot>
               <tr>
-                <td>结果评定</td>
+                <td>{footName}</td>
                 <td colSpan={standardColumnTitleData.length + 4}>
                   <p>
-                    GB/T 1596-2017 国家标准F类
+                    {footContent}
                     <span className={styles.resultLevel}>
                       {detail.columnTitle}
                     </span>技术要求。
@@ -181,4 +188,4 @@ class Report extends Component {
     );
   }
 }
-export default connect(({ report }) => ({ report }))(Report);
+
