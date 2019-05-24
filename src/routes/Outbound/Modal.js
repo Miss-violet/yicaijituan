@@ -69,7 +69,7 @@ class EditModal extends Component {
       standardColumnTitleData,
     } = this.props;
 
-    const { productId, columnTitle, title, outTime, allowModifyOutTime, deliveryTime, supplierId, techno, carNo, distributorId, customer, flyashSource, relationCode, poundCode } = selectedDetail
+    const { productId, columnTitle, title, outTime, allowModifyOutTime, deliveryTime, supplierId, techno, carNo, distributorId, customer, flyashSource, relationCode, poundCode, allowApprover } = selectedDetail
 
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
@@ -451,7 +451,7 @@ class EditModal extends Component {
                 {getFieldDecorator('flyashSource', {
                   rules: [
                     {
-                      required: true,
+                      required: allowApprover === 1,
                       message: '请填写灰源',
                     },
                   ],
@@ -470,7 +470,7 @@ class EditModal extends Component {
                 {getFieldDecorator('relationCode', {
                   rules: [
                     {
-                      required: true,
+                      required: allowApprover === 1,
                       message: '请填写关联编号',
                     },
                   ],
@@ -483,7 +483,7 @@ class EditModal extends Component {
                 {getFieldDecorator('poundCode', {
                   rules: [
                     {
-                      required: true,
+                      required: allowApprover === 1,
                       message: '请填写磅单号',
                     },
                   ],
@@ -542,7 +542,7 @@ class EditModal extends Component {
         return paramsItem
       })
       /* 检验是否为空 */
-      if (standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+      if ((standardName !== '强度活性指数（%）' && standardName !== '强度活性指数(%)') && (value === '' || value === null)) {
         validateStatus[standardsItem.orderSort - 1] = {
           status: 'error',
           help: `${standardName}的检验结果不能为空值`,
@@ -917,7 +917,7 @@ class EditModal extends Component {
     pointNum = pointNum || standardsItem.params[0].pointNum
 
     /* 检验是否为空 */
-    if (standardName !== '强度活性指数（%）' && (value === '' || value === null)) {
+    if ((standardName !== '强度活性指数（%）' && standardName !== '强度活性指数(%)') && (value === '' || value === null)) {
       callback({ message: '检验结果不能为空值' });
       return;
     }
