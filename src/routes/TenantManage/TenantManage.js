@@ -39,6 +39,21 @@ class TenantManage extends Component {
         dataIndex: 'modifyOutTimeFlag',
         render: text => (text === 0 ? <span>不可修改</span> : <span className={commonStyles.disableState}>可修改</span>),
       },
+      {
+        title: '是否需要审批人',
+        dataIndex: 'approverFlag',
+        render: text => {
+          switch (text) {
+            case 1:
+              return (<span className={commonStyles.disableState}>需要</span>)
+            case 0:
+              return (<span>不需要</span>)
+            default:
+              return ''
+          }
+
+        },
+      },
     ]
     let { data } = this.props.tenantManage
     data = data.map((item, index) => {
@@ -109,6 +124,22 @@ class TenantManage extends Component {
         }, {
           id: 0,
           name: '不可修改',
+        },
+      ],
+    }, {
+      key: 6,
+      label: '是否需要审批人',
+      name: 'approverFlag',
+      type: 'radio',
+      required: true,
+      defaultValue: '',
+      data: [
+        {
+          id: 0,
+          name: '不需要',
+        }, {
+          id: 1,
+          name: '需要',
         },
       ],
     }]

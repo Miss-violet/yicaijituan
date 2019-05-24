@@ -30,6 +30,7 @@ class EditModal extends Component {
       remark: '',                       /* 打印备注 */
       changeLevel: false,               /* 修改了级别 */
       validateStatus: [],                  /* 设置标准值校验提示 */
+      allowApprover: 0,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -45,6 +46,7 @@ class EditModal extends Component {
         standardsData: nextProps.selectedDetail.standards,
         levelSelected: nextProps.selectedDetail.columnId,
         levelSelectedName: nextProps.selectedDetail.columnTitle,
+        allowApprover: nextProps.selectedDetail.allowApprover,
       });
     }
 
@@ -69,7 +71,9 @@ class EditModal extends Component {
       standardColumnTitleData,
     } = this.props;
 
-    const { productId, columnTitle, title, outTime, allowModifyOutTime, deliveryTime, supplierId, techno, carNo, distributorId, customer, flyashSource, relationCode, poundCode, allowApprover } = selectedDetail
+    const { productId, columnTitle, title, outTime, allowModifyOutTime, deliveryTime, supplierId, techno, carNo, distributorId, customer, flyashSource, relationCode, poundCode } = selectedDetail
+
+    const { allowApprover } = this.state
 
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
@@ -109,6 +113,13 @@ class EditModal extends Component {
         type: 'productManage/info',
         payload: {
           productId: proId,
+        },
+        callback: (res) => {
+          if (res.code === 0) {
+            this.setState({
+              allowApprover: res.data.allowApprover,
+            })
+          }
         },
       })
 
@@ -451,7 +462,7 @@ class EditModal extends Component {
                 {getFieldDecorator('flyashSource', {
                   rules: [
                     {
-                      required: allowApprover === 1,
+                      required: allowApprover === 0,
                       message: '请填写灰源',
                     },
                   ],
@@ -470,7 +481,7 @@ class EditModal extends Component {
                 {getFieldDecorator('relationCode', {
                   rules: [
                     {
-                      required: allowApprover === 1,
+                      required: allowApprover === 0,
                       message: '请填写关联编号',
                     },
                   ],
@@ -483,7 +494,7 @@ class EditModal extends Component {
                 {getFieldDecorator('poundCode', {
                   rules: [
                     {
-                      required: allowApprover === 1,
+                      required: allowApprover === 0,
                       message: '请填写磅单号',
                     },
                   ],
@@ -740,7 +751,8 @@ class EditModal extends Component {
   getInfo = () => {
     const { getFieldDecorator } = this.props.form;
     const { selectedDetail, disabled } = this.props;
-    const { grossWeight, tareWeight, netWeight, checker, auditor, batchNo, allowApprover, approver } = selectedDetail
+    const { grossWeight, tareWeight, netWeight, checker, auditor, batchNo, approver } = selectedDetail
+    const { allowApprover } = this.state
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },

@@ -106,6 +106,7 @@ export default {
     },
     * info({
       payload,
+      callback,
     }, {
       call,
         put,
@@ -119,6 +120,7 @@ export default {
           },
         })
       }
+      if (callback) callback(res)
     },
     * queryList({
       payload,
