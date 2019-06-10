@@ -176,10 +176,15 @@ export default class Report extends Component {
             </tfoot>
           </table>
           <Row gutter={16}>
-            <Col span={6} offset={8}>
+            {detail.allowApprover === 1 && (
+              <Col span={6} offset={2}>
+                审批员：{detail.approver}
+              </Col>
+            )}
+            <Col span={6} offset={2}>
               审核：{detail.auditor}
             </Col>
-            <Col span={6} offset={4}>
+            <Col span={6} offset={2}>
               检验员：{detail.checker}
             </Col>
           </Row>
