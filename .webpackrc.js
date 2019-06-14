@@ -1,43 +1,48 @@
 const path = require('path');
 
-const { NODE_ENV } = process.env
+const { ENV } = process.env
 
-const proxy = () => {
-  switch (NODE_ENV) {
-    case 'development':
-      return {
-        "/api": {
-          "target": "http://www.linhy.cn:8090/api/",
-          "changeOrigin": true,
-          "pathRewrite": {
-            "^/api": ""
-          }
-        }
-      }
-    case 'qa':
-      return {
-        "/api": {
-          "target": "http://www.linhy.cn:8090/api/",
-          "changeOrigin": true,
-          "pathRewrite": {
-            "^/api": ""
-          }
-        }
-      }
-    case 'production':
-      return {
-        "/api": {
-          "target": "http://www.yicaijituan.cn:8090/api/",
-          "changeOrigin": true,
-          "pathRewrite": {
-            "^/api": ""
-          }
-        }
-      }
-    default:
-      return {}
-  }
-}
+// let proxy = {}
+// switch (ENV) {
+//   case 'developmenta':
+//     console.info('dev')
+//     proxy = {
+//       "/api": {
+//         "target": "http://www.linhy.cn:8090/api/",
+//         "changeOrigin": true,
+//         "pathRewrite": {
+//           "^/api": ""
+//         }
+//       }
+//     }
+//     break
+//   case 'qa':
+//     console.info('qa')
+//     proxy = {
+//       "/api": {
+//         "target": "http://www.linhy.cn:8090/api/",
+//         "changeOrigin": true,
+//         "pathRewrite": {
+//           "^/api": ""
+//         }
+//       }
+//     }
+//     break
+//   case 'production':
+//     proxy = {
+//       "/api": {
+//         "target": "http://www.yicaijituan.cn:8090/api/",
+//         "changeOrigin": true,
+//         "pathRewrite": {
+//           "^/api": ""
+//         }
+//       }
+//     }
+//     break
+//   default:
+//     proxy = {}
+//     break
+// }
 
 export default {
   entry: 'src/index.js',
@@ -68,5 +73,5 @@ export default {
         "^/api": ""
       }
     }
-  }
+  },
 };
