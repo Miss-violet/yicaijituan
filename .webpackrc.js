@@ -60,7 +60,7 @@ export default {
   disableDynamicImport: true,
   publicPath: '/',
   hash: true,
-  proxy: NODE_ENV === 'development' ? {
+  proxy: {
     "/api": {
       "target": "http://www.linhy.cn:8090/api/",
       "changeOrigin": true,
@@ -68,13 +68,5 @@ export default {
         "^/api": ""
       }
     }
-  } : {
-      "/api": {
-        "target": "http://www.yicaijituan.cn:8090/api/",
-        "changeOrigin": true,
-        "pathRewrite": {
-          "^/api": ""
-        }
-      }
-    }
+  }
 };
