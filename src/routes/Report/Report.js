@@ -110,10 +110,14 @@ export default class Report extends Component {
                     <span className={styles.label}>工艺：</span>
                     <span className={styles.content}>{detail.techno === 0 ? '分选' : ''}</span>
                   </li>
-                  <li>
-                    <span className={styles.label}>运输车号：</span>
-                    <span className={styles.content}>{detail.carNo}</span>
-                  </li>
+                  {
+                    detail.allowShowCarNo === 1 && (
+                      <li>
+                        <span className={styles.label}>运输车号：</span>
+                        <span className={styles.content}>{detail.carNo}</span>
+                      </li>
+                    )
+                  }
                 </ul>
               </Col>
             </Row>

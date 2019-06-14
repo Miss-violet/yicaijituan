@@ -142,6 +142,22 @@ class TenantManage extends Component {
           name: '需要',
         },
       ],
+    }, {
+      key: 7,
+      label: '是否需要展示车牌',
+      name: 'showCarNoFlag',
+      type: 'radio',
+      required: true,
+      defaultValue: '',
+      data: [
+        {
+          id: 0,
+          name: '不需要',
+        }, {
+          id: 1,
+          name: '需要',
+        },
+      ],
     }]
     const tenantProps = {
       columns,

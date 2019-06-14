@@ -327,7 +327,7 @@ class EditModal extends Component {
                     format="YYYY-MM-DD HH:mm:ss"
                     placeholder="请选择出厂时间"
                     className={styles.datepicker}
-                    disabled={allowModifyOutTime === 0}
+                    disabled={allowModifyOutTime === 0 || disabled}
                   />
                   )}
               </FormItem>
@@ -890,7 +890,7 @@ class EditModal extends Component {
                       },
                     ],
                     initialValue: approver,
-                  })(<Input />)}
+                  })(<Input disabled={disabled} />)}
                 </FormItem>
               </Col>
             )
