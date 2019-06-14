@@ -2,6 +2,43 @@ const path = require('path');
 
 const { NODE_ENV } = process.env
 
+const proxy = () => {
+  switch (NODE_ENV) {
+    case 'development':
+      return {
+        "/api": {
+          "target": "http://www.linhy.cn:8090/api/",
+          "changeOrigin": true,
+          "pathRewrite": {
+            "^/api": ""
+          }
+        }
+      }
+    case 'qa':
+      return {
+        "/api": {
+          "target": "http://www.linhy.cn:8090/api/",
+          "changeOrigin": true,
+          "pathRewrite": {
+            "^/api": ""
+          }
+        }
+      }
+    case 'production':
+      return {
+        "/api": {
+          "target": "http://www.yicaijituan.cn:8090/api/",
+          "changeOrigin": true,
+          "pathRewrite": {
+            "^/api": ""
+          }
+        }
+      }
+    default:
+      return {}
+  }
+}
+
 export default {
   entry: 'src/index.js',
   extraBabelPlugins: [
