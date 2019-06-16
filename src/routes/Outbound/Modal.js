@@ -273,7 +273,7 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -295,7 +295,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -329,7 +329,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={allowModifyOutTime === 0 || disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -350,7 +350,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -368,7 +368,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -385,7 +385,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -423,7 +423,7 @@ class EditModal extends Component {
                     style={this.props.style}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -441,7 +441,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -462,7 +462,7 @@ class EditModal extends Component {
                 {getFieldDecorator('flyashSource', {
                   rules: [
                     {
-                      required: allowApprover === 0,
+                      required: false,
                       message: '请填写灰源',
                     },
                   ],
@@ -473,7 +473,7 @@ class EditModal extends Component {
                     <Option value='嵩屿'>嵩屿</Option>
                     <Option value='后石'>后石</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -481,7 +481,7 @@ class EditModal extends Component {
                 {getFieldDecorator('relationCode', {
                   rules: [
                     {
-                      required: allowApprover === 0,
+                      required: false,
                       message: '请填写关联编号',
                     },
                   ],
@@ -494,7 +494,7 @@ class EditModal extends Component {
                 {getFieldDecorator('poundCode', {
                   rules: [
                     {
-                      required: allowApprover === 0,
+                      required: false,
                       message: '请填写磅单号',
                     },
                   ],
@@ -719,7 +719,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                              )}
+                            )}
                           </FormItem>
                         </td>
                       </tr>
@@ -794,7 +794,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -814,7 +814,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -834,7 +834,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
         </Row>
