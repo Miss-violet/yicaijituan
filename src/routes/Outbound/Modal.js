@@ -572,7 +572,7 @@ class EditModal extends Component {
        *  type===1：大于等于
        *  type===0：小于等于
        */
-      if (value !== '' && value !== null) {
+      if (Number(value) === 0 || value) {
         if (type === 1 && value && Number(value) < levelStandards) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
@@ -902,7 +902,8 @@ class EditModal extends Component {
 
   /* 检验结果 文本框 输入时的校验  */
   validateParameter = (rule, value, callback, standardsItem) => {
-    if (isNaN(Number(value))) {
+    console.info('starn->', standardsItem)
+    if (standardsItem.rowTitle !== '强度活性指数（%）' && standardsItem.rowTitle !== '强度活性指数(%)' && isNaN(Number(value))) {
       callback('请输入数字')
       return
     }
@@ -938,7 +939,7 @@ class EditModal extends Component {
      *  standardsItem.type===1：大于等于
      *  standardsItem.type===0：小于等于
      */
-    if (value !== '' && value !== null) {
+    if (Number(value) === 0 || value) {
       if (type === 1 && value && Number(value) < levelStandards) {
         callback({ message: `检验结果须大于等于国家标准值${levelStandards}` });
         return;
