@@ -603,7 +603,7 @@ class EditModal extends Component {
           });
           return
         }
-        if (pointNum === 0 && value.indexOf('.') !== -1) {
+        if (pointNum === 0 && value && value.indexOf('.') !== -1) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，请填写整数`,
@@ -618,7 +618,7 @@ class EditModal extends Component {
           });
           return
         }
-        if (pointNum > 0 && value.indexOf('.') === -1) {
+        if (pointNum > 0 && value && value.indexOf('.') === -1) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
@@ -633,7 +633,7 @@ class EditModal extends Component {
           });
           return
         }
-        if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
+        if (pointNum > 0 && value && value.length - value.indexOf('.') - 1 !== pointNum) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
@@ -902,7 +902,6 @@ class EditModal extends Component {
 
   /* 检验结果 文本框 输入时的校验  */
   validateParameter = (rule, value, callback, standardsItem) => {
-    console.info('starn->', standardsItem)
     if (standardsItem.rowTitle !== '强度活性指数（%）' && standardsItem.rowTitle !== '强度活性指数(%)' && isNaN(Number(value))) {
       callback('请输入数字')
       return
@@ -948,15 +947,15 @@ class EditModal extends Component {
         callback({ message: `检验结果须小于等于国家标准值${levelStandards}` });
         return;
       }
-      if (pointNum === 0 && value.indexOf('.') !== -1) {
+      if (pointNum === 0 && value && value.indexOf('.') !== -1) {
         callback({ message: `请填写整数` })
         return
       }
-      if (pointNum > 0 && value.indexOf('.') === -1) {
+      if (pointNum > 0 && value && value.indexOf('.') === -1) {
         callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` })
         return
       }
-      if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
+      if (pointNum > 0 && value && value.length - value.indexOf('.') - 1 !== pointNum) {
         callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` })
         return
       }
