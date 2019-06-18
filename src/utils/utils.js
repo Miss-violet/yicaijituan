@@ -181,11 +181,27 @@ export function toDecimal(number, pointNum) {
     pointLastIndex = numberToString.length;
   }
   /* 如果 number 带小数 */
-  if (pointLastIndex > 0 && pointLastIndex+1 < pointNum) {
+  if (pointLastIndex > 0 && pointLastIndex + 1 < pointNum) {
     pointLastIndex = numberToString.length - 1
   }
   while (numberToString.length < pointLastIndex + pointNum) {
     numberToString += '0';
   }
   return numberToString
-} 
+}
+
+/**
+ * 将 objData 中值为 undefined 的属性剔除
+ * @param objData 需要处理的数据
+ */
+export function filterEmpty(objData) {
+  for (const key in objData) {
+    if (objData[key] === null || objData[key] === undefined || objData[key] === '') {
+      delete objData[key];
+    }
+    if (objData[key] === '_UNITE_SELECT_ALL') {
+      delete objData[key];
+    }
+  }
+  return objData;
+};

@@ -3,6 +3,7 @@ import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button, 
 import * as moment from 'moment';
 import { connect } from 'dva';
 import classNames from 'classnames'
+import { filterEmpty } from '../../utils/utils'
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
 
@@ -29,7 +30,7 @@ class EditModal extends Component {
       supplierName: '',                 /* 选中的生厂商名称 */
       remark: '',                       /* 打印备注 */
       changeLevel: false,               /* 修改了级别 */
-      validateStatus: [],                  /* 设置标准值校验提示 */
+      validateStatus: [],               /* 设置标准值校验提示 */
       allowApprover: 0,
     };
   }
@@ -273,7 +274,7 @@ class EditModal extends Component {
                     {productEnabled &&
                       productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -295,7 +296,7 @@ class EditModal extends Component {
                       )
                     }
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -329,7 +330,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={allowModifyOutTime === 0 || disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -341,7 +342,7 @@ class EditModal extends Component {
                       message: '请选择生产日期',
                     },
                   ],
-                  initialValue: type !== 'add' && moment(deliveryTime),
+                  initialValue: type !== 'add' ? moment(deliveryTime) : '',
                 })(
                   <DatePicker
                     showTime
@@ -350,7 +351,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -368,7 +369,7 @@ class EditModal extends Component {
                     {manufacturerEnabled &&
                       manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -385,7 +386,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -423,7 +424,7 @@ class EditModal extends Component {
                     style={this.props.style}
                     disabled={disabled}
                   />
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -441,7 +442,7 @@ class EditModal extends Component {
                     {companyEnabled &&
                       companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -473,7 +474,7 @@ class EditModal extends Component {
                     <Option value='嵩屿'>嵩屿</Option>
                     <Option value='后石'>后石</Option>
                   </Select>
-                )}
+                  )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -719,7 +720,7 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                            )}
+                              )}
                           </FormItem>
                         </td>
                       </tr>
@@ -794,7 +795,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -814,7 +815,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -834,7 +835,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-              )}
+                )}
             </FormItem>
           </Col>
         </Row>
@@ -973,9 +974,11 @@ class EditModal extends Component {
       if (!err) {
         let { standardsData } = this.state;
         const { validateStatus } = this.state
+        const filterFmValues = filterEmpty(fmValues)
+
         /* 日期格式转化 */
         const values = {
-          ...fmValues,
+          ...filterFmValues,
           deliveryTime: moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
           outTime: moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss'),
         }
