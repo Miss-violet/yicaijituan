@@ -178,7 +178,9 @@ class OutboundFilter extends Component {
                   )}
                 </FormItem>
               </Col>
-              <Col {...filterFormLayout}>
+              {
+                /*
+                <Col {...filterFormLayout}>
                 <FormItem label='级别' {...formItemLayout} className={styles.formItem}>
                   {getFieldDecorator('level')(
                     <Select allowClear>
@@ -189,6 +191,9 @@ class OutboundFilter extends Component {
                   )}
                 </FormItem>
               </Col>
+                */
+              }
+
             </span>
           )
         }
