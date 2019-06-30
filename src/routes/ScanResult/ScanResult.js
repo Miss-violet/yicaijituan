@@ -16,7 +16,7 @@ class ScanResult extends Component {
         <ul className={styles.result}>
           <li>{detail && detail.title}检验报告</li>
           <li>客户名称：{detail && detail.customer}</li>
-          <li>品名：{detail && detail.productName}</li>
+          <li>品名：{detail && '粉煤灰'}</li>
           <li>
             级别：{detail && detail.columnTitle}
           </li>
