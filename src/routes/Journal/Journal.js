@@ -6,13 +6,39 @@ import styles from './journal.less'
 
 const FormItem = Form.Item
 const { RangePicker } = DatePicker;
-const Option = Select.Option
+const { Option } = Select
 
 class Journal extends Component {
+
   constructor() {
     super()
     this.state = {
+      current: 0,
+      pageSize: 20,
+      filterValue: {},
     }
+  }
+  onTableChange = (current, pageSize) => {
+    const { filterValue: params } = this.state
+    this.setState({
+      current,
+      pageSize,
+    })
+    this.onSearch({
+      pageIndex: current,
+      pageSize,
+      sortField: null,
+      sortOrder: null,
+      params,
+    })
+  }
+  onSearch = (params) => {
+    this.props.dispatch({
+      type: 'journal/log',
+      payload: {
+        ...params,
+      },
+    })
   }
   columns = [
     {
@@ -80,6 +106,7 @@ class Journal extends Component {
       className: 'journalTd',
     },
   ]
+
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -93,18 +120,26 @@ class Journal extends Component {
         startTime = moment(values.createTime[0]).format('YYYY-MM-DD HH:mm:ss')
         endTime = moment(values.createTime[1]).format('YYYY-MM-DD HH:mm:ss')
       }
-      this.props.dispatch({
-        type: 'journal/log',
-        payload: {
-          "pageIndex": 0,
-          "pageSize": 20,
-          "sortField": null,
-          "sortOrder": null,
-          "params": {
-            ...rest,
-            startTime,
-            endTime,
-          },
+
+      this.setState({
+        current: 0,
+        pageSize: 20,
+        filterValue: {
+          ...rest,
+          startTime,
+          endTime,
+        },
+      })
+
+      this.onSearch({
+        pageIndex: 0,
+        pageSize: 20,
+        sortField: null,
+        sortOrder: null,
+        params: {
+          ...rest,
+          startTime,
+          endTime,
         },
       })
     });
@@ -112,13 +147,13 @@ class Journal extends Component {
   handleReset = () => {
     this.props.form.resetFields();
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    let { data } = this.props
-    data = data.map((item, index) => {
-      item.key = index
-      return item
-    })
+    const { data, pagination } = this.props
+
+    const { current, pageSize } = this.state
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -174,6 +209,20 @@ class Journal extends Component {
         name: '标准',
       },
     ]
+
+    const tableProps = {
+      columns: this.columns,
+      dataSource: data,
+      pagination: {
+        ...pagination,
+        current,
+        pageSize,
+        showSizeChanger: true,
+        onChange: this.onTableChange,
+      },
+      rowKey: record => record.id,
+    }
+
     return (
       <div>
         <Form
@@ -228,7 +277,7 @@ class Journal extends Component {
             </Col>
           </Row>
         </Form>
-        <Table columns={this.columns} dataSource={data} />
+        <Table {...tableProps} />
       </div>
     )
   }
