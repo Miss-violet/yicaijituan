@@ -134,12 +134,12 @@ export default class Report extends Component {
               <tr>
                 <th rowSpan="2" style={{ width: '16%' }}>{headName}</th>
                 <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>{headTitle}</th>
-                <th rowSpan="2" style={{ width: '10%' }}>{headResult}</th>
+                <th rowSpan="2" style={{ width: '10%', whiteSpace: "nowrap" }}>{headResult}</th>
               </tr>
               <tr>
                 {
                   standardColumnTitleData && standardColumnTitleData.map(columnItem => (
-                    <th key={columnItem.id} style={{ width: `${74 / standardColumnTitleData.length}%` }}>
+                    <th key={columnItem.id} style={{ width: `${74 / standardColumnTitleData.length}%`, whiteSpace: "nowrap" }}>
                       {columnItem.name}
                     </th>
                   ))
@@ -155,7 +155,7 @@ export default class Report extends Component {
                 detail.standards &&
                 detail.standards.map(item => (
                   <tr>
-                    <td>{item.standardName}</td>
+                    <td style={{ whiteSpace: "nowrap" }}>{item.standardName}</td>
                     {
                       item.params.map(paramsItem => (
                         <td className={commonStyles.alignRight}>

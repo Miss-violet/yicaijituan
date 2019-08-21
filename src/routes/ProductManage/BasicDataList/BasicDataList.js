@@ -122,7 +122,7 @@ class BasicDataList extends Component {
                     placeholder={modalType === 'check' ? '' : `请输入${label}`}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -145,7 +145,7 @@ class BasicDataList extends Component {
                         <Option value={selectItem.id} key={selectItem.id}>{selectItem.name}</Option>
                       ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -168,7 +168,7 @@ class BasicDataList extends Component {
                         <Radio value={radioItem.id} key={radioItem.id}>{radioItem.name}</Radio>
                       ))}
                   </RadioGroup>
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -190,7 +190,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
               <Col span={24}>
@@ -211,7 +211,7 @@ class BasicDataList extends Component {
                       placeholder={modalType === 'check' ? '' : '请再次输入密码'}
                       disabled={disabled}
                     />
-                    )}
+                  )}
                 </FormItem>
               </Col>
             </div>
@@ -235,7 +235,7 @@ class BasicDataList extends Component {
                     disabled={disabled}
                     style={{ width: '100%' }}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
           );
@@ -731,7 +731,7 @@ class BasicDataList extends Component {
                             let pointNumValue
                             return (
                               <tr key={standardParamsItem.rowId}>
-                                <td key={`rowTitle_${standardParamsItem.rowId}`}>
+                                <td key={`rowTitle_${standardParamsItem.rowId}`} style={{ whiteSpace: "nowrap" }}>
                                   {standardParamsItem.rowTitle}
                                 </td>
                                 <td key={`item_${standardParamsItem.rowId}`}>
@@ -744,7 +744,7 @@ class BasicDataList extends Component {
                                         <Option value={0}>≤（小于等于）</Option>
                                         <Option value={1}>≥（大于等于）</Option>
                                       </Select>
-                                      )
+                                    )
                                     }
                                   </FormItem>
                                 </td>
@@ -768,7 +768,7 @@ class BasicDataList extends Component {
                                               min={this.props.min}
                                               max={this.props.max}
                                             />
-                                            )}
+                                          )}
                                         </FormItem>
                                       </td>
                                     )
@@ -789,7 +789,7 @@ class BasicDataList extends Component {
                                         min={this.props.min}
                                         max={this.props.max}
                                       />
-                                      )}
+                                    )}
                                   </FormItem>
                                 </td>
                               </tr>
