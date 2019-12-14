@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 import { Table, Form, Row, Col, DatePicker, Select, Button } from 'antd'
-import * as moment from 'moment'
+import moment from 'moment'
 import styles from './journal.less'
 
 const FormItem = Form.Item

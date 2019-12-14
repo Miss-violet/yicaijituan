@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Table, Modal, Form, Row, Col, Input, Select, DatePicker, Radio, message, Switch, Icon } from 'antd'
-import * as moment from 'moment'
+import moment from 'moment'
 import styles from './basicDataList.less'
 
 

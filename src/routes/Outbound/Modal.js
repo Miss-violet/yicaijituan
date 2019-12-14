@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button, AutoComplete } from 'antd';
-import * as moment from 'moment';
+import moment from 'moment';
 import { connect } from 'dva';
 import classNames from 'classnames'
 import { filterEmpty } from '../../utils/utils'

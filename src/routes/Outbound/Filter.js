@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Button, Input, Select, DatePicker, Icon, AutoComplete } from 'antd'
-import * as moment from 'moment'
+import moment from 'moment'
 import styles from './outbound.less'
 
 const FormItem = Form.Item

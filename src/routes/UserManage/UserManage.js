@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 import { Tooltip, Badge, Form, Row, Col, Button, Input, Icon, Select } from 'antd'
-import * as moment from 'moment'
+import moment from 'moment'
 import BasicDataList from '../../components/BasicDataList/BasicDataList'
 import commonStyles from '../../assets/style/common.less'
 
@@ -166,7 +166,7 @@ class UserManage extends Component {
             payload: {
               loginName,
             },
-            callback: (code)=>{
+            callback: (code) => {
               this.setState({
                 validateLoginName: code,
               })
@@ -223,7 +223,7 @@ class UserManage extends Component {
               break;
           }
           return roleData
-        } (),
+        }(),
       },
       {
         key: 5,
@@ -307,7 +307,7 @@ class UserManage extends Component {
     const userProps = {
       columns,
       scrollX: 2000,
-      scrollY:600,
+      scrollY: 600,
       data,
       fmFields,
       validateUnique: this.state.validateLoginName,

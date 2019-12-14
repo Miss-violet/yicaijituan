@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Table, Tooltip, Badge, Icon, Spin } from 'antd';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Link } from 'dva/router';
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import classnames from 'classnames';
 import { connect } from 'dva';
-import * as moment from 'moment';
+import moment from 'moment';
 import styles from './report.less';
 import commonStyles from '../../assets/style/common.less';
 
