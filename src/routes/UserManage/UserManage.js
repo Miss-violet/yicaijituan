@@ -1,30 +1,29 @@
-import React, { Component } from 'react'
-import { connect } from 'dva'
-import { Tooltip, Badge, Form, Row, Col, Button, Input, Icon, Select } from 'antd'
-import * as moment from 'moment'
-import BasicDataList from '../../components/BasicDataList/BasicDataList'
-import commonStyles from '../../assets/style/common.less'
+import React, { Component } from 'react';
+import { connect } from 'dva';
+import { Tooltip, Badge, Form, Row, Col, Button, Input, Icon, Select } from 'antd';
+import * as moment from 'moment';
+import BasicDataList from '../../components/BasicDataList/BasicDataList';
+import commonStyles from '../../assets/style/common.less';
 
-const FormItem = Form.Item
-const Option = Select.Option
-
+const FormItem = Form.Item;
+const Option = Select.Option;
 
 class UserManage extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       pageSize: 20,
       pageIndex: 0,
-      filterValue: {},        /* 查询条件 */
+      filterValue: {} /* 查询条件 */,
       validateLoginName: 0,
-    }
+    };
   }
-  handleSearch = (e) => {
-    e.preventDefault()
+  handleSearch = e => {
+    e.preventDefault();
     this.props.form.validateFields((err, params) => {
       this.setState({
         filterValue: params,
-      })
+      });
       this.props.dispatch({
         type: 'userManage/queryList',
         payload: {
@@ -32,34 +31,34 @@ class UserManage extends Component {
           pageIndex: this.state.pageIndex,
           pageSize: this.state.pageSize,
         },
-      })
-    })
-  }
+      });
+    });
+  };
   handleReset = () => {
     this.props.form.resetFields();
     this.setState({
       filterValue: {},
-    })
-  }
-  pageIndexChange = (pageIndex) => {
+    });
+  };
+  pageIndexChange = pageIndex => {
     this.setState({
       pageIndex,
-    })
-  }
+    });
+  };
   pageSizeChange = (pageIndex, pageSize) => {
     this.setState({
       pageSize,
-    })
-  }
+    });
+  };
 
   render() {
-    const { getFieldDecorator } = this.props.form
-    const { total } = this.props.userManage
-    let { data } = this.props.userManage
+    const { getFieldDecorator } = this.props.form;
+    const { total } = this.props.userManage;
+    let { data } = this.props.userManage;
     data = data.map((item, index) => {
-      item.key = index
-      return item
-    })
+      item.key = index;
+      return item;
+    });
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -71,14 +70,14 @@ class UserManage extends Component {
         sm: { span: 16 },
         md: { span: 16 },
       },
-    }
+    };
     const filterFormLayout = {
       xs: { span: 12 },
       sm: { span: 12 },
       md: { span: 8 },
       lg: { span: 8 },
       xl: { span: 6 },
-    }
+    };
     const columns = [
       {
         title: '登录名',
@@ -86,8 +85,16 @@ class UserManage extends Component {
         fixed: 'left',
         width: 150,
         render: (text, record) => {
-          if (record.status === 1) return <span><Tooltip title="此用户已被停用"><Badge status="error" /></Tooltip>{text}</span>
-          else return <span>{text}</span>
+          if (record.status === 1)
+            return (
+              <span>
+                <Tooltip title="此用户已被停用">
+                  <Badge status="error" />
+                </Tooltip>
+                {text}
+              </span>
+            );
+          else return <span>{text}</span>;
         },
       },
       {
@@ -98,13 +105,14 @@ class UserManage extends Component {
       {
         title: '角色',
         dataIndex: 'role',
-        render: text => (text === 0 ? '超级管理员' : (text === 1 ? '管理员' : '成员')),
+        render: text => (text === 0 ? '超级管理员' : text === 1 ? '管理员' : '成员'),
         width: 150,
       },
       {
         title: '状态',
         dataIndex: 'status',
-        render: text => (text === 0 ? <span>启用</span> : <span className={commonStyles.disableState}>停用</span>),
+        render: text =>
+          text === 0 ? <span>启用</span> : <span className={commonStyles.disableState}>停用</span>,
         width: 100,
       },
       {
@@ -121,7 +129,7 @@ class UserManage extends Component {
       {
         title: '生日',
         dataIndex: 'birth',
-        render: text => text ? moment(text).format('YYYY-MM-DD') : '',
+        render: text => (text ? moment(text).format('YYYY-MM-DD') : ''),
         width: 150,
       },
       {
@@ -151,7 +159,7 @@ class UserManage extends Component {
         render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         width: 150,
       },
-    ]
+    ];
     const fmFields = [
       {
         key: 1,
@@ -160,20 +168,21 @@ class UserManage extends Component {
         type: 'text',
         required: true,
         verifyUnique: true,
-        verifyFunc: (loginName) => {
+        verifyFunc: loginName => {
           this.props.dispatch({
             type: 'userManage/vaildateLoginName',
             payload: {
               loginName,
             },
-            callback: (code)=>{
+            callback: code => {
               this.setState({
                 validateLoginName: code,
-              })
+              });
             },
-          })
+          });
         },
-      }, {
+      },
+      {
         key: 2,
         label: '用户名',
         name: 'userName',
@@ -187,14 +196,14 @@ class UserManage extends Component {
         type: 'radio',
         required: true,
         defaultValue: 2,
-        data: function roleDataFunc() {
+        data: (function roleDataFunc() {
           /**
            * 根据 登录账号的角色 - role 来给予该账号可新建的用户角色
            * 超级管理员('0') - 可新建 超级管理员、管理员 和 成员
            * 管理员('1')     - 可新建 成员 （20180706 - 对管理员暂不开放用户管理菜单操作权限）
            */
-          const role = sessionStorage.getItem('role')
-          let roleData
+          const role = sessionStorage.getItem('role');
+          let roleData;
           switch (role) {
             case '0':
               roleData = [
@@ -205,11 +214,12 @@ class UserManage extends Component {
                 {
                   id: 1,
                   name: '管理员',
-                }, {
+                },
+                {
                   id: 2,
                   name: '成员',
                 },
-              ]
+              ];
               break;
             case '1':
               roleData = [
@@ -217,13 +227,13 @@ class UserManage extends Component {
                   id: 2,
                   name: '成员',
                 },
-              ]
+              ];
               break;
             default:
               break;
           }
-          return roleData
-        } (),
+          return roleData;
+        })(),
       },
       {
         key: 5,
@@ -243,7 +253,8 @@ class UserManage extends Component {
           {
             id: 1,
             name: '男',
-          }, {
+          },
+          {
             id: 0,
             name: '女',
           },
@@ -288,7 +299,8 @@ class UserManage extends Component {
           {
             id: 1,
             name: '停用',
-          }, {
+          },
+          {
             id: 0,
             name: '启用',
           },
@@ -302,12 +314,12 @@ class UserManage extends Component {
         required: true,
         data: this.props.userManage.companySelectList.filter(item => item.status === 0),
       },
-    ]
-    const showTotal = () => `共${total}条数据`
+    ];
+    const showTotal = () => `共${total}条数据`;
     const userProps = {
       columns,
       scrollX: 2000,
-      scrollY:600,
+      scrollY: 600,
       data,
       fmFields,
       validateUnique: this.state.validateLoginName,
@@ -324,28 +336,28 @@ class UserManage extends Component {
         onChange: this.pageIndexChange,
         onShowSizeChange: this.pageSizeChange,
       },
-      handleCreate: (values) => {
+      handleCreate: values => {
         this.props.dispatch({
           type: 'userManage/create',
           payload: {
             ...values,
           },
-        })
+        });
       },
-      handleEdit: (values) => {
-        const { birth, ...rest } = values
+      handleEdit: values => {
+        const { birth, ...rest } = values;
         this.props.dispatch({
           type: 'userManage/edit',
           payload: {
             ...rest,
             birth: moment(birth).format('YYYY-MM-DD'),
           },
-        })
+        });
       },
-      handleTableChange: (pagination) => {
+      handleTableChange: pagination => {
         this.setState({
           pageSize: pagination.pageSize,
-        })
+        });
         this.props.dispatch({
           type: 'userManage/queryList',
           payload: {
@@ -355,41 +367,51 @@ class UserManage extends Component {
             sortOrder: null,
             params: this.state.filterValue,
           },
-        })
+        });
       },
-    }
+    };
     return (
       <div>
-        <Form
-          className="ant-advanced-search-form"
-          onSubmit={this.handleSearch}
-        >
+        <Form className="ant-advanced-search-form" onSubmit={this.handleSearch}>
           <Row gutter={32} className={commonStyles.form}>
             <span style={{ padding: 0 }}>
-              <Col {...filterFormLayout} >
-                <FormItem label='登录名' {...formItemLayout} className={commonStyles.formItem}>
-                  {getFieldDecorator('loginName')(
-                    <Input />
-                  )}
+              <Col {...filterFormLayout}>
+                <FormItem label="登录名" {...formItemLayout} className={commonStyles.formItem}>
+                  {getFieldDecorator('loginName')(<Input />)}
                 </FormItem>
               </Col>
               <Col {...filterFormLayout}>
-                <FormItem label='角色' {...formItemLayout} className={commonStyles.formItem}>
+                <FormItem label="角色" {...formItemLayout} className={commonStyles.formItem}>
                   {getFieldDecorator('role')(
                     <Select allowClear>
-                      <Option value='0' key='0'> 超级管理员</Option>
-                      <Option value='1' key='1'> 管理员</Option>
-                      <Option value='2' key='2'> 成员</Option>
+                      <Option value="0" key="0">
+                        {' '}
+                        超级管理员
+                      </Option>
+                      <Option value="1" key="1">
+                        {' '}
+                        管理员
+                      </Option>
+                      <Option value="2" key="2">
+                        {' '}
+                        成员
+                      </Option>
                     </Select>
                   )}
                 </FormItem>
               </Col>
               <Col {...filterFormLayout}>
-                <FormItem label='状态' {...formItemLayout} className={commonStyles.formItem}>
+                <FormItem label="状态" {...formItemLayout} className={commonStyles.formItem}>
                   {getFieldDecorator('status')(
                     <Select allowClear>
-                      <Option value='0' key='0'> 启用</Option>
-                      <Option value='1' key='1'> 停用</Option>
+                      <Option value="0" key="0">
+                        {' '}
+                        启用
+                      </Option>
+                      <Option value="1" key="1">
+                        {' '}
+                        停用
+                      </Option>
                     </Select>
                   )}
                 </FormItem>
@@ -398,8 +420,9 @@ class UserManage extends Component {
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right', position: 'relative' }}>
-
-              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit">
+                <Icon type="search" />查询
+              </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
                 <Icon type="reload" />重置
               </Button>
@@ -408,7 +431,7 @@ class UserManage extends Component {
         </Form>
         <BasicDataList {...userProps} />
       </div>
-    )
+    );
   }
 }
-export default connect(({ userManage }) => ({ userManage }))(Form.create()(UserManage))
+export default connect(({ userManage }) => ({ userManage }))(Form.create()(UserManage));

@@ -36,7 +36,9 @@ class List extends Component {
       selectedStatus,
       selectedId,
       role,
+      shippingFlag,
     } = this.props;
+
     const btnBar = (
       <div className={styles.btnBar}>
         {(role === '0' || role === '1') && (
@@ -55,7 +57,7 @@ class List extends Component {
               ) : (
                   <span>
                     <Icon type="check" />启用
-                </span>
+                  </span>
                 )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
@@ -74,12 +76,30 @@ class List extends Component {
                   </Link>
                 )
               )}
+            {
+              // 权限根据租户的 shippingFlag
+              (role === '0' || role === '1') && shippingFlag !== '0' && (
+                <Button className={styles.btn} onClick={() => showModal('shipping')}>
+                  <Icon type="plus" />新增发货单
+                </Button>
+              )
+            }
           </span>
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>
-          <span>共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条出库单；</span>
-          <span>净重统计：<span style={{ color: '#f5222d' }}>{sumNetweight === '' ? (<Spin />) : (Number(sumNetweight) / 1000).toLocaleString()} </span>吨；</span>
-          <span>出库车次统计：<span style={{ color: '#f5222d' }}>{totalRecords === '' ? (<Spin />) : Number(totalRecords).toLocaleString()} </span>。</span>
+          <span>
+            共 <span style={{ color: '#f5222d' }}>{Number(total).toLocaleString()} </span>条出库单；
+          </span>
+          <span>
+            净重统计：<span style={{ color: '#f5222d' }}>
+              {sumNetweight === '' ? <Spin /> : (Number(sumNetweight) / 1000).toLocaleString()}{' '}
+            </span>吨；
+          </span>
+          <span>
+            出库车次统计：<span style={{ color: '#f5222d' }}>
+              {totalRecords === '' ? <Spin /> : Number(totalRecords).toLocaleString()}{' '}
+            </span>。
+          </span>
           <span>【数据统计请根据出厂日期筛选统计；若无筛选条件则默认统计当月数据。】</span>
         </div>
       </div>

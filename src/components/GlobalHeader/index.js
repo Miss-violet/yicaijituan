@@ -11,7 +11,7 @@ export default class GlobalHeader extends PureComponent {
     this.triggerResizeEvent.cancel();
   }
   getNoticeData() {
-    const { notices = []} = this.props;
+    const { notices = [] } = this.props;
     if (notices.length === 0) {
       return {};
     }
@@ -77,17 +77,14 @@ export default class GlobalHeader extends PureComponent {
           className={styles.trigger}
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
-          />
+        />
         <div className={styles.right}>
           <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
+            <Menu.Item key="currentUser">当前用户：{currentUser}</Menu.Item>
 
-              <Menu.Item key="currentUser">
-                当前用户：{currentUser}
-              </Menu.Item>
-              
             <Menu.Item key="logout">
               <Icon type="logout" />退出登录
-              </Menu.Item>
+            </Menu.Item>
           </Menu>
         </div>
       </div>

@@ -14,6 +14,12 @@
   - 查看
   - 导出
   - 打印
+  - 新增发货单
+-发货单
+  - 修改
+  - 删除
+  - 查看
+  - 打印
 - 用户管理
   - 新增
   - 修改
@@ -27,6 +33,10 @@
   - 修改
   - 查看
 - 产品管理
+  - 新增
+  - 修改
+  - 查看
+- 租户管理
   - 新增
   - 修改
   - 查看
@@ -50,4 +60,21 @@ $ npm start         # 访问 http://localhost:8000
 ## 兼容性
 
 现代浏览器及 IE11。
+
+## 其他说明
+
+页面文件位置：      src/routes
+
+models 文件位置：   src/models
+
+services 文件位置： src/services
+
+路由：              src/commom/router.js
+
+修改代理地址：.webpackrc.js
+
+登录账号：
+- unique  - 平台管理员
+- unique2 - 普通管理员 role !==0 && role !==1
+- sum     - 普通管理员 role === 1
 

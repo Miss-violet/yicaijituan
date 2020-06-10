@@ -11,15 +11,14 @@ import commonStyles from '../../assets/style/common.less';
   productDetail: productManage.productDetail,
   standardColumnTitleData: productManage.standardColumnTitleData,
 }))
-
 export default class Report extends Component {
   constructor() {
     super();
     this.state = {};
   }
   render() {
-    const { detail, productDetail, standardColumnTitleData } = this.props
-    const { footContent, footName, headName, headResult, headTitle } = productDetail
+    const { detail, productDetail, standardColumnTitleData } = this.props;
+    const { footContent, footName, headName, headResult, headTitle } = productDetail;
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,
@@ -27,9 +26,7 @@ export default class Report extends Component {
     return (
       <Row gutter={16} className={styles.row}>
         <Col span={8} className={styles.leftCol}>
-          <div className={styles.deliveryNo}>
-            No. {detail.deliveryNo}
-          </div>
+          <div className={styles.deliveryNo}>No. {detail.deliveryNo}</div>
           <h1 className={styles.productName}>
             <div>{detail.title}</div>
             <p className={styles.name}>出厂合格证</p>
@@ -74,14 +71,12 @@ export default class Report extends Component {
                 <span>{detail.checker}</span>
               </div>
             </li>
-            {
-              detail.allowShowCarNo === 1 && (
-                <li>
-                  <span className={styles.label}>运输车号：</span>
-                  <span className={styles.content}>{detail.carNo}</span>
-                </li>
-              )
-            }
+            {detail.allowShowCarNo === 1 && (
+              <li>
+                <span className={styles.label}>运输车号：</span>
+                <span className={styles.content}>{detail.carNo}</span>
+              </li>
+            )}
           </ul>
         </Col>
         <Col span={16} className={styles.rightCol}>
@@ -102,9 +97,7 @@ export default class Report extends Component {
                   </li>
                   <li>
                     <span className={styles.label}>类别：</span>
-                    <span className={styles.content}>
-                      {detail.columnTitle}
-                    </span>
+                    <span className={styles.content}>{detail.columnTitle}</span>
                   </li>
                 </ul>
               </Col>
@@ -132,38 +125,46 @@ export default class Report extends Component {
           <table className={table}>
             <thead>
               <tr>
-                <th rowSpan="2" style={{ width: '16%' }}>{headName}</th>
-                <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>{headTitle}</th>
-                <th rowSpan="2" style={{ width: '10%', whiteSpace: "nowrap" }}>{headResult}</th>
+                <th rowSpan="2" style={{ width: '16%' }}>
+                  {headName}
+                </th>
+                <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>
+                  {headTitle}
+                </th>
+                <th rowSpan="2" style={{ width: '10%', whiteSpace: 'nowrap' }}>
+                  {headResult}
+                </th>
               </tr>
               <tr>
-                {
-                  standardColumnTitleData && standardColumnTitleData.map(columnItem => (
-                    <th key={columnItem.id} style={{ width: `${74 / standardColumnTitleData.length}%`, whiteSpace: "nowrap" }}>
+                {standardColumnTitleData &&
+                  standardColumnTitleData.map(columnItem => (
+                    <th
+                      key={columnItem.id}
+                      style={{
+                        width: `${74 / standardColumnTitleData.length}%`,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       {columnItem.name}
                     </th>
-                  ))
-                }
+                  ))}
               </tr>
             </thead>
             <tbody>
-              {
-                /**
-                 *  item.type===1：大于等于
-                 *  item.type===0：小于等于
-                 */
+              {/**
+               *  item.type===1：大于等于
+               *  item.type===0：小于等于
+               */
                 detail.standards &&
                 detail.standards.map(item => (
                   <tr>
-                    <td style={{ whiteSpace: "nowrap" }}>{item.standardName}</td>
-                    {
-                      item.params.map(paramsItem => (
-                        <td className={commonStyles.alignRight}>
-                          {paramsItem.type === 0 ? '≤' : '≥'}
-                          {paramsItem.val}
-                        </td>
-                      ))
-                    }
+                    <td style={{ whiteSpace: 'nowrap' }}>{item.standardName}</td>
+                    {item.params.map(paramsItem => (
+                      <td className={commonStyles.alignRight}>
+                        {paramsItem.type === 0 ? '≤' : '≥'}
+                        {paramsItem.val}
+                      </td>
+                    ))}
                     <td className={commonStyles.alignRight}>{item.parameter || ''}</td>
                   </tr>
                 ))}
@@ -174,9 +175,7 @@ export default class Report extends Component {
                 <td colSpan={standardColumnTitleData.length + 4}>
                   <p>
                     {footContent}
-                    <span className={styles.resultLevel}>
-                      {detail.columnTitle}
-                    </span>技术要求。
+                    <span className={styles.resultLevel}>{detail.columnTitle}</span>技术要求。
                   </p>
                   <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
                 </td>
@@ -201,4 +200,3 @@ export default class Report extends Component {
     );
   }
 }
-
