@@ -17,6 +17,7 @@ export default {
       const userResponse = yield call(queryCurrent);
       if (userResponse) {
         const { data: { tenantCode } } = userResponse
+
         yield put({
           type: 'shippingFlag',
           payload: {
@@ -33,6 +34,8 @@ export default {
       const response = yield call(fakeAccountLogin, payload);
       // Login successfully
       if (response.code === 0) {
+
+        // 必须写在前面，要存 token，不然在这之前的接口会报错
         yield put({
           type: 'changeLoginStatus',
           payload: {
@@ -40,7 +43,14 @@ export default {
             currentAuthority: 'admin',
           },
         });
+
         const userResponse = yield call(queryCurrent);
+
+        yield put({
+          type: 'saveCurrentUser',
+          payload: userResponse.data,
+        });
+
         if (userResponse) {
           const { data: { tenantCode } } = userResponse
           yield put({
@@ -50,13 +60,6 @@ export default {
             },
           })
         }
-        yield put({
-          type: 'saveCurrentUser',
-          payload: userResponse.data,
-        });
-
-        reloadAuthorized();
-        yield put(routerRedux.push('/'));
       }
     },
     *logout({ payload }, { call, put, select }) {
@@ -88,6 +91,11 @@ export default {
         const { shippingFlag } = data
         sessionStorage.setItem('shippingFlag', shippingFlag)
       }
+      // 查询发货单权限后再跳转到首页
+      // shippingFlag 决定了发货单菜单的显示和新建发货单按钮的显示
+      // 如果把以下代码放在 login 里，会导致先跳转到首页，再拿到 shippingFlag，导致显示不准确
+      reloadAuthorized();
+      yield put(routerRedux.push('/'));
     },
   },
 

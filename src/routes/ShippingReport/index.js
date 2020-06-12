@@ -58,7 +58,7 @@ class ShippingReport extends PureComponent {
         <div className={styles.No}>{shippingNo}</div>
         <div className={styles.purchaser}>
           <div>购货单位：{purchaser}</div>
-          <div>{moment(accTime).format('YYYY  年  MM  月  DD  日  hh  时')}</div>
+          <div>{moment(accTime).format('YYYY  年  MM  月  DD  日  HH  时')}</div>
         </div>
         <div className={styles.tableWrap}>
           <div className={styles.table}>
