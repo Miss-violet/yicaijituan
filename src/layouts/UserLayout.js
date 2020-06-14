@@ -66,7 +66,7 @@ class UserLayout extends React.PureComponent {
                   path={item.path}
                   component={item.component}
                   exact={item.exact}
-                  />
+                />
               ))}
               <Redirect exact from="/user" to="/user/login" />
             </Switch>

@@ -75,29 +75,47 @@ export const getRouterData = app => {
     '/outbound': {
       component: dynamicWrapper(app, ['outbound'], () => import('../routes/Outbound/Outbound')),
     },
+    '/shipping': {
+      component: dynamicWrapper(app, ['shipping'], () => import('../routes/Shipping')),
+    },
     '/userManage': {
-      component: dynamicWrapper(app, ['userManage'], () => import('../routes/UserManage/UserManage')),
+      component: dynamicWrapper(app, ['userManage'], () =>
+        import('../routes/UserManage/UserManage')
+      ),
     },
     '/companyManage': {
-      component: dynamicWrapper(app, ['companyManage'], () => import('../routes/CompanyManage/CompanyManage')),
+      component: dynamicWrapper(app, ['companyManage'], () =>
+        import('../routes/CompanyManage/CompanyManage')
+      ),
     },
     '/productManage': {
-      component: dynamicWrapper(app, ['productManage'], () => import('../routes/ProductManage/ProductManage')),
+      component: dynamicWrapper(app, ['productManage'], () =>
+        import('../routes/ProductManage/ProductManage')
+      ),
     },
     '/manufacturerManage': {
-      component: dynamicWrapper(app, ['manufacturerManage'], () => import('../routes/ManufacturerManage/ManufacturerManage')),
+      component: dynamicWrapper(app, ['manufacturerManage'], () =>
+        import('../routes/ManufacturerManage/ManufacturerManage')
+      ),
     },
     '/journal': {
       component: dynamicWrapper(app, ['journal'], () => import('../routes/Journal/Journal')),
     },
     '/tenantManage': {
-      component: dynamicWrapper(app, ['tenantManage'], () => import('../routes/TenantManage/TenantManage')),
+      component: dynamicWrapper(app, ['tenantManage'], () =>
+        import('../routes/TenantManage/TenantManage')
+      ),
     },
     '/scanResult/:id': {
-      component: dynamicWrapper(app, ['scanResult'], () => import('../routes/ScanResult/ScanResult')),
+      component: dynamicWrapper(app, ['scanResult'], () =>
+        import('../routes/ScanResult/ScanResult')
+      ),
     },
     '/report/:id': {
       component: dynamicWrapper(app, ['report'], () => import('../routes/Report/Report')),
+    },
+    '/shippingReport/:id': {
+      component: dynamicWrapper(app, ['shippingReport'], () => import('../routes/ShippingReport')),
     },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),

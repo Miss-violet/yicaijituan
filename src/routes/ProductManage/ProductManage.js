@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Modal, Table, Tooltip, Badge, Button } from 'antd';
 
-import classNames from 'classnames'
+import classNames from 'classnames';
 
 import BasicDataList from './BasicDataList/BasicDataList';
 import commonStyles from '../../assets/style/common.less';
@@ -14,8 +14,6 @@ import commonStyles from '../../assets/style/common.less';
   productDetail: productManage.productDetail,
   data: productManage.data,
 }))
-
-
 export default class ProductManage extends Component {
   constructor() {
     super();
@@ -25,28 +23,28 @@ export default class ProductManage extends Component {
     };
   }
   check = (record, e) => {
-    e.preventDefault()
-    const { id } = record
+    e.preventDefault();
+    const { id } = record;
     this.props.dispatch({
       type: 'productManage/queryStandardTitleList',
       payload: {
         productId: id,
         type: 0,
       },
-    })
+    });
     this.props.dispatch({
       type: 'productManage/queryStandardTitleList',
       payload: {
         productId: id,
         type: 1,
       },
-    })
+    });
     this.props.dispatch({
       type: 'productManage/standardParamsQuery',
       payload: {
         productId: id,
       },
-    })
+    });
     this.setState({
       standardsVisible: true,
       proName: record.name,
@@ -64,13 +62,13 @@ export default class ProductManage extends Component {
   };
   render() {
     const {
-       dispatch,
+      dispatch,
       standardRowTitleData,
       standardColumnTitleData,
       standardParams,
       productDetail,
-     } = this.props
-    let { data } = this.props
+    } = this.props;
+    let { data } = this.props;
     const columns = [
       {
         title: '名称',
@@ -111,18 +109,18 @@ export default class ProductManage extends Component {
         title: '标准',
         dataIndex: 'standards',
         render: (text, record) => {
-          if (!record.standardDataFlag) return (
-            <Tooltip title="请先编辑标准后再查看">
-              <span>
+          if (!record.standardDataFlag)
+            return (
+              <Tooltip title="请先编辑标准后再查看">
+                <span>查看标准</span>
+              </Tooltip>
+            );
+          else
+            return (
+              <a href="#" onClick={e => this.check(record, e)}>
                 查看标准
-              </span>
-            </Tooltip>
-          )
-          else return (
-            <a href="#" onClick={(e) => this.check(record, e)}>
-              查看标准
-            </a>
-          )
+              </a>
+            );
         },
       },
     ];
@@ -213,9 +211,9 @@ export default class ProductManage extends Component {
       },
     ];
     fmFields = fmFields.map((item, index) => {
-      item.key = index
-      return item
-    })
+      item.key = index;
+      return item;
+    });
     const productProps = {
       columns,
       data,
@@ -254,23 +252,21 @@ export default class ProductManage extends Component {
         dispatch({
           type: 'productManage/info',
           payload,
-        })
+        });
       },
       addStandardTitle: payload => {
         dispatch({
           type: 'productManage/standardTitleCreate',
           payload,
-        })
+        });
       },
     };
     const { standardsVisible, proName } = this.state;
 
-    const tableStyle =
-      classNames({
-        [commonStyles.table]: true,
-        [commonStyles.standardsTable]: true,
-      })
-
+    const tableStyle = classNames({
+      [commonStyles.table]: true,
+      [commonStyles.standardsTable]: true,
+    });
 
     return (
       <div>
@@ -292,47 +288,36 @@ export default class ProductManage extends Component {
               <tr>
                 <th style={{ width: '15%' }}>项目名称</th>
                 <th style={{ width: '15%' }}>类型</th>
-                {
-                  standardColumnTitleData && standardColumnTitleData.map(columnItem => {
-                    const { id: columnId, name } = columnItem
+                {standardColumnTitleData &&
+                  standardColumnTitleData.map(columnItem => {
+                    const { id: columnId, name } = columnItem;
                     return (
-                      <th key={columnId} style={{ width: `${60 / standardColumnTitleData.length}%` }}>
+                      <th
+                        key={columnId}
+                        style={{ width: `${60 / standardColumnTitleData.length}%` }}
+                      >
                         {name}
                       </th>
-                    )
-                  })
-                }
+                    );
+                  })}
                 <th style={{ width: '10%' }}>保留的小数点位数</th>
               </tr>
             </thead>
             <tbody>
-              {
-                standardParams && standardParams.map(dataItem => {
-                  const { rowId: id, rowTitle, params } = dataItem
+              {standardParams &&
+                standardParams.map(dataItem => {
+                  const { rowId: id, rowTitle, params } = dataItem;
                   return (
                     <tr key={id}>
-                      <td>
-                        {rowTitle}
-                      </td>
-                      <td >
-                        {params[0].type === 0 ? '≤（小于等于）' : '≥（大于等于）'}
-                      </td>
-                      {
-                        params.map(item => {
-                          return (
-                            <td key={item.id}>
-                              {item.val}
-                            </td>
-                          )
-                        })
-                      }
-                      <td>
-                        {params[0].pointNum}
-                      </td>
+                      <td>{rowTitle}</td>
+                      <td>{params[0].type === 0 ? '≤（小于等于）' : '≥（大于等于）'}</td>
+                      {params.map(item => {
+                        return <td key={item.id}>{item.val}</td>;
+                      })}
+                      <td>{params[0].pointNum}</td>
                     </tr>
-                  )
-                })
-              }
+                  );
+                })}
             </tbody>
           </table>
         </Modal>

@@ -33,8 +33,8 @@ export default {
     *log({ payload }, { call, put }) {
       const res = yield call(log, payload);
       if (res.code === 0) {
-        const { data } = res
-        const { currentPage: current, pageSize, total, rows } = data
+        const { data } = res;
+        const { currentPage: current, pageSize, total, rows } = data;
         yield put({
           type: 'success',
           payload: {

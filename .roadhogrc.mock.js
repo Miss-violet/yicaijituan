@@ -18,6 +18,8 @@ import { queryCompanyListAll } from './mock/companyManage'
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
 
+console.info('noProxy->', noProxy)
+
 // 代码中会兼容本地 service mock 以及部署站点的静态数据
 const proxy = {
   // 支持值为 Object 和 Array
@@ -83,6 +85,7 @@ const proxy = {
     console.info('/api/loginSubmit')
     const { password, loginName, type } = req.body;
     if (password === '888888' && loginName === 'admin') {
+      console.info('inn')
       res.send({
         code: 0,
         type,
@@ -213,7 +216,7 @@ const proxy = {
   'POST /api/company/listAll': queryCompanyListAll,
 };
 
-// export default (noProxy ? {} : delay(proxy, 1000));
-export default {
-  'GET /api/(.*)': 'http://www.yicaijituan.cn:8090/api/',
-};
+export default (noProxy ? {} : delay(proxy, 1000));
+// export default {
+//   'GET /api/(.*)': 'http://www.yicaijituan.cn:8090/api/',
+// };

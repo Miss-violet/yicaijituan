@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import { Modal, Form, Row, Col, Select, Input, DatePicker, InputNumber, Button, AutoComplete } from 'antd';
-import moment from 'moment';
+import {
+  Modal,
+  Form,
+  Row,
+  Col,
+  Select,
+  Input,
+  DatePicker,
+  InputNumber,
+  Button,
+  AutoComplete,
+} from 'antd';
+import * as moment from 'moment';
 import { connect } from 'dva';
-import classNames from 'classnames'
-import { filterEmpty } from '../../utils/utils'
+import classNames from 'classnames';
+import { filterEmpty } from '../../utils/utils';
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
 
@@ -14,7 +25,6 @@ const { Option } = Select;
   standardColumnTitleData: productManage.standardColumnTitleData,
   productDetail: productManage.productDetail,
 }))
-
 class EditModal extends Component {
   constructor(props) {
     super(props);
@@ -23,14 +33,14 @@ class EditModal extends Component {
       confirmLoading: false,
       carData: [],
       standardsData: '',
-      levelSelected: '',                /* 选中的级别 id */
-      levelSelectedName: '',            /* 选中的级别 name */
-      productName: '',                  /* 选中的产品名称 */
-      distributorName: '',              /* 选中的客户名称 */
-      supplierName: '',                 /* 选中的生厂商名称 */
-      remark: '',                       /* 打印备注 */
-      changeLevel: false,               /* 修改了级别 */
-      validateStatus: [],               /* 设置标准值校验提示 */
+      levelSelected: '' /* 选中的级别 id */,
+      levelSelectedName: '' /* 选中的级别 name */,
+      productName: '' /* 选中的产品名称 */,
+      distributorName: '' /* 选中的客户名称 */,
+      supplierName: '' /* 选中的生厂商名称 */,
+      remark: '' /* 打印备注 */,
+      changeLevel: false /* 修改了级别 */,
+      validateStatus: [] /* 设置标准值校验提示 */,
       allowApprover: 0,
     };
   }
@@ -72,14 +82,30 @@ class EditModal extends Component {
       standardColumnTitleData,
     } = this.props;
 
-    const { productId, columnTitle, title, outTime, allowModifyOutTime, deliveryTime, supplierId, techno, carNo, distributorId, customer, flyashSource, relationCode, poundCode } = selectedDetail
+    const {
+      productId,
+      columnTitle,
+      title,
+      outTime,
+      allowModifyOutTime,
+      deliveryTime,
+      supplierId,
+      techno,
+      carNo,
+      distributorId,
+      customer,
+      flyashSource,
+      relationCode,
+      poundCode,
+    } = selectedDetail;
 
-    const { allowApprover } = this.state
+    const { allowApprover } = this.state;
 
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
-    const productEnabled = productSelectList.filter(item => item.status === 0 && item.standardDataFlag !== 0);
-
+    const productEnabled = productSelectList.filter(
+      item => item.status === 0 && item.standardDataFlag !== 0
+    );
 
     const formItemLayout = {
       labelCol: {
@@ -106,24 +132,23 @@ class EditModal extends Component {
      * 3、级别下拉框的值也需要做修改
      */
     const handleProductChange = proId => {
-      const { dispatch, form } = this.props
+      const { dispatch, form } = this.props;
       const proSelected = productEnabled.find(item => item.id === proId);
-      const { name, id, remark, printName } = proSelected
+      const { name, id, remark, printName } = proSelected;
 
       dispatch({
         type: 'productManage/info',
         payload: {
           productId: proId,
         },
-        callback: (res) => {
+        callback: res => {
           if (res.code === 0) {
             this.setState({
               allowApprover: res.data.allowApprover,
-            })
+            });
           }
         },
-      })
-
+      });
 
       dispatch({
         type: 'productManage/queryStandardTitleList',
@@ -131,36 +156,36 @@ class EditModal extends Component {
           productId: id,
           type: 0,
         },
-      })
+      });
       dispatch({
         type: 'productManage/queryStandardTitleList',
         payload: {
           productId: id,
           type: 1,
         },
-        callback: (res) => {
+        callback: res => {
           if (res.code === 0) {
-            setFieldsValue({ columnTitle: '' })
+            setFieldsValue({ columnTitle: '' });
             this.setState({
               levelSelected: '',
               levelSelectedName: '',
-            })
+            });
           }
         },
-      })
+      });
       dispatch({
         type: 'productManage/standardParamsQuery',
         payload: {
           productId: id,
         },
-        callback: (standardParams) => {
+        callback: standardParams => {
           this.setState({
             standardsData: standardParams,
             productName: name,
             remark,
           });
         },
-      })
+      });
 
       form.setFields({
         title: {
@@ -211,7 +236,7 @@ class EditModal extends Component {
         if (item.id === SupplierId) {
           supplierName = item.name;
         }
-        return item
+        return item;
       });
       this.setState({
         supplierName,
@@ -249,11 +274,11 @@ class EditModal extends Component {
       fetch(value);
     };
     const handleFocus = () => {
-      const { cars } = this.props
+      const { cars } = this.props;
       this.setState({
         carData: cars,
-      })
-    }
+      });
+    };
     return (
       <div>
         <fieldset>
@@ -272,9 +297,13 @@ class EditModal extends Component {
                 })(
                   <Select onChange={handleProductChange} disabled={productDisabled}>
                     {productEnabled &&
-                      productEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      productEnabled.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -286,17 +315,16 @@ class EditModal extends Component {
                       message: '请选择级别',
                     },
                   ],
-                  initialValue:
-                    columnTitle !== undefined ? String(columnTitle) : '',
+                  initialValue: columnTitle !== undefined ? String(columnTitle) : '',
                 })(
                   <Select onChange={handleLevelChange} disabled={disabled}>
-                    {
-                      standardColumnTitleData.map(
-                        item => <Option value={item.id} key={item.id}>{item.name}</Option>
-                      )
-                    }
+                    {standardColumnTitleData.map(item => (
+                      <Option value={item.id} key={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -330,7 +358,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={allowModifyOutTime === 0 || disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -351,7 +379,7 @@ class EditModal extends Component {
                     className={styles.datepicker}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -367,9 +395,13 @@ class EditModal extends Component {
                 })(
                   <Select onChange={handleSupplierChange} disabled={disabled}>
                     {manufacturerEnabled &&
-                      manufacturerEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      manufacturerEnabled.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -386,7 +418,7 @@ class EditModal extends Component {
                   <Select disabled={disabled}>
                     <Option value="0">分选</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -424,7 +456,7 @@ class EditModal extends Component {
                     style={this.props.style}
                     disabled={disabled}
                   />
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -438,11 +470,21 @@ class EditModal extends Component {
                   ],
                   initialValue: distributorId,
                 })(
-                  <Select onChange={handleDistributorChange} disabled={disabled} allowClear showSearch optionFilterProp="children">
+                  <Select
+                    onChange={handleDistributorChange}
+                    disabled={disabled}
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                  >
                     {companyEnabled &&
-                      companyEnabled.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                      companyEnabled.map(item => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -470,11 +512,11 @@ class EditModal extends Component {
                   initialValue: flyashSource,
                 })(
                   <Select disabled={disabled}>
-                    <Option value='麦特'>麦特</Option>
-                    <Option value='嵩屿'>嵩屿</Option>
-                    <Option value='后石'>后石</Option>
+                    <Option value="麦特">麦特</Option>
+                    <Option value="嵩屿">嵩屿</Option>
+                    <Option value="后石">后石</Option>
                   </Select>
-                  )}
+                )}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -515,7 +557,7 @@ class EditModal extends Component {
     const { disabled, selectedDetail, standardColumnTitleData, productDetail } = this.props;
     const { getFieldDecorator } = this.props.form;
     const { columnId } = selectedDetail;
-    const { footContent, footName, headName, headResult, headTitle } = productDetail
+    const { footContent, footName, headName, headResult, headTitle } = productDetail;
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -532,33 +574,37 @@ class EditModal extends Component {
           content: `请先选择级别`,
           okText: '知道了',
         });
-        return
+        return;
       }
 
       let levelStandards = 0;
-      const { value } = event.target
+      const { value } = event.target;
 
-      let { type, pointNum, standardName } = standardsItem
+      let { type, pointNum, standardName } = standardsItem;
       /* 如果修改了品名，standardsItem 中没有standardName,则需要取 rowTitle 的值 */
-      standardName = standardName || standardsItem.rowTitle
+      standardName = standardName || standardsItem.rowTitle;
 
       /* 如果修改了品名，standardsItem 中没有 type 和 pointNum */
-      type = type || standardsItem.params[0].type
-      pointNum = pointNum || standardsItem.params[0].pointNum
+      type = type || standardsItem.params[0].type;
+      pointNum = pointNum || standardsItem.params[0].pointNum;
 
       standardsItem.params.map(paramsItem => {
         if (paramsItem.columnId === columnId || paramsItem.columnId === levelSelected) {
-          const { val } = paramsItem
-          levelStandards = Number(val)
+          const { val } = paramsItem;
+          levelStandards = Number(val);
         }
-        return paramsItem
-      })
+        return paramsItem;
+      });
       /* 检验是否为空 */
-      if ((standardName !== '强度活性指数（%）' && standardName !== '强度活性指数(%)') && (value === '' || value === null)) {
+      if (
+        standardName !== '强度活性指数（%）' &&
+        standardName !== '强度活性指数(%)' &&
+        (value === '' || value === null)
+      ) {
         validateStatus[standardsItem.orderSort - 1] = {
           status: 'error',
           help: `${standardName}的检验结果不能为空值`,
-        }
+        };
         this.setState({
           validateStatus,
         });
@@ -567,7 +613,7 @@ class EditModal extends Component {
           content: `${standardName}的检验结果不能为空值`,
           okText: '知道了',
         });
-        return false
+        return false;
       }
       /**
        *  type===1：大于等于
@@ -578,7 +624,7 @@ class EditModal extends Component {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的检验结果须大于等于国家标准值${levelStandards}`,
-          }
+          };
           this.setState({
             validateStatus,
           });
@@ -587,13 +633,13 @@ class EditModal extends Component {
             content: `${standardName}的检验结果须大于等于国家标准值${levelStandards}`,
             okText: '知道了',
           });
-          return
+          return;
         }
         if (type === 0 && value && Number(value) > levelStandards) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的检验结果须小于等于国家标准值${levelStandards}`,
-          }
+          };
           this.setState({
             validateStatus,
           });
@@ -602,13 +648,13 @@ class EditModal extends Component {
             content: `${standardName}的检验结果须小于等于国家标准值${levelStandards}`,
             okText: '知道了',
           });
-          return
+          return;
         }
         if (pointNum === 0 && value && value.indexOf('.') !== -1) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，请填写整数`,
-          }
+          };
           this.setState({
             validateStatus,
           });
@@ -617,13 +663,13 @@ class EditModal extends Component {
             content: `${standardName}的小数位与产品设置不符合，请填写整数`,
             okText: '知道了',
           });
-          return
+          return;
         }
         if (pointNum > 0 && value && value.indexOf('.') === -1) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
-          }
+          };
           this.setState({
             validateStatus,
           });
@@ -632,13 +678,13 @@ class EditModal extends Component {
             content: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
             okText: '知道了',
           });
-          return
+          return;
         }
         if (pointNum > 0 && value && value.length - value.indexOf('.') - 1 !== pointNum) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
-          }
+          };
           this.setState({
             validateStatus,
           });
@@ -647,7 +693,7 @@ class EditModal extends Component {
             content: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
             okText: '知道了',
           });
-          return
+          return;
         }
       }
       this.setState({
@@ -655,11 +701,10 @@ class EditModal extends Component {
       });
     };
 
-    const tableStyle =
-      classNames({
-        [commonStyles.table]: true,
-        [commonStyles.standardsTable]: true,
-      })
+    const tableStyle = classNames({
+      [commonStyles.table]: true,
+      [commonStyles.standardsTable]: true,
+    });
 
     return (
       <div>
@@ -671,36 +716,53 @@ class EditModal extends Component {
             <table className={tableStyle}>
               <thead>
                 <tr>
-                  <th rowSpan="2" style={{ width: '16%' }}>{headName}</th>
-                  <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>{headTitle}</th>
-                  <th rowSpan="2" style={{ width: '10%' }}>{headResult}</th>
+                  <th rowSpan="2" style={{ width: '16%' }}>
+                    {headName}
+                  </th>
+                  <th colSpan={standardColumnTitleData.length} style={{ width: '74%' }}>
+                    {headTitle}
+                  </th>
+                  <th rowSpan="2" style={{ width: '10%' }}>
+                    {headResult}
+                  </th>
                 </tr>
                 <tr>
-                  {
-                    standardColumnTitleData && standardColumnTitleData.map(item => <th key={item.id} style={{ width: `${74 / standardColumnTitleData.length}%` }}>{item.name}</th>)
-                  }
+                  {standardColumnTitleData &&
+                    standardColumnTitleData.map(item => (
+                      <th
+                        key={item.id}
+                        style={{ width: `${74 / standardColumnTitleData.length}%` }}
+                      >
+                        {item.name}
+                      </th>
+                    ))}
                 </tr>
               </thead>
               <tbody>
-                {
-                  standardsData && standardsData.map((standardsItem, index) => {
-                    const { id, rowId, rowTitle, standardName, standardId, params, parameter } = standardsItem
-                    const parameterId = id || rowId
+                {standardsData &&
+                  standardsData.map((standardsItem, index) => {
+                    const {
+                      id,
+                      rowId,
+                      rowTitle,
+                      standardName,
+                      standardId,
+                      params,
+                      parameter,
+                    } = standardsItem;
+                    const parameterId = id || rowId;
                     return (
                       <tr key={rowId || standardId}>
-                        <td>
-                          {rowTitle || standardName}
-                        </td>
-                        {
-                          params.map((item) => {
-                            const { id: itemId, val, type } = item
-                            return (
-                              <td key={itemId}>
-                                {type === 0 ? '≤' : '≥'}{val}
-                              </td>
-                            )
-                          })
-                        }
+                        <td>{rowTitle || standardName}</td>
+                        {params.map(item => {
+                          const { id: itemId, val, type } = item;
+                          return (
+                            <td key={itemId}>
+                              {type === 0 ? '≤' : '≥'}
+                              {val}
+                            </td>
+                          );
+                        })}
                         <td>
                           <FormItem
                             validateStatus={validateStatus[index] && validateStatus[index].status}
@@ -720,13 +782,12 @@ class EditModal extends Component {
                                 onBlur={e => inputOnBlur(e, standardsItem)}
                                 disabled={disabled}
                               />
-                              )}
+                            )}
                           </FormItem>
                         </td>
                       </tr>
-                    )
-                  })
-                }
+                    );
+                  })}
               </tbody>
               <tfoot>
                 <tr>
@@ -734,7 +795,8 @@ class EditModal extends Component {
                   <td colSpan={standardColumnTitleData.length + 4}>
                     <div>
                       <p>
-                        {footContent} <span className={styles.resultLevel}>{levelSelectedName}</span>技术要求。
+                        {footContent}{' '}
+                        <span className={styles.resultLevel}>{levelSelectedName}</span>技术要求。
                       </p>
                       <p>{remark}</p>
                     </div>
@@ -752,8 +814,16 @@ class EditModal extends Component {
   getInfo = () => {
     const { getFieldDecorator } = this.props.form;
     const { selectedDetail, disabled } = this.props;
-    const { grossWeight, tareWeight, netWeight, checker, auditor, batchNo, approver } = selectedDetail
-    const { allowApprover } = this.state
+    const {
+      grossWeight,
+      tareWeight,
+      netWeight,
+      checker,
+      auditor,
+      batchNo,
+      approver,
+    } = selectedDetail;
+    const { allowApprover } = this.state;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -795,7 +865,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -815,7 +885,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
           <Col {...formColLayout}>
@@ -835,7 +905,7 @@ class EditModal extends Component {
                   disabled={disabled}
                   style={{ width: '100%' }}
                 />
-                )}
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -879,23 +949,21 @@ class EditModal extends Component {
               })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
-          {
-            allowApprover === 1 && (
-              <Col {...formColLayout}>
-                <FormItem label="审批员" {...formItemLayout}>
-                  {getFieldDecorator('approver', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请填写审批员',
-                      },
-                    ],
-                    initialValue: approver,
-                  })(<Input disabled={disabled} />)}
-                </FormItem>
-              </Col>
-            )
-          }
+          {allowApprover === 1 && (
+            <Col {...formColLayout}>
+              <FormItem label="审批员" {...formItemLayout}>
+                {getFieldDecorator('approver', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写审批员',
+                    },
+                  ],
+                  initialValue: approver,
+                })(<Input disabled={disabled} />)}
+              </FormItem>
+            </Col>
+          )}
         </Row>
       </div>
     );
@@ -903,34 +971,42 @@ class EditModal extends Component {
 
   /* 检验结果 文本框 输入时的校验  */
   validateParameter = (rule, value, callback, standardsItem) => {
-    if (standardsItem.rowTitle !== '强度活性指数（%）' && standardsItem.rowTitle !== '强度活性指数(%)' && isNaN(Number(value))) {
-      callback('请输入数字')
-      return
+    if (
+      standardsItem.rowTitle !== '强度活性指数（%）' &&
+      standardsItem.rowTitle !== '强度活性指数(%)' &&
+      isNaN(Number(value))
+    ) {
+      callback('请输入数字');
+      return;
     }
-    const { levelSelected } = this.state
+    const { levelSelected } = this.state;
     if (!levelSelected) {
-      callback('请先选择级别')
-      return
+      callback('请先选择级别');
+      return;
     }
     let levelStandards = 0;
-    let { type, pointNum, standardName } = standardsItem
+    let { type, pointNum, standardName } = standardsItem;
     const { columnId } = this.props.selectedDetail;
     standardsItem.params.forEach(paramsItem => {
       if (paramsItem.columnId === columnId || paramsItem.columnId === levelSelected) {
-        const { val } = paramsItem
-        levelStandards = Number(val)
+        const { val } = paramsItem;
+        levelStandards = Number(val);
       }
-    })
+    });
 
     /* 如果修改了品名，standardsItem 中没有standardName,则需要取 rowTitle 的值 */
-    standardName = standardName || standardsItem.rowTitle
+    standardName = standardName || standardsItem.rowTitle;
 
     /* 如果修改了品名，standardsItem 中没有 type 和 pointNum */
-    type = type || standardsItem.params[0].type
-    pointNum = pointNum || standardsItem.params[0].pointNum
+    type = type || standardsItem.params[0].type;
+    pointNum = pointNum || standardsItem.params[0].pointNum;
 
     /* 检验是否为空 */
-    if ((standardName !== '强度活性指数（%）' && standardName !== '强度活性指数(%)') && (value === '' || value === null)) {
+    if (
+      standardName !== '强度活性指数（%）' &&
+      standardName !== '强度活性指数(%)' &&
+      (value === '' || value === null)
+    ) {
       callback({ message: '检验结果不能为空值' });
       return;
     }
@@ -949,16 +1025,16 @@ class EditModal extends Component {
         return;
       }
       if (pointNum === 0 && value && value.indexOf('.') !== -1) {
-        callback({ message: `请填写整数` })
-        return
+        callback({ message: `请填写整数` });
+        return;
       }
       if (pointNum > 0 && value && value.indexOf('.') === -1) {
-        callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` })
-        return
+        callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` });
+        return;
       }
       if (pointNum > 0 && value && value.length - value.indexOf('.') - 1 !== pointNum) {
-        callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` })
-        return
+        callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` });
+        return;
       }
     }
     callback();
@@ -973,76 +1049,80 @@ class EditModal extends Component {
     this.props.form.validateFieldsAndScroll((err, fmValues) => {
       if (!err) {
         let { standardsData } = this.state;
-        const { validateStatus } = this.state
-        const filterFmValues = filterEmpty(fmValues)
+        const { validateStatus } = this.state;
+        const filterFmValues = filterEmpty(fmValues);
 
         /* 日期格式转化 */
         const values = {
           ...filterFmValues,
           deliveryTime: moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
           outTime: moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss'),
-        }
+        };
 
-        const { standardColumnTitleData } = this.props
-        const { columnTitle, ...restValue } = values
-        let columnName = ''
+        const { standardColumnTitleData } = this.props;
+        const { columnTitle, ...restValue } = values;
+        let columnName = '';
         standardColumnTitleData.forEach(item => {
           if (item.id === columnTitle) {
-            columnName = item.name
+            columnName = item.name;
           }
-        })
-        const { changeLevel } = this.state
+        });
+        const { changeLevel } = this.state;
         /* 如果级别被做了修改，则需要在提交前校验一遍 */
         if (changeLevel) {
-          const validateName = []
+          const validateName = [];
           for (const i in values) {
             if (Number(i)) {
               standardsData.forEach(dataItem => {
                 if (Number(i) === dataItem.id) {
-                  const { params, standardName } = dataItem
-                  const { val, type } = params.find(paramsItem => paramsItem.columnId === values.columnTitle)
+                  const { params, standardName } = dataItem;
+                  const { val, type } = params.find(
+                    paramsItem => paramsItem.columnId === values.columnTitle
+                  );
                   /**
                    *  type===1：大于等于
                    *  type===0：小于等于
                    */
                   if ((type === 0 && values[i] > val) || (type === 1 && values[i] < val)) {
-                    validateName.push(standardName)
-                    validateStatus.push({ status: 'error', help: `${values[i]}的值应该${type === 0 ? '小于等于' : '大于等于'}${val}` })
+                    validateName.push(standardName);
+                    validateStatus.push({
+                      status: 'error',
+                      help: `${values[i]}的值应该${type === 0 ? '小于等于' : '大于等于'}${val}`,
+                    });
                   } else {
-                    validateStatus.push({ status: 'success' })
+                    validateStatus.push({ status: 'success' });
                   }
                 }
-              })
-
+              });
             }
           }
           if (validateName.length > 0) {
             this.setState({
               validateStatus,
-            })
+            });
             Modal.warning({
               title: '警告',
               content: `请检查以下标准值${validateName.join(',')}后再保存`,
               okText: '知道了',
             });
-            return
+            return;
           }
         }
 
         if (this.props.type === 'add') {
           /* 把填写的检验结果值填入，传给后端 */
-          const standards = []
+          const standards = [];
           for (const i in values) {
             if (Number(i)) {
               standardsData.forEach(standardsItem => {
                 if (standardsItem.rowId === Number(i)) {
-                  const { rowTitle, params } = standardsItem
+                  const { rowTitle, params } = standardsItem;
                   standards.push({
                     id: '',
                     standardId: params.find(item => item.columnId === columnTitle).id,
                     standardName: rowTitle,
                     parameter: String(values[i]) || '',
-                  })
+                  });
                 }
               });
             }
@@ -1059,10 +1139,9 @@ class EditModal extends Component {
               supplierName,
             },
           });
-        }
-        else if (this.props.type === 'edit') {
-          const { companyAllSelectList, manufacturerSelectList, productSelectList } = this.props
-          const { distributorId, supplierId, productId } = values
+        } else if (this.props.type === 'edit') {
+          const { companyAllSelectList, manufacturerSelectList, productSelectList } = this.props;
+          const { distributorId, supplierId, productId } = values;
           if (distributorName === '') {
             companyAllSelectList.map(item => {
               if (item.id === distributorId) {
@@ -1076,16 +1155,16 @@ class EditModal extends Component {
               if (item.id === supplierId) {
                 supplierName = item.name;
               }
-              return item
+              return item;
             });
           }
           if (productName === '') {
             productSelectList.map(item => {
               if (item.id === productId) {
-                productName = item.name
+                productName = item.name;
               }
-              return item
-            })
+              return item;
+            });
           }
 
           /* 把填写的检验结果值填入，传给后端 */
@@ -1093,15 +1172,15 @@ class EditModal extends Component {
             if (Number(i)) {
               standardsData = standardsData.map(standardsItem => {
                 if (standardsItem.id === Number(i)) {
-                  const { id, standardId, standardName } = standardsItem
+                  const { id, standardId, standardName } = standardsItem;
                   return {
                     id,
                     standardId,
                     standardName,
                     parameter: String(values[i]) || '',
-                  }
+                  };
                 }
-                return standardsItem
+                return standardsItem;
               });
             }
           }
@@ -1137,13 +1216,13 @@ class EditModal extends Component {
   };
 
   closeModal = () => {
-    const { closeModal } = this.props
+    const { closeModal } = this.props;
     this.setState({
       changeLevel: false,
       validateStatus: [],
-    })
-    closeModal()
-  }
+    });
+    closeModal();
+  };
 
   render() {
     const { visible, confirmLoading } = this.state;
@@ -1185,4 +1264,4 @@ class EditModal extends Component {
     );
   }
 }
-export default Form.create()(EditModal)
+export default Form.create()(EditModal);

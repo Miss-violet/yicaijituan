@@ -74,9 +74,9 @@ function accMul(arg1, arg2) {
   let m = 0;
   const s1 = arg1.toString();
   const s2 = arg2.toString();
-  m += s1.split(".").length > 1 ? s1.split(".")[1].length : 0;
-  m += s2.split(".").length > 1 ? s2.split(".")[1].length : 0;
-  return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / 10 ** m;
+  m += s1.split('.').length > 1 ? s1.split('.')[1].length : 0;
+  m += s2.split('.').length > 1 ? s2.split('.')[1].length : 0;
+  return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / 10 ** m;
 }
 
 export function digitUppercase(n) {
@@ -107,7 +107,6 @@ export function digitUppercase(n) {
 
 function getRelation(str1, str2) {
   if (str1 === str2) {
-
   }
   const arr1 = str1.split('/');
   const arr2 = str2.split('/');
@@ -174,7 +173,7 @@ export function toDecimal(number, pointNum) {
   }
   const numberRound = Math.round(number * 100) / 100;
   let numberToString = numberRound.toString();
-  let pointLastIndex = numberToString.lastIndexOf('.')
+  let pointLastIndex = numberToString.lastIndexOf('.');
   /* 如果 number 是个整数，则添加小数点（.） */
   if (pointLastIndex < 0 && pointNum > 0) {
     numberToString += '.';
@@ -182,12 +181,12 @@ export function toDecimal(number, pointNum) {
   }
   /* 如果 number 带小数 */
   if (pointLastIndex > 0 && pointLastIndex + 1 < pointNum) {
-    pointLastIndex = numberToString.length - 1
+    pointLastIndex = numberToString.length - 1;
   }
   while (numberToString.length < pointLastIndex + pointNum) {
     numberToString += '0';
   }
-  return numberToString
+  return numberToString;
 }
 
 /**
@@ -204,4 +203,4 @@ export function filterEmpty(objData) {
     }
   }
   return objData;
-};
+}

@@ -1,20 +1,19 @@
 import { routerRedux } from 'dva/router';
-import { create, update, userList, vaildateLoginName } from '../services/userManage';
-import { companyList } from '../services/companyManage';
+import { shippingList, create, update, info, del } from '../services/shipping';
 
 export default {
-  namespace: 'userManage',
+  namespace: 'shipping',
 
   state: {
-    companySelectList: [],
-    data: [],
+    listData: [],
     total: '',
+    selectedDetail: {},
   },
 
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(location => {
-        if (location.pathname === '/userManage') {
+        if (location.pathname === '/shipping') {
           if (sessionStorage.getItem('token') === '') {
             dispatch(
               routerRedux.push({
@@ -24,13 +23,9 @@ export default {
           } else {
             dispatch({
               type: 'queryList',
-              payload: {},
-            });
-            /* 加载下拉框选项 */
-            dispatch({
-              type: 'querySelectList',
               payload: {
-                pageSize: 999999999,
+                pageIndex: 0,
+                pageSize: 20,
               },
             });
           }
@@ -40,6 +35,18 @@ export default {
   },
 
   effects: {
+    *queryList({ payload }, { call, put }) {
+      const queryRes = yield call(shippingList, payload);
+      if (queryRes.code === 0) {
+        yield put({
+          type: 'success',
+          payload: {
+            listData: queryRes.data.rows,
+            total: queryRes.data.total,
+          },
+        });
+      }
+    },
     *create({ payload }, { call, put }) {
       const res = yield call(create, payload);
       if (res.code === 0) {
@@ -54,6 +61,7 @@ export default {
           payload: {},
         });
       }
+      return res;
     },
     *edit({ payload }, { call, put }) {
       const res = yield call(update, payload);
@@ -69,33 +77,23 @@ export default {
           payload: {},
         });
       }
+      return res;
     },
-    *querySelectList({ payload }, { call, put }) {
-      const res = yield call(companyList, payload);
+    *info({ payload, callback }, { call, put }) {
+      const res = yield call(info, payload.id);
       if (res.code === 0) {
         yield put({
           type: 'success',
           payload: {
-            companySelectList: res.data.rows,
+            selectedDetail: res.data,
           },
         });
+        if (callback) callback(res.code, res.data);
       }
     },
-    *queryList({ payload }, { call, put }) {
-      const res = yield call(userList, payload);
-      if (res.code === 0) {
-        yield put({
-          type: 'success',
-          payload: {
-            data: res.data.rows,
-            total: res.data.total,
-          },
-        });
-      }
-    },
-    *vaildateLoginName({ payload, callback }, { call }) {
-      const res = yield call(vaildateLoginName, payload);
-      if (callback) callback(res.code);
+    *del({ payload }, { call }) {
+      const res = yield call(del, payload)
+      return res
     },
   },
 

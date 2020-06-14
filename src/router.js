@@ -7,7 +7,6 @@ import { getRouterData } from './common/router';
 import Authorized from './utils/Authorized';
 import styles from './index.less';
 
-
 const { ConnectedRouter } = routerRedux;
 const { AuthorizedRoute } = Authorized;
 
@@ -21,12 +20,14 @@ function RouterConfig({ history, app }) {
   const BasicLayout = routerData['/'].component;
   const Report = routerData['/report/:id'].component;
   const ScanResult = routerData['/scanResult/:id'].component;
+  const ShippingReport = routerData['/shippingReport/:id'].component;
   return (
     <LocaleProvider locale={zhCN}>
       <ConnectedRouter history={history}>
         <Switch>
           <Route path="/user" component={UserLayout} />
           <Route path="/report" component={Report} />
+          <Route path="/shippingReport" component={ShippingReport} />
           <Route path="/scanResult" component={ScanResult} />
           <AuthorizedRoute
             path="/"
