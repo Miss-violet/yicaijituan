@@ -68,7 +68,7 @@ class ShippingReport extends PureComponent {
                 return (
                   <div className={styles.td}>
                     <div style={{ letterSpacing, textIndent: letterSpacing }} className={styles.tdLabel}>{label}</div>
-                    <div className={styles.tdValue}>{value}</div>
+                    <div className={styles.tdValue}><span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{value}</span></div>
                   </div>
                 )
               })

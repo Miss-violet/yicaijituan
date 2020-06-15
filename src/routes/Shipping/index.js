@@ -85,13 +85,25 @@ class Index extends Component {
   handleSearch = values => {
     console.info('values->', values)
     const { params } = values;
+    let { startTime = '', endTime = '' } = params
+    startTime = startTime && moment(startTime).format('YYYY-MM-DD 00:00:00')
+    endTime = endTime && moment(endTime).format('YYYY-MM-DD 23:59:59')
     this.setState({
-      filterValue: params,
+      filterValue: {
+        ...params,
+        startTime,
+        endTime,
+      },
     });
     this.props.dispatch({
       type: 'shipping/queryList',
       payload: {
         ...values,
+        params: {
+          ...params,
+          startTime,
+          endTime,
+        },
       },
     });
   };
