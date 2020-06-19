@@ -1,12 +1,10 @@
 const path = require('path');
 
-const { ENV } = process.env
+const { ENV } = process.env;
 
 export default {
   entry: 'src/index.js',
-  extraBabelPlugins: [
-    ['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }],
-  ],
+  extraBabelPlugins: [['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }]],
   env: {
     development: {
       extraBabelPlugins: ['dva-hmr'],
@@ -25,14 +23,14 @@ export default {
   publicPath: '/',
   hash: true,
   proxy: {
-    "/api": {
-      "target": "http://www.yicaijituan.cn:8090/api/",
+    '/api': {
+      target: 'http://www.yicaijituan.cn:8090/api/',
       // "target": "http://119.23.210.125:8090/api/",
-      // "target": "http://test.linhy.cn:8090/api/",
-      "changeOrigin": true,
-      "pathRewrite": {
-        "^/api": ""
-      }
-    }
+      // target: 'http://test.linhy.cn:8090/api/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': '',
+      },
+    },
   },
 };

@@ -196,7 +196,7 @@ class UserManage extends Component {
         type: 'radio',
         required: true,
         defaultValue: 2,
-        data: function roleDataFunc() {
+        data: (function roleDataFunc() {
           /**
            * 根据 登录账号的角色 - role 来给予该账号可新建的用户角色
            * 超级管理员('0') - 可新建 超级管理员、管理员 和 成员
@@ -233,7 +233,7 @@ class UserManage extends Component {
               break;
           }
           return roleData;
-        },
+        })(),
       },
       {
         key: 5,
