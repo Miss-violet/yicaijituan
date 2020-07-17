@@ -4,8 +4,33 @@ import { getActivities, getNotice, getFakeList } from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { getProfileBasicData } from './mock/profile';
 import { getProfileAdvancedData } from './mock/profile';
+// import {getOutbound} from './mock/outbound'
 import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
+
+import {
+  getProductList,
+  getProductInfo,
+  createStandardTitle,
+  delStandardTitle,
+  editStandardTitle,
+  getStandardTitleList,
+  createStandardParams,
+  updateStandardParams,
+  queryStandardParams,
+} from './mock/productManage';
+
+import {
+  queryDeliveryList,
+  queryDeliveryCarsList,
+  queryDeliveryStatistics,
+  queryDeliveryInfo,
+  deliveryUpdate,
+} from './mock/outbound';
+
+import { queryMftList } from './mock/manufacturerManage';
+
+import { queryCompanyListAll } from './mock/companyManage';
 
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
@@ -133,6 +158,102 @@ const proxy = {
       error: 'Unauthorized',
       message: 'Unauthorized',
       path: '/base/category/list',
+    });
+  },
+  'POST /api/delivery/list': (req, res) => {
+    res.send({
+      code: '200',
+    });
+  },
+  'POST /api/product/list': getProductList,
+  'POST /api/product/info/*': getProductInfo,
+  'POST /api/standardTitle/create': createStandardTitle,
+  'POST /api/standardTitle/list/*/*': getStandardTitleList,
+  'POST /api/standardTitle/delete/*': delStandardTitle,
+  'POST /api/standardTitle/update': editStandardTitle,
+  'POST /api/standardParams/create': createStandardParams,
+  'POST /api/standardParams/update': updateStandardParams,
+  'POST /api/standardParams/list/*': queryStandardParams,
+  'POST /api/delivery/list': queryDeliveryList,
+  'POST /api/delivery/cars': queryDeliveryCarsList,
+  'POST /api/delivery/statistics': queryDeliveryStatistics,
+  'POST /api/delivery/info/*': queryDeliveryInfo,
+  'POST /api/delivery/update': deliveryUpdate,
+  'POST /api/mft/list': queryMftList,
+  'POST /api/company/listAll': queryCompanyListAll,
+  'POST /api/loginSubmit': (req, res) => {
+    console.info('/api/loginSubmit');
+    const { password, loginName, type } = req.body;
+    if (password === '888888' && loginName === 'admin') {
+      console.info('inn');
+      res.send({
+        code: 0,
+        type,
+        currentAuthority: 'admin',
+        msg: 'success',
+        success: true,
+        data: {
+          id: 41,
+          loginName: 'admin',
+          password: null,
+          userName: '平台管理员',
+          sex: 0,
+          birth: null,
+          phone: '',
+          address: null,
+          email: null,
+          role: 0,
+          status: null,
+          companyId: 73,
+          tenantCode: 'songneng',
+          token:
+            'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0MSIsInN1YiI6InVuaXF1ZSIsImlzcyI6InVuaXF1ZSIsImlhdCI6MTU1MDEyNTYwNCwiZXhwIjoxNTUwMTk3NjA0fQ.5zF-5a-u5agNrvJrPhWLs7MWecWKpOBm4ZR6SaNxv_M',
+          startTime: null,
+          endTime: null,
+        },
+      });
+      return;
+    }
+    if (password === '123456' && loginName === 'user') {
+      res.send({
+        status: 'ok',
+        type,
+        currentAuthority: 'user',
+      });
+      return;
+    }
+    res.send({
+      status: 'error',
+      type,
+      currentAuthority: 'guest',
+    });
+  },
+  'POST /api/user/info': (req, res) => {
+    res.send({
+      code: 0,
+      currentAuthority: 'admin',
+      msg: 'success',
+      success: true,
+      data: {
+        id: 41,
+        loginName: 'admin',
+        password: null,
+        userName: '平台管理员',
+        sex: 0,
+        birth: 1535644800000,
+        phone: '',
+        address: null,
+        email: null,
+        role: 0,
+        status: 0,
+        companyId: 73,
+        companyName: null,
+        tenantCode: 'songneng',
+        createBy: 'lld',
+        createTime: 1531185348000,
+        modifyTime: 1535679261000,
+        modifyBy: 'admin',
+      },
     });
   },
 };

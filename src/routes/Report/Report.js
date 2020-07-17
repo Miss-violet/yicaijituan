@@ -16,66 +16,65 @@ class Report extends Component {
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,
+      [styles.fontSize12]: detail.standards.length > 10,
     });
-    let techno = ''
-    let level = ''
+    const supplierNameStyle = classnames({
+      [styles.content]: true,
+      [styles.fontSize12]: detail.supplierName.length > 12,
+    });
+    let techno = '';
+    let level = '';
     switch (detail.techno) {
       case 0:
-        techno = '分选'
-        break
+        techno = '分选';
+        break;
       case 1:
-        techno = '加工灰（Ⅰ级）'
-        break
+        techno = '加工灰（Ⅰ级）';
+        break;
       case 2:
-        techno = '加工灰（Ⅱ级）'
-        break
+        techno = '加工灰（Ⅱ级）';
+        break;
       case 3:
-        techno = '原灰'
-        break
+        techno = '原灰';
+        break;
       case 4:
-        techno = '其他'
-        break
+        techno = '其他';
+        break;
       default:
-        break
+        break;
     }
     switch (detail.level) {
       case 0:
-        level = 'Ⅰ级'
-        break
+        level = 'Ⅰ级';
+        break;
       case 1:
-        level = 'Ⅱ级'
-        break
+        level = 'Ⅱ级';
+        break;
       case 2:
-        level = 'Ⅲ级'
-        break
+        level = 'Ⅲ级';
+        break;
       case 3:
-        level = 'Ⅲw级'
-        break
+        level = 'Ⅲw级';
+        break;
       case 4:
-        level = '干渣'
-        break
+        level = '干渣';
+        break;
       case 5:
-        level = '调湿灰'
-        break
+        level = '调湿灰';
+        break;
       default:
-        break
+        break;
     }
     return (
       <Row gutter={16} className={styles.row}>
         <Col span={8} className={styles.leftCol}>
-          <div className={styles.deliveryNo}>
-            No. {detail.deliveryNo}
-          </div>
+          <div className={styles.deliveryNo}>No. {detail.deliveryNo}</div>
           <h1 className={styles.productName}>
             <div>{detail.title}</div>
             <p className={styles.name}>出厂合格证</p>
           </h1>
           <div className={styles.qrCode}>
-            {
-              detail.qrcodeUrl !== null ? (
-                <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
-              ) : ''
-            }
+            {detail.qrcodeUrl !== null ? <img src={`${detail.qrcodeUrl}`} alt="qrCode" /> : ''}
           </div>
           <ul className={styles.leftList}>
             <li>
@@ -116,7 +115,7 @@ class Report extends Component {
             </li>
             <li>
               <span className={styles.label}>生产厂家：</span>
-              <div className={styles.content}>
+              <div className={supplierNameStyle}>
                 <span>{detail.supplierName}</span>
               </div>
             </li>
@@ -146,9 +145,7 @@ class Report extends Component {
                   </li>
                   <li>
                     <span className={styles.label}>类别：</span>
-                    <span className={styles.content}>
-                      {level}
-                    </span>
+                    <span className={styles.content}>{level}</span>
                   </li>
                 </ul>
               </Col>
@@ -160,10 +157,7 @@ class Report extends Component {
                   </li>
                   <li>
                     <span className={styles.label}>工艺：</span>
-                    <span className={styles.content}>{
-                      techno
-                    }
-                    </span>
+                    <span className={styles.content}>{techno}</span>
                   </li>
                   <li>
                     <span className={styles.label}>运输车号：</span>
@@ -173,72 +167,68 @@ class Report extends Component {
               </Col>
             </Row>
             <div className={styles.qrCode}>
-              {
-                detail.qrcodeUrl ? (
-                  <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
-                ) : ''
-              }
+              {detail.qrcodeUrl ? <img src={`${detail.qrcodeUrl}`} alt="qrCode" /> : ''}
             </div>
           </div>
-          {
-            (detail.level === 0 || detail.level === 1 || detail.level === 2) &&
-            (
-              <table className={table}>
-                <thead>
-                  <tr>
-                    <th rowSpan="2" className={styles.standardName}>项目</th>
-                    <th colSpan="3" className={styles.standards}>国家标准</th>
-                    <th rowSpan="2" className={styles.standardsResult}>检验结果</th>
-                  </tr>
-                  <tr>
-                    <th>Ⅰ级</th>
-                    <th>Ⅱ级</th>
-                    <th>Ⅲ级</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    /**
-                     *  item.type===1：大于等于
-                     *  item.type===0：小于等于
-                     */
-                    detail.standards &&
-                    detail.standards.map(item => (
-                      <tr>
-                        <td>{item.standardName}</td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.oneLevel}
-                        </td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.twoLevel}
-                        </td>
-                        <td className={commonStyles.alignRight}>
-                          {item.type === 0 ? '≤' : '≥'}
-                          {item.threeLevel}
-                        </td>
-                        <td className={commonStyles.alignRight}>{item.parameter}</td>
-                      </tr>
-                    ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td>结果评定</td>
-                    <td colSpan="4">
-                      <p>
-                        GB/T 1596-2017 国家标准F类
-                        <span className={styles.resultLevel}>
-                          {level}
-                        </span>技术要求。
-                      </p>
-                      <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            )
-          }
+          {(detail.level === 0 || detail.level === 1 || detail.level === 2) && (
+            <table className={table}>
+              <thead>
+                <tr>
+                  <th rowSpan="2" className={styles.standardName}>
+                    项目
+                  </th>
+                  <th colSpan="3" className={styles.standards}>
+                    国家标准
+                  </th>
+                  <th rowSpan="2" className={styles.standardsResult}>
+                    检验结果
+                  </th>
+                </tr>
+                <tr>
+                  <th>Ⅰ级</th>
+                  <th>Ⅱ级</th>
+                  <th>Ⅲ级</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/**
+                 *  item.type===1：大于等于
+                 *  item.type===0：小于等于
+                 */
+                detail.standards &&
+                  detail.standards.map(item => (
+                    <tr>
+                      <td>{item.standardName}</td>
+                      <td className={commonStyles.alignRight}>
+                        {item.type === 0 ? '≤' : '≥'}
+                        {item.oneLevel}
+                      </td>
+                      <td className={commonStyles.alignRight}>
+                        {item.type === 0 ? '≤' : '≥'}
+                        {item.twoLevel}
+                      </td>
+                      <td className={commonStyles.alignRight}>
+                        {item.type === 0 ? '≤' : '≥'}
+                        {item.threeLevel}
+                      </td>
+                      <td className={commonStyles.alignRight}>{item.parameter}</td>
+                    </tr>
+                  ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>结果评定</td>
+                  <td colSpan="4">
+                    <p>
+                      GB/T 1596-2017 国家标准F类
+                      <span className={styles.resultLevel}>{level}</span>技术要求。
+                    </p>
+                    <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          )}
           <Row gutter={16}>
             <Col span={6} offset={8}>
               审核员：{detail.auditor}
