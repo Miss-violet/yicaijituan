@@ -19,9 +19,16 @@ export default class Report extends Component {
   render() {
     const { detail, productDetail, standardColumnTitleData } = this.props;
     const { footContent, footName, headName, headResult, headTitle } = productDetail;
+    const footContentArray = footContent && footContent.split('@');
+    const startFootContent = footContentArray && footContentArray[0];
+    const endFootContent = footContentArray && (footContentArray[1] || '技术要求');
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,
+    });
+    const resultLevelStyle = classnames({
+      [styles.resultLevel]: true,
+      [styles.resultLevel_underline]: detail && detail.productId !== 45,
     });
     return (
       <Row gutter={16} className={styles.row}>
@@ -155,7 +162,7 @@ export default class Report extends Component {
                *  item.type===1：大于等于
                *  item.type===0：小于等于
                */
-                detail.standards &&
+              detail.standards &&
                 detail.standards.map(item => (
                   <tr>
                     <td style={{ whiteSpace: 'nowrap' }}>{item.standardName}</td>
@@ -174,8 +181,9 @@ export default class Report extends Component {
                 <td>{footName}</td>
                 <td colSpan={standardColumnTitleData.length + 4}>
                   <p>
-                    {footContent}
-                    <span className={styles.resultLevel}>{detail.columnTitle}</span>技术要求。
+                    {startFootContent}
+                    <span className={resultLevelStyle}>{detail.columnTitle}</span>
+                    {endFootContent}。
                   </p>
                   <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
                 </td>

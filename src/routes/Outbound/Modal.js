@@ -99,8 +99,6 @@ class EditModal extends Component {
       poundCode,
     } = selectedDetail;
 
-    const { allowApprover } = this.state;
-
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
     const companyEnabled = companyAllSelectList.filter(item => item.status === 0);
     const productEnabled = productSelectList.filter(
@@ -556,8 +554,12 @@ class EditModal extends Component {
     const { levelSelected, levelSelectedName, remark, standardsData, validateStatus } = this.state;
     const { disabled, selectedDetail, standardColumnTitleData, productDetail } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const { columnId } = selectedDetail;
+    const { columnId, productId } = selectedDetail;
+
     const { footContent, footName, headName, headResult, headTitle } = productDetail;
+    const footContentArray = footContent && footContent.split('@');
+    const startFootContent = footContentArray && footContentArray[0];
+    const endFootContent = footContentArray && (footContentArray[1] || '技术要求');
 
     const tableColLayout = {
       xs: { offset: 0 },
@@ -705,7 +707,10 @@ class EditModal extends Component {
       [commonStyles.table]: true,
       [commonStyles.standardsTable]: true,
     });
-
+    const resultLevelStyle = classNames({
+      [styles.resultLevel]: true,
+      [styles.resultLevel_underline]: productId !== 45,
+    });
     return (
       <div>
         <fieldset>
@@ -795,8 +800,9 @@ class EditModal extends Component {
                   <td colSpan={standardColumnTitleData.length + 4}>
                     <div>
                       <p>
-                        {footContent}{' '}
-                        <span className={styles.resultLevel}>{levelSelectedName}</span>技术要求。
+                        {startFootContent}{' '}
+                        <span className={resultLevelStyle}>{levelSelectedName}</span>
+                        {endFootContent}。
                       </p>
                       <p>{remark}</p>
                     </div>
