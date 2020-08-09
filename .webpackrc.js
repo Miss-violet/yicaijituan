@@ -22,15 +22,15 @@ export default {
   disableDynamicImport: true,
   publicPath: '/',
   hash: true,
-  // proxy: {
-  //   '/api': {
-  //     // target: 'http://www.yicaijituan.cn:8090/api/',
-  //     // "target": "http://119.23.210.125:8090/api/",
-  //     target: 'http://test.linhy.cn:8090/api/',
-  //     changeOrigin: true,
-  //     pathRewrite: {
-  //       '^/api': '',
-  //     },
-  //   },
-  // },
+  proxy: {
+    '/api': {
+      target: 'http://www.yicaijituan.cn:8090/api/',
+      // "target": "http://119.23.210.125:8090/api/",
+      // target: 'http://test.linhy.cn:8090/api/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': '',
+      },
+    },
+  },
 };
