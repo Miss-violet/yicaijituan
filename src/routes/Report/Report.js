@@ -16,11 +16,11 @@ class Report extends Component {
     const table = classnames({
       [commonStyles.table]: true,
       [styles.table]: true,
-      [styles.fontSize12]: detail.standards.length > 10,
+      [styles.fontSize12]: detail.standards && detail.standards.length > 10,
     });
     const supplierNameStyle = classnames({
       [styles.content]: true,
-      [styles.fontSize12]: detail.supplierName.length > 12,
+      [styles.fontSize12]: detail.supplierName && detail.supplierName.length > 12,
     });
     let techno = '';
     let level = '';
