@@ -20,6 +20,7 @@ import commonStyles from '../../assets/style/common.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const flyashDataSource = ['麦特', '嵩屿', '后石', '南浦', '雷州', '潮州'];
 
 @connect(({ productManage }) => ({
   standardColumnTitleData: productManage.standardColumnTitleData,
@@ -42,6 +43,7 @@ class EditModal extends Component {
       changeLevel: false /* 修改了级别 */,
       validateStatus: [] /* 设置标准值校验提示 */,
       allowApprover: 0,
+      flyashData: flyashDataSource,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -243,24 +245,24 @@ class EditModal extends Component {
     /* 车牌 */
     let timeout;
     // const options = this.state.carData.map(d => <Option key={d}>{d}</Option>);
-    const fetch = value => {
+    const fetch = ({ value, dataSource, stateName }) => {
       if (timeout) {
         clearTimeout(timeout);
         timeout = null;
       }
 
       const fake = () => {
-        const { cars } = this.props;
+        // const { cars } = this.props;
         const data = [];
 
-        cars.map(carItem => {
+        dataSource.map(item => {
           const reg = new RegExp(value);
-          if (carItem.match(reg)) {
-            data.push(carItem);
+          if (item.match(reg)) {
+            data.push(item);
           }
-          return carItem;
+          return item;
         });
-        this.setState({ carData: data });
+        this.setState({ [stateName]: data });
       };
 
       timeout = setTimeout(fake, 300);
@@ -269,13 +271,20 @@ class EditModal extends Component {
       this.props.form.setFieldsValue({
         carNo: value,
       });
-      fetch(value);
+      fetch({ value, dataSource: this.props.cars, stateName: 'carData' });
     };
     const handleFocus = () => {
       const { cars } = this.props;
       this.setState({
         carData: cars,
       });
+    };
+
+    const handleChangeFlyash = value => {
+      this.props.form.setFieldsValue({
+        flyashSource: value,
+      });
+      fetch({ value, dataSource: flyashDataSource, stateName: 'flyashData' });
     };
     return (
       <div>
@@ -509,11 +518,15 @@ class EditModal extends Component {
                   ],
                   initialValue: flyashSource,
                 })(
-                  <Select disabled={disabled}>
-                    <Option value="麦特">麦特</Option>
-                    <Option value="嵩屿">嵩屿</Option>
-                    <Option value="后石">后石</Option>
-                  </Select>
+                  <AutoComplete
+                    dataSource={this.state.flyashData}
+                    onSelect={handleChangeFlyash}
+                    onSearch={handleChangeFlyash}
+                    // onFocus={handleFocus}
+                    // placeholder={this.props.placeholder}
+                    // style={this.props.style}
+                    disabled={disabled}
+                  />
                 )}
               </FormItem>
             </Col>
