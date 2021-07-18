@@ -27,7 +27,15 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2018 嵩能
+    <div>
+      Copyright <Icon type="copyright" /> 2021 嵩能
+    </div>
+    <div>
+      备案号：
+      <a href="https://beian.miit.gov.cn/" target="_blank">
+        闽ICP备18014922号-2
+      </a>
+    </div>
   </Fragment>
 );
 
@@ -64,7 +72,7 @@ class UserLayout extends React.PureComponent {
                   path={item.path}
                   component={item.component}
                   exact={item.exact}
-                  />
+                />
               ))}
               <Redirect exact from="/user" to="/user/login" />
             </Switch>

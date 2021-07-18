@@ -110,7 +110,6 @@ class BasicLayout extends React.PureComponent {
       this.props.dispatch({
         type: 'login/fetchCurrent',
       });
-
     }
   }
   componentWillUnmount() {
@@ -151,7 +150,7 @@ class BasicLayout extends React.PureComponent {
 
       /* 如果没有token，则跳转到登录页 */
       if (!sessionStorage.getItem('token')) {
-        authorizedPath = '/user/login'
+        authorizedPath = '/user/login';
       }
       return authorizedPath;
     }
@@ -170,7 +169,7 @@ class BasicLayout extends React.PureComponent {
       payload: type,
     });
   };
-  handleMenuClick = (event) => {
+  handleMenuClick = event => {
     if (event.key === 'logout') {
       this.props.dispatch({
         type: 'login/logout',
@@ -208,7 +207,7 @@ class BasicLayout extends React.PureComponent {
           location={location}
           isMobile={this.state.isMobile}
           onCollapse={this.handleMenuCollapse}
-          />
+        />
         <Layout>
           <Header style={{ background: 'none', height: '48px', padding: 0 }}>
             <GlobalHeader
@@ -222,7 +221,7 @@ class BasicLayout extends React.PureComponent {
               onCollapse={this.handleMenuCollapse}
               onMenuClick={this.handleMenuClick}
               onNoticeVisibleChange={this.handleNoticeVisibleChange}
-              />
+            />
           </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <Switch>
@@ -237,7 +236,7 @@ class BasicLayout extends React.PureComponent {
                   exact={item.exact}
                   authority={item.authority}
                   redirectPath="/exception/403"
-                  />
+                />
               ))}
               <Redirect exact from="/" to={bashRedirect} />
               <Route render={NotFound} />
@@ -247,10 +246,18 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 嵩能集团
+                  <div>
+                    Copyright <Icon type="copyright" /> 2021 嵩能
+                  </div>
+                  <div>
+                    备案号：
+                    <a href="https://beian.miit.gov.cn/" target="_blank">
+                      闽ICP备18014922号-2
+                    </a>
+                  </div>
                 </Fragment>
               }
-              />
+            />
           </Footer>
         </Layout>
       </Layout>
