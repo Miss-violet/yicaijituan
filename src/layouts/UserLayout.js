@@ -27,7 +27,15 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2018 益材集团
+    <div>
+      Copyright <Icon type="copyright" /> 2021 益材集团
+    </div>
+    <div>
+      备案号：
+      <a href="https://beian.miit.gov.cn/" target="_blank">
+        闽ICP备18014922号-1
+      </a>
+    </div>
   </Fragment>
 );
 
