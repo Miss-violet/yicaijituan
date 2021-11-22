@@ -350,12 +350,6 @@ class EditModal extends Component {
             <Col {...formColLayout}>
               <FormItem label="出厂时间" {...formItemLayout}>
                 {getFieldDecorator('outTime', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择出厂时间',
-                    },
-                  ],
                   initialValue: moment(outTime),
                 })(
                   <DatePicker
@@ -371,12 +365,6 @@ class EditModal extends Component {
             <Col {...formColLayout}>
               <FormItem label="生产日期" {...formItemLayout}>
                 {getFieldDecorator('deliveryTime', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择生产日期',
-                    },
-                  ],
                   initialValue: type !== 'add' ? moment(deliveryTime) : '',
                 })(
                   <DatePicker
@@ -958,12 +946,6 @@ class EditModal extends Component {
           <Col {...formColLayout}>
             <FormItem label="出厂批号" {...formItemLayout}>
               {getFieldDecorator('batchNo', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请填写出厂批号',
-                  },
-                ],
                 initialValue: batchNo,
               })(<Input disabled={disabled} />)}
             </FormItem>
