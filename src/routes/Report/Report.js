@@ -220,7 +220,7 @@ class Report extends Component {
                   <td>结果评定</td>
                   <td colSpan="4">
                     <p>
-                      GB/T 1596-2017 国家标准F类
+                      所检项目符合 GB/T 1596-2017 国家标准F类
                       <span className={styles.resultLevel}>{level}</span>技术要求。
                     </p>
                     <p style={{ marginLeft: '30px' }}>{detail.remark}</p>
