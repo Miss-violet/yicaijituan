@@ -43,7 +43,7 @@ export default class Report extends Component {
           </div>
           <ul className={styles.leftList}>
             <li>
-              <span className={styles.label}>级别：</span>
+              <span className={styles.label}>类别/级别：</span>
               <div className={styles.content}>
                 <span>{detail.columnTitle}</span>
               </div>
@@ -104,7 +104,10 @@ export default class Report extends Component {
                   </li>
                   <li>
                     <span className={styles.label}>类别：</span>
-                    <span className={styles.content}>{detail.columnTitle}</span>
+                    {
+                      // <span className={styles.content}>{detail.columnTitle}</span>
+                    }
+                    <span className={styles.content}>F类</span>
                   </li>
                 </ul>
               </Col>
