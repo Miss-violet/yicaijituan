@@ -38,14 +38,15 @@ export default class Report extends Component {
             <div>{detail.title}</div>
             <p className={styles.name}>出厂合格证</p>
           </h1>
-          <div className={styles.qrCode}>
+          {/* 20250116 客户要求隐藏 */}
+          {/* <div className={styles.qrCode}>
             <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
-          </div>
+          </div> */}
           <ul className={styles.leftList}>
             <li>
               <span className={styles.label}>类别/级别：</span>
               <div className={styles.content}>
-                <span>{detail.columnTitle}</span>
+                <span>F类{detail.columnTitle}</span>
               </div>
             </li>
             <li>
@@ -128,9 +129,10 @@ export default class Report extends Component {
                 </ul>
               </Col>
             </Row>
-            <div className={styles.qrCode}>
+            {/* 20250116 客户要求隐藏 */}
+            {/* <div className={styles.qrCode}>
               <img src={`${detail.qrcodeUrl}`} alt="qrCode" />
-            </div>
+            </div> */}
           </div>
           <table className={table}>
             <thead>
