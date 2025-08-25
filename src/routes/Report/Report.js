@@ -73,9 +73,10 @@ class Report extends Component {
             <div>{detail.title}</div>
             <p className={styles.name}>出厂合格证</p>
           </h1>
-          <div className={styles.qrCode}>
+          {/* 20250825 注释 */}
+          {/* <div className={styles.qrCode}>
             {detail.qrcodeUrl !== null ? <img src={`${detail.qrcodeUrl}`} alt="qrCode" /> : ''}
-          </div>
+          </div> */}
           <ul className={styles.leftList}>
             <li>
               <span className={styles.label}>级别：</span>
@@ -166,9 +167,10 @@ class Report extends Component {
                 </ul>
               </Col>
             </Row>
-            <div className={styles.qrCode}>
+            {/* 20250825 注释 */}
+            {/* <div className={styles.qrCode}>
               {detail.qrcodeUrl ? <img src={`${detail.qrcodeUrl}`} alt="qrCode" /> : ''}
-            </div>
+            </div> */}
           </div>
           {(detail.level === 0 || detail.level === 1 || detail.level === 2) && (
             <table className={table}>
