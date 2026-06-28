@@ -70,6 +70,11 @@ class EditModal extends Component {
     }
   }
 
+  // 判断是否是数字
+  isNumber=(value)=>{
+    return !isNaN(Number(value))
+  }
+
   /* 出厂合格证 */
   getCertificateFields = () => {
     const { getFieldDecorator, setFieldsValue } = this.props.form;
@@ -598,32 +603,32 @@ class EditModal extends Component {
         }
         return paramsItem;
       });
-      /* 检验是否为空 */
+      /* 为空时，不进行后续的校验 - 2026/6/27，客户要求内容可为空 */
       if (
         standardName !== '强度活性指数（%）' &&
         standardName !== '强度活性指数(%)' &&
         (value === '' || value === null)
       ) {
-        validateStatus[standardsItem.orderSort - 1] = {
-          status: 'error',
-          help: `${standardName}的检验结果不能为空值`,
-        };
-        this.setState({
-          validateStatus,
-        });
-        Modal.warning({
-          title: '警告',
-          content: `${standardName}的检验结果不能为空值`,
-          okText: '知道了',
-        });
+        // validateStatus[standardsItem.orderSort - 1] = {
+        //   status: 'error',
+        //   help: `${standardName}的检验结果不能为空值`,
+        // };
+        // this.setState({
+        //   validateStatus,
+        // });
+        // Modal.warning({
+        //   title: '警告',
+        //   content: `${standardName}的检验结果不能为空值`,
+        //   okText: '知道了',
+        // });
         return false;
       }
       /**
        *  type===1：大于等于
        *  type===0：小于等于
        */
-      if (Number(value) === 0 || value) {
-        if (type === 1 && value && Number(value) < levelStandards) {
+      if (this.isNumber(value)&&(Number(value) === 0 || value)) {
+        if (type === 1 && Number(value) < levelStandards) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的检验结果须大于等于国家标准值${levelStandards}`,
@@ -638,7 +643,7 @@ class EditModal extends Component {
           });
           return;
         }
-        if (type === 0 && value && Number(value) > levelStandards) {
+        if (type === 0 && Number(value) > levelStandards) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的检验结果须小于等于国家标准值${levelStandards}`,
@@ -653,7 +658,7 @@ class EditModal extends Component {
           });
           return;
         }
-        if (pointNum === 0 && value && value.indexOf('.') !== -1) {
+        if (pointNum === 0 && value.indexOf('.') !== -1) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，请填写整数`,
@@ -668,7 +673,7 @@ class EditModal extends Component {
           });
           return;
         }
-        if (pointNum > 0 && value && value.indexOf('.') === -1) {
+        if (pointNum > 0 && value.indexOf('.') === -1) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
@@ -683,7 +688,7 @@ class EditModal extends Component {
           });
           return;
         }
-        if (pointNum > 0 && value && value.length - value.indexOf('.') - 1 !== pointNum) {
+        if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
             help: `${standardName}的小数位与产品设置不符合，小数点后需保留${pointNum}位小数`,
@@ -972,14 +977,16 @@ class EditModal extends Component {
 
   /* 检验结果 文本框 输入时的校验  */
   validateParameter = (rule, value, callback, standardsItem) => {
-    if (
-      standardsItem.rowTitle !== '强度活性指数（%）' &&
-      standardsItem.rowTitle !== '强度活性指数(%)' &&
-      isNaN(Number(value))
-    ) {
-      callback('请输入数字');
-      return;
-    }
+    // 2026/6/27，客户要求内容可填文字
+    // if (
+    //   standardsItem.rowTitle !== '强度活性指数（%）' &&
+    //   standardsItem.rowTitle !== '强度活性指数(%)' &&
+    //   isNaN(Number(value))
+    // ) {
+    //   callback('请输入数字');
+    //   return;
+    // }
+    
     const { levelSelected } = this.state;
     if (!levelSelected) {
       callback('请先选择级别');
@@ -1001,39 +1008,47 @@ class EditModal extends Component {
     /* 如果修改了品名，standardsItem 中没有 type 和 pointNum */
     type = type || standardsItem.params[0].type;
     pointNum = pointNum || standardsItem.params[0].pointNum;
-
-    /* 检验是否为空 */
+    
+    /* 为空时不进行后续的校验 */
     if (
       standardName !== '强度活性指数（%）' &&
       standardName !== '强度活性指数(%)' &&
       (value === '' || value === null)
     ) {
-      callback({ message: '检验结果不能为空值' });
       return;
     }
+    /* 检验是否为空 2026/6/27，客户要求内容可为空 */
+    // if (
+    //   standardName !== '强度活性指数（%）' &&
+    //   standardName !== '强度活性指数(%)' &&
+    //   (value === '' || value === null)
+    // ) {
+    //   callback({ message: '检验结果不能为空值' });
+    //   return;
+    // }
 
     /**
      *  standardsItem.type===1：大于等于
      *  standardsItem.type===0：小于等于
      */
-    if (Number(value) === 0 || value) {
-      if (type === 1 && value && Number(value) < levelStandards) {
+    if (this.isNumber(value) &&(Number(value) === 0 || value)) {
+      if (type === 1 && Number(value) < levelStandards) {
         callback({ message: `检验结果须大于等于国家标准值${levelStandards}` });
         return;
       }
-      if (type === 0 && value && Number(value) > levelStandards) {
+      if (type === 0 && Number(value) > levelStandards) {
         callback({ message: `检验结果须小于等于国家标准值${levelStandards}` });
         return;
       }
-      if (pointNum === 0 && value && value.indexOf('.') !== -1) {
+      if (pointNum === 0 && value.indexOf('.') !== -1) {
         callback({ message: `请填写整数` });
         return;
       }
-      if (pointNum > 0 && value && value.indexOf('.') === -1) {
+      if (pointNum > 0 && value.indexOf('.') === -1) {
         callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` });
         return;
       }
-      if (pointNum > 0 && value && value.length - value.indexOf('.') - 1 !== pointNum) {
+      if (pointNum > 0 && value.length - value.indexOf('.') - 1 !== pointNum) {
         callback({ message: `小数位与产品设置不符合，小数点后需保留${pointNum}位小数` });
         return;
       }
