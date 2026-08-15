@@ -26,7 +26,8 @@ export default {
     setup({ dispatch, history }) {
       return history.listen(location => {
         if (location.pathname === '/outbound') {
-          if (sessionStorage.getItem('token') === '') {
+          const token = localStorage.getItem('token');
+          if (!token || token === '') {
             dispatch(
               routerRedux.push({
                 pathname: '/user/login',

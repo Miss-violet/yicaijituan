@@ -96,6 +96,7 @@ class EditModal extends Component {
       outTime,
       allowModifyOutTime,
       deliveryTime,
+      reportDate,
       supplierId,
       techno,
       carNo,
@@ -376,6 +377,21 @@ class EditModal extends Component {
                     showTime
                     format="YYYY-MM-DD HH:mm:ss"
                     placeholder="请选择生产日期"
+                    className={styles.datepicker}
+                    disabled={disabled}
+                  />
+                )}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="填报日期" {...formItemLayout}>
+                {getFieldDecorator('reportDate', {
+                  initialValue: type !== 'add'&&reportDate ? moment(reportDate) : '',
+                })(
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="请选择填报日期"
                     className={styles.datepicker}
                     disabled={disabled}
                   />
@@ -1071,8 +1087,9 @@ class EditModal extends Component {
         /* 日期格式转化 */
         const values = {
           ...filterFmValues,
-          deliveryTime: moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss'),
-          outTime: moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss'),
+          deliveryTime: fmValues.deliveryTime?moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss'):'',
+          outTime: fmValues.outTime?moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss'):'',
+          reportDate: fmValues.reportDate?moment(fmValues.reportDate).format('YYYY-MM-DD HH:mm:ss'):'',
         };
 
         const { standardColumnTitleData } = this.props;

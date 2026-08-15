@@ -202,7 +202,7 @@ class UserManage extends Component {
            * 超级管理员('0') - 可新建 超级管理员、管理员 和 成员
            * 管理员('1')     - 可新建 成员 （20180706 - 对管理员暂不开放用户管理菜单操作权限）
            */
-          const role = sessionStorage.getItem('role');
+          const role = localStorage.getItem('role');
           let roleData;
           switch (role) {
             case '0':

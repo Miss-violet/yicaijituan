@@ -43,9 +43,7 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-  console.info('url->', url);
-
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   const defaultOptions = {
     credentials: 'include',
   };
@@ -95,12 +93,12 @@ export default function request(url, options) {
           responseData.code === 4001 ||
           responseData.code === 4002
         ) {
-          sessionStorage.setItem('role', '');
-          sessionStorage.setItem('token', '');
-          sessionStorage.setItem('userId', '');
-          sessionStorage.setItem('loginName', '');
-          sessionStorage.setItem('companyId', '');
-          sessionStorage.setItem('tenantCode', '');
+          localStorage.removeItem('role');
+          localStorage.removeItem('token');
+          localStorage.removeItem('userId');
+          localStorage.removeItem('loginName');
+          localStorage.removeItem('companyId');
+          localStorage.removeItem('tenantCode');
           store.dispatch(routerRedux.push('/user/login'));
         }
       }

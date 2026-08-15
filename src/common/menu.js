@@ -50,11 +50,11 @@ const menuData = [
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {
-  /* 从 sessionStorage 中拿到角色 */
-  const role = sessionStorage.getItem('role');
+  /* 从 localStorage 中拿到角色 */
+  const role = localStorage.getItem('role');
 
-  const tenantCode = sessionStorage.getItem('tenantCode');
-  const shippingFlag = sessionStorage.getItem('shippingFlag')
+  const tenantCode = localStorage.getItem('tenantCode');
+  const shippingFlag = localStorage.getItem('shippingFlag')
 
   return data.map(item => {
     let { path } = item;

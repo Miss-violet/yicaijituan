@@ -10,8 +10,8 @@ class Outbound extends Component {
   constructor() {
     super();
     this.state = {
-      role: sessionStorage.getItem('role'), // 当前用户的角色
-      shippingFlag: sessionStorage.getItem('shippingFlag'),    // 当前用户是否有查看发货单权限
+      role: localStorage.getItem('role'), // 当前用户的角色
+      shippingFlag: localStorage.getItem('shippingFlag'),    // 当前用户是否有查看发货单权限
       modalVisible: false,
       disabled: false,
       productDisabled: false /* 只有新增产品时才是 false */,

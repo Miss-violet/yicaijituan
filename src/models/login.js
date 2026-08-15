@@ -89,7 +89,7 @@ export default {
       const { code, data } = shippingFlagRes
       if (code === 0) {
         const { shippingFlag } = data
-        sessionStorage.setItem('shippingFlag', shippingFlag)
+        localStorage.setItem('shippingFlag', shippingFlag)
       }
       // 查询发货单权限后再跳转到首页
       // shippingFlag 决定了发货单菜单的显示和新建发货单按钮的显示
@@ -103,20 +103,20 @@ export default {
     changeLoginStatus(state, { payload }) {
       if (payload.code === 0) {
         const { data } = payload;
-        sessionStorage.setItem('token', `${data.token}`);
-        sessionStorage.setItem('role', `${data.role}`);
-        sessionStorage.setItem('userId', `${data.id}`);
-        sessionStorage.setItem('loginName', `${data.loginName}`);
-        sessionStorage.setItem('companyId', `${data.companyId}`);
-        sessionStorage.setItem('tenantCode', `${data.tenantCode}`);
+        localStorage.setItem('token', `${data.token}`);
+        localStorage.setItem('role', `${data.role}`);
+        localStorage.setItem('userId', `${data.id}`);
+        localStorage.setItem('loginName', `${data.loginName}`);
+        localStorage.setItem('companyId', `${data.companyId}`);
+        localStorage.setItem('tenantCode', `${data.tenantCode}`);
       } else {
-        sessionStorage.setItem('token', '');
-        sessionStorage.setItem('role', '');
-        sessionStorage.setItem('userId', '');
-        sessionStorage.setItem('loginName', '');
-        sessionStorage.setItem('companyId', '');
-        sessionStorage.setItem('tenantCode', '');
-        sessionStorage.setItem('shippingFlag', '')
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('loginName');
+        localStorage.removeItem('companyId');
+        localStorage.removeItem('tenantCode');
+        localStorage.removeItem('shippingFlag');
       }
       setAuthority(payload.currentAuthority);
       return {

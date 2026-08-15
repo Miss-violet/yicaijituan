@@ -10,7 +10,7 @@ class Index extends Component {
   constructor() {
     super();
     this.state = {
-      role: sessionStorage.getItem('role'), // 当前用户的角色
+      role: localStorage.getItem('role'), // 当前用户的角色
       modalVisible: false,
       disabled: false,
       title: '',
@@ -83,7 +83,6 @@ class Index extends Component {
   };
 
   handleSearch = values => {
-    console.info('values->', values)
     const { params } = values;
     let { startTime = '', endTime = '' } = params
     startTime = startTime && moment(startTime).format('YYYY-MM-DD 00:00:00')

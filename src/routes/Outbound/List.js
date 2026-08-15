@@ -126,13 +126,13 @@ class List extends Component {
       {
         title: '出厂时间',
         dataIndex: 'outTime',
-        render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+        render: text => text?moment(text).format('YYYY-MM-DD HH:mm:ss'):'-',
         width: 200,
       },
       {
         title: '生产日期',
         dataIndex: 'deliveryTime',
-        render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+        render: text => text?moment(text).format('YYYY-MM-DD HH:mm:ss'):'-',
         width: 200,
         className: role === '2' ? 'hidden' : '',
       },

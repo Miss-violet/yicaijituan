@@ -238,7 +238,7 @@ class OutboundFilter extends Component {
     this.props.form.validateFields((err, values) => {
       const startTime = values.outTime && moment(values.outTime[0]).format('YYYY-MM-DD HH:mm:ss');
       const endTime = values.outTime && moment(values.outTime[1]).format('YYYY-MM-DD HH:mm:ss');
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
       let url;
       if (startTime && endTime)
         url = `/api/file/delivery/export?startTime=${startTime}&endTime=${endTime}&token=${token}`;

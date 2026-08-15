@@ -106,7 +106,7 @@ class BasicLayout extends React.PureComponent {
       });
     });
     /* 获取当前用户，防止重新打开页面时因为没有token报错 */
-    if (sessionStorage.getItem('token')) {
+    if (localStorage.getItem('token')) {
       this.props.dispatch({
         type: 'login/fetchCurrent',
       });
@@ -149,7 +149,7 @@ class BasicLayout extends React.PureComponent {
       );
 
       /* 如果没有token，则跳转到登录页 */
-      if (!sessionStorage.getItem('token')) {
+      if (!localStorage.getItem('token')) {
         authorizedPath = '/user/login';
       }
       return authorizedPath;

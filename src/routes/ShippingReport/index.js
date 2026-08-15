@@ -10,7 +10,6 @@ import styles from './index.less'
 class ShippingReport extends PureComponent {
   render() {
     const { detail } = this.props
-    console.info('detail->', detail)
     const { shippingNo, purchaser, productName, specification, quantity, carNo, loadPlace, clerker, picker, remarks, accQuantity, accepter, accTime } = detail
     const column = [{
       label: '品名',
