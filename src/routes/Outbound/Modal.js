@@ -14,7 +14,6 @@ import {
 import * as moment from 'moment';
 import { connect } from 'dva';
 import classNames from 'classnames';
-import { filterEmpty } from '../../utils/utils';
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
 
@@ -98,6 +97,7 @@ class EditModal extends Component {
       deliveryTime,
       reportDate,
       supplierId,
+      produceAddress,
       techno,
       carNo,
       distributorId,
@@ -386,7 +386,7 @@ class EditModal extends Component {
             <Col {...formColLayout}>
               <FormItem label="填报日期" {...formItemLayout}>
                 {getFieldDecorator('reportDate', {
-                  initialValue: type !== 'add'&&reportDate ? moment(reportDate) : '',
+                  initialValue: type !== 'add' ? (reportDate?moment(reportDate):'') : '',
                 })(
                   <DatePicker
                     showTime
@@ -418,6 +418,13 @@ class EditModal extends Component {
                       ))}
                   </Select>
                 )}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="生产厂地址" {...formItemLayout}>
+                {getFieldDecorator('produceAddress', {  // todo
+                  initialValue: produceAddress,
+                })(<Input placeholder="请填写生产厂地址" disabled={disabled} />)}
               </FormItem>
             </Col>
             <Col {...formColLayout}>
@@ -1079,14 +1086,14 @@ class EditModal extends Component {
       confirmLoading: true,
     });
     this.props.form.validateFieldsAndScroll((err, fmValues) => {
+      console.info('fmValues', fmValues);
       if (!err) {
         let { standardsData } = this.state;
         const { validateStatus } = this.state;
-        const filterFmValues = filterEmpty(fmValues);
 
         /* 日期格式转化 */
         const values = {
-          ...filterFmValues,
+          ...fmValues,
           deliveryTime: fmValues.deliveryTime?moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss'):'',
           outTime: fmValues.outTime?moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss'):'',
           reportDate: fmValues.reportDate?moment(fmValues.reportDate).format('YYYY-MM-DD HH:mm:ss'):'',

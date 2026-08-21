@@ -72,6 +72,14 @@ export default class Report extends Component {
                 <span>{detail.supplierName}</span>
               </div>
             </li>
+            {detail.produceAddress
+              && <li>
+                <span className={styles.label}>生产厂地址：</span>
+                <div className={styles.content}>
+                  <span>{detail.produceAddress}</span>
+                </div>
+              </li>
+            }
             <li>
               <span className={styles.label}>检验员：</span>
               <div className={styles.content}>
@@ -95,7 +103,7 @@ export default class Report extends Component {
                   <li>
                     <span className={styles.label}>生产日期：</span>
                     <span className={styles.content}>
-                      {detail.deliveryTime?moment(detail.deliveryTime).format('YYYY年MM月DD日'):'-'}
+                      {detail.deliveryTime ? moment(detail.deliveryTime).format('YYYY年MM月DD日') : '-'}
                     </span>
                   </li>
                   <li>
@@ -110,7 +118,7 @@ export default class Report extends Component {
                     <span className={styles.content}>F类</span>
                   </li>
                   {
-                    detail.reportDate&&<li>
+                    detail.reportDate && <li>
                       <span className={styles.label}>填报日期：</span>
                       <span className={styles.content}>
                         {moment(detail.reportDate).format('YYYY年MM月DD日')}
@@ -173,7 +181,7 @@ export default class Report extends Component {
                *  item.type===1：大于等于
                *  item.type===0：小于等于
                */
-              detail.standards &&
+                detail.standards &&
                 detail.standards.map(item => (
                   <tr>
                     <td style={{ whiteSpace: 'nowrap' }}>{item.standardName}</td>

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Modal, Form, Row, Col, Input, DatePicker, InputNumber, Button } from 'antd';
 import * as moment from 'moment';
 import { connect } from 'dva';
-import { filterEmpty } from '../../utils/utils';
 import styles from './index.less';
 
 const FormItem = Form.Item;
