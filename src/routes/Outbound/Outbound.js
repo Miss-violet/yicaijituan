@@ -5,6 +5,7 @@ import ShippingModal from '../Shipping/Modal';
 import OutboundFilter from './Filter';
 import List from './List';
 import EditModal from './Modal';
+import { ScanReport } from './ScanReport';
 
 class Outbound extends Component {
   constructor() {
@@ -24,6 +25,7 @@ class Outbound extends Component {
       selectedStatus: '' /* 选中的单据的状态 */,
       filterValue: {} /* 查询条件 */,
       addShippingModalVisible: false /* 新建发货单弹窗是否可见 */,
+      scanReportModalVisible: false /* 扫描报告弹窗是否可见 */,
     };
   }
 
@@ -156,6 +158,44 @@ class Outbound extends Component {
     });
   };
 
+  scanReport = () => {
+    const { dispatch } = this.props;
+    // 查询单据详情
+    dispatch({
+      type: 'report/info',
+      payload: {
+        id: this.state.selectedRows.id,
+      },
+      callback: (code, selectedDetail) => {
+        if (code === 0) {
+          /* selectedDetail     - 获取选中的单据详情 */
+          /* 查询列标题 */
+          const { productId } = selectedDetail;
+          dispatch({
+            type: 'productManage/info',
+            payload: {
+              productId,
+            },
+          });
+        }
+
+        // 保存详情到 state，准备传值给弹窗
+        this.setState({
+          selectedDetail,
+        });
+      },
+    });
+    this.setState({
+      scanReportModalVisible: true,
+    });
+  }
+
+  closeScanReportModal = () => {
+    this.setState({
+      scanReportModalVisible: false,
+    });
+  }
+
   /**
    * 选中行
    *
@@ -268,6 +308,8 @@ class Outbound extends Component {
       role,
       shippingFlag,
       showModal: this.showModal,
+      scanReport: this.scanReport,
+      scanReportBtnVisible: !!this.state.selectedRows.styleNum,
       listData,
       total,
       sumNetweight,
@@ -331,10 +373,18 @@ class Outbound extends Component {
       deliveryNo,
       deliveryId,
     };
+    const scanReportProps = {
+      closeModal: this.closeScanReportModal,
+      dispatch: this.props.dispatch,
+      visible: this.state.scanReportModalVisible,
+      title: '扫描报告',
+      type: 'scanReport',
+    };
     return (
       <div>
         <OutboundFilter {...filterProps} />
         <List {...listProps} />
+        <ScanReport {...scanReportProps} />
         <EditModal {...modalProps} />
         <ShippingModal {...shippingModalProps} />
       </div>

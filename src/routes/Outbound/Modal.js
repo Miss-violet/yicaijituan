@@ -70,7 +70,7 @@ class EditModal extends Component {
   }
 
   // 判断是否是数字
-  isNumber=(value)=>{
+  isNumber = (value) => {
     return !isNaN(Number(value))
   }
 
@@ -105,6 +105,10 @@ class EditModal extends Component {
       flyashSource,
       relationCode,
       poundCode,
+      sealNo,
+      monthlyBatch,
+      orderPhone,
+      unitNum,
     } = selectedDetail;
 
     const manufacturerEnabled = manufacturerSelectList.filter(item => item.status === 0);
@@ -371,7 +375,7 @@ class EditModal extends Component {
             <Col {...formColLayout}>
               <FormItem label="生产日期" {...formItemLayout}>
                 {getFieldDecorator('deliveryTime', {
-                  initialValue: type !== 'add' ? moment(deliveryTime) : '',
+                  initialValue: type !== 'add' && deliveryTime ? moment(deliveryTime) : '',
                 })(
                   <DatePicker
                     showTime
@@ -386,7 +390,7 @@ class EditModal extends Component {
             <Col {...formColLayout}>
               <FormItem label="填报日期" {...formItemLayout}>
                 {getFieldDecorator('reportDate', {
-                  initialValue: type !== 'add' ? (reportDate?moment(reportDate):'') : '',
+                  initialValue: type !== 'add' ? (reportDate ? moment(reportDate) : '') : '',
                 })(
                   <DatePicker
                     showTime
@@ -572,6 +576,34 @@ class EditModal extends Component {
                 })(<Input placeholder="请填写磅单号" disabled={disabled} />)}
               </FormItem>
             </Col>
+            <Col {...formColLayout}>
+              <FormItem label="数量" {...formItemLayout}>
+                {getFieldDecorator('unitNum', {
+                  initialValue: unitNum,
+                })(<Input placeholder="请填写数量" disabled={disabled} />)}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="封签编号" {...formItemLayout}>
+                {getFieldDecorator('sealNo', {
+                  initialValue: sealNo,
+                })(<Input placeholder="请填写封签编号" disabled={disabled} />)}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="月份批次" {...formItemLayout}>
+                {getFieldDecorator('monthlyBatch', {
+                  initialValue: monthlyBatch,
+                })(<Input placeholder="请填写月份批次" disabled={disabled} />)}
+              </FormItem>
+            </Col>
+            <Col {...formColLayout}>
+              <FormItem label="单据联系电话" {...formItemLayout}>
+                {getFieldDecorator('orderPhone', {
+                  initialValue: orderPhone,
+                })(<Input placeholder="请填写单据联系电话" disabled={disabled} />)}
+              </FormItem>
+            </Col>
           </Row>
         </fieldset>
       </div>
@@ -650,7 +682,7 @@ class EditModal extends Component {
        *  type===1：大于等于
        *  type===0：小于等于
        */
-      if (this.isNumber(value)&&(Number(value) === 0 || value)) {
+      if (this.isNumber(value) && (Number(value) === 0 || value)) {
         if (type === 1 && Number(value) < levelStandards) {
           validateStatus[standardsItem.orderSort - 1] = {
             status: 'error',
@@ -857,6 +889,8 @@ class EditModal extends Component {
       auditor,
       batchNo,
       approver,
+      productBatch,
+      styleImpleStandard,
     } = selectedDetail;
     const { allowApprover } = this.state;
     const formItemLayout = {
@@ -946,6 +980,44 @@ class EditModal extends Component {
         </Row>
         <Row gutter={8}>
           <Col {...formColLayout}>
+            <FormItem label="执行标准" {...formItemLayout}>
+              {getFieldDecorator('styleImpleStandard', {
+                initialValue: styleImpleStandard,
+              })(<Input disabled={disabled} />)}
+            </FormItem>
+          </Col>
+          <Col {...formColLayout}>
+            <FormItem label="出厂批号" {...formItemLayout}>
+              {getFieldDecorator('batchNo', {
+                initialValue: batchNo,
+              })(<Input disabled={disabled} />)}
+            </FormItem>
+          </Col>
+          <Col {...formColLayout}>
+            <FormItem label="生产批号" {...formItemLayout}>
+              {getFieldDecorator('productBatch', {
+                initialValue: productBatch,
+              })(<Input disabled={disabled} />)}
+            </FormItem>
+          </Col>
+          </Row>
+          <Row gutter={8}>
+          {allowApprover === 1 && (
+            <Col {...formColLayout}>
+              <FormItem label="审批员" {...formItemLayout}>
+                {getFieldDecorator('approver', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请填写审批员',
+                    },
+                  ],
+                  initialValue: approver,
+                })(<Input disabled={disabled} />)}
+              </FormItem>
+            </Col>
+          )}
+          <Col {...formColLayout}>
             <FormItem label="检验员" {...formItemLayout}>
               {getFieldDecorator('checker', {
                 rules: [
@@ -971,28 +1043,6 @@ class EditModal extends Component {
               })(<Input placeholder="请填写审核人" disabled={disabled} />)}
             </FormItem>
           </Col>
-          <Col {...formColLayout}>
-            <FormItem label="出厂批号" {...formItemLayout}>
-              {getFieldDecorator('batchNo', {
-                initialValue: batchNo,
-              })(<Input disabled={disabled} />)}
-            </FormItem>
-          </Col>
-          {allowApprover === 1 && (
-            <Col {...formColLayout}>
-              <FormItem label="审批员" {...formItemLayout}>
-                {getFieldDecorator('approver', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请填写审批员',
-                    },
-                  ],
-                  initialValue: approver,
-                })(<Input disabled={disabled} />)}
-              </FormItem>
-            </Col>
-          )}
         </Row>
       </div>
     );
@@ -1009,7 +1059,7 @@ class EditModal extends Component {
     //   callback('请输入数字');
     //   return;
     // }
-    
+
     const { levelSelected } = this.state;
     if (!levelSelected) {
       callback('请先选择级别');
@@ -1031,7 +1081,7 @@ class EditModal extends Component {
     /* 如果修改了品名，standardsItem 中没有 type 和 pointNum */
     type = type || standardsItem.params[0].type;
     pointNum = pointNum || standardsItem.params[0].pointNum;
-    
+
     /* 为空时不进行后续的校验 */
     if (
       standardName !== '强度活性指数（%）' &&
@@ -1054,7 +1104,7 @@ class EditModal extends Component {
      *  standardsItem.type===1：大于等于
      *  standardsItem.type===0：小于等于
      */
-    if (this.isNumber(value) &&(Number(value) === 0 || value)) {
+    if (this.isNumber(value) && (Number(value) === 0 || value)) {
       if (type === 1 && Number(value) < levelStandards) {
         callback({ message: `检验结果须大于等于国家标准值${levelStandards}` });
         return;
@@ -1086,7 +1136,6 @@ class EditModal extends Component {
       confirmLoading: true,
     });
     this.props.form.validateFieldsAndScroll((err, fmValues) => {
-      console.info('fmValues', fmValues);
       if (!err) {
         let { standardsData } = this.state;
         const { validateStatus } = this.state;
@@ -1094,9 +1143,9 @@ class EditModal extends Component {
         /* 日期格式转化 */
         const values = {
           ...fmValues,
-          deliveryTime: fmValues.deliveryTime?moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss'):'',
-          outTime: fmValues.outTime?moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss'):'',
-          reportDate: fmValues.reportDate?moment(fmValues.reportDate).format('YYYY-MM-DD HH:mm:ss'):'',
+          deliveryTime: fmValues.deliveryTime ? moment(fmValues.deliveryTime).format('YYYY-MM-DD HH:mm:ss') : '',
+          outTime: fmValues.outTime ? moment(fmValues.outTime).format('YYYY-MM-DD HH:mm:ss') : '',
+          reportDate: fmValues.reportDate ? moment(fmValues.reportDate).format('YYYY-MM-DD HH:mm:ss') : '',
         };
 
         const { standardColumnTitleData } = this.props;
@@ -1224,6 +1273,8 @@ class EditModal extends Component {
               });
             }
           }
+          console.info('this.props.selectedDetail=>', this.props.selectedDetail)
+          console.info('values=>', values)
           this.props.dispatch({
             type: 'outbound/edit',
             payload: {

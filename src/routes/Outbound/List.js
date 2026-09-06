@@ -32,6 +32,8 @@ class List extends Component {
       rowSelection,
       handleTableChange,
       showModal,
+      scanReport,
+      scanReportBtnVisible,
       handleChangeStatus,
       selectedStatus,
       selectedId,
@@ -55,10 +57,10 @@ class List extends Component {
                   <Icon type="minus" />停用
                 </span>
               ) : (
-                  <span>
-                    <Icon type="check" />启用
-                  </span>
-                )}
+                <span>
+                  <Icon type="check" />启用
+                </span>
+              )}
             </Button>
             <Button className={styles.btn} onClick={() => showModal('check')}>
               <Icon type="eye-o" />查看
@@ -70,12 +72,29 @@ class List extends Component {
                 </span>
               </Tooltip>
             ) : (
-                selectedStatus === 0 && (
-                  <Link target="_blank" to={`/report/${selectedId}`} className={styles.btn}>
-                    <Icon type="printer" /> 查看合格证
-                  </Link>
-                )
-              )}
+              selectedStatus === 0 && (
+                <Link target="_blank" to={`/report/${selectedId}`} className={styles.btn}>
+                  <Icon type="printer" /> 查看合格证
+                </Link>
+              )
+            )}
+            {selectedId === undefined ? (
+              <Tooltip title="请先选中一条单据后再下载">
+                <span className={styles.btn}>
+                  <Icon type="download" /> 下载合格证
+                </span>
+              </Tooltip>
+            ) : (
+              selectedStatus === 0 && (scanReportBtnVisible ?
+                <Button onClick={scanReport} className={styles.btn}>
+                  <Icon type="download" /> 下载合格证
+                </Button> : <Tooltip title="暂不支持下载">
+                  <span className={styles.btn}>
+                    <Icon type="download" /> 下载合格证
+                  </span>
+                </Tooltip>
+              )
+            )}
             {
               // 权限根据租户的 shippingFlag
               (role === '0' || role === '1') && shippingFlag !== '0' && (
@@ -126,13 +145,13 @@ class List extends Component {
       {
         title: '出厂时间',
         dataIndex: 'outTime',
-        render: text => text?moment(text).format('YYYY-MM-DD HH:mm:ss'):'-',
+        render: text => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '-',
         width: 200,
       },
       {
         title: '生产日期',
         dataIndex: 'deliveryTime',
-        render: text => text?moment(text).format('YYYY-MM-DD HH:mm:ss'):'-',
+        render: text => text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '-',
         width: 200,
         className: role === '2' ? 'hidden' : '',
       },

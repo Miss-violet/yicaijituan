@@ -1,0 +1,209 @@
+.row {
+  background: #fff;
+  display: flex;
+  height: 100%;
+  margin-right: 0 !important;
+  padding: 20px;
+}
+
+.qrCode {
+  text-align: right;
+
+  img {
+    max-height: 20%;
+    max-width: 20%;
+  }
+}
+
+ul {
+  padding-left: 25px;
+}
+
+.label {
+  display: inline-block;
+  font-weight: bold;
+  height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  text-align: justify;
+
+  &:after {
+    content: '';
+    display: inline-block;
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+}
+
+.content {
+  display: inline-block;
+  min-height: 30px;
+  line-height: 30px;
+  vertical-align: 10px;
+}
+
+.leftCol {
+  border: 1px solid #000;
+  height: 100%;
+  // margin-top: 5%;
+  position: relative;
+  margin-right: 10px;
+
+  .deliveryNo {
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .productName {
+    font-size: 20px;
+    margin-top: 3px;
+    text-align: center;
+  }
+
+  .leftList {
+    li {
+      min-height: 28px;
+      line-height: 28px;
+      list-style-type: none;
+    }
+  }
+
+  .label {
+    vertical-align: top;
+    width: 30%;
+  }
+
+  .content {
+    border-bottom: 2px solid #000;
+    text-align: center;
+    width: 60%;
+  }
+
+  .qrCode {
+    margin: 30px 20px 45px 0;
+  }
+}
+
+.rightCol {
+  border: 1px solid #000;
+  height: 100%;
+  padding: 0 !important;
+
+  .topInfoWrap {
+    display: flex;
+    justify-content: space-between;
+
+    .topInfoLeftWrap {
+      border-bottom: 1px solid #000;
+      border-right: 1px solid #000;
+      width: 70%;
+    }
+
+    .topInfoRightWrap {
+      border-bottom: 1px solid #000;
+      border-left: none;
+      height: 162px;
+      text-align: center;
+      width: 30%;
+    }
+
+    .No {
+      margin-bottom: 10px;
+      margin-left: 10px;
+    }
+  }
+
+  .topInfoLeftWrapRow {
+    border: 1px solid #000;
+    border-left: none;
+    border-right: none;
+    display: flex;
+    height: 35px;
+    line-height: 35px;
+
+    .label {
+      border-right: 1px solid #000;
+      width: 15%;
+      text-align: right;
+      height: 100%;
+      line-height: 35px;
+    }
+
+    .content {
+      border-right: 1px solid #000;
+      width: 35%;
+      height: 100%;
+      line-height: 35px;
+      padding: 0 7px;
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    &:not(:first-child) {
+      border-bottom: none;
+    }
+  }
+
+  .name {
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    text-align: center;
+
+    .title {
+      margin-right: 5px;
+    }
+  }
+
+  .qrCode {
+    margin-top: 10px;
+    max-height: 90%;
+    max-width: 90%;
+  }
+
+  .table {
+    margin: 0 auto 10px;
+    width: 100%;
+
+    th,
+    td {
+      border-bottom: 1px solid #000;
+      font-size: 12px;
+      width: inherit;
+    }
+
+    td {
+      padding: 7px 5px;
+    }
+  }
+
+  .resultLevel {
+    display: inline-block;
+    text-align: center;
+    width: 50px;
+  }
+
+  .resultLevel_underline {
+    border-bottom: 1px solid #999;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.companyName {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px auto;
+  text-align: center;
+
+  .logo {
+    max-height: 30px;
+    max-width: 30px;
+    margin-right: 10px;
+    vertical-align: -8px;
+  }
+}
