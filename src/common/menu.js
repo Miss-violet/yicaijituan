@@ -7,11 +7,6 @@ const menuData = [
     icon: 'file',
   },
   {
-    name: '发货单',
-    path: 'shipping',
-    icon: 'rocket',
-  },
-  {
     name: '用户管理',
     path: 'userManage',
     icon: 'user',
@@ -69,10 +64,6 @@ function formatter(data, parentPath = '/', parentAuthority) {
     }
     if (name === '租户管理') {
       hideInMenu = tenantCode !== 'platform';
-    }
-
-    if (name === '发货单') {
-      hideInMenu = shippingFlag === '0'
     }
 
     const result = {

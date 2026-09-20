@@ -33,8 +33,6 @@ export default class Report_New extends Component {
             [styles.resultLevel]: true,
             [styles.resultLevel_underline]: detail && detail.productId !== 45,
         });
-
-
         return (
             <Row gutter={16} className={styles.row}>
                 <Col span={10} className={styles.leftCol}>
@@ -42,10 +40,12 @@ export default class Report_New extends Component {
                         <img src={logo} className={styles.logo} />
                         <span>{detail.styleTitleLeft || detail.title || '厦门益材粉煤灰有限责任公司'}</span>
                     </div>
-                    <div className={styles.deliveryNo}>No. {detail.deliveryNo}</div>
-                    <h1 className={styles.productName}>
-                        <p className={styles.name}>合格证</p>
-                    </h1>
+                    <div style={{ margin: '20px 0' }}>
+                        <div className={styles.deliveryNo}>No. {detail.deliveryNo}</div>
+                        <h1 className={styles.productName}>
+                            <p className={styles.name}>合格证</p>
+                        </h1>
+                    </div>
                     <ul className={styles.leftList}>
                         {
                             detail.sealNo &&
@@ -59,7 +59,7 @@ export default class Report_New extends Component {
                         <li>
                             <span className={styles.label}>产品名称：</span>
                             <div className={styles.content}>
-                                <span>{detail.productName}</span>
+                                <span>{detail.feature.styleProductName || "F类粉煤灰"}</span>
                             </div>
                         </li>
                         <li>
@@ -107,7 +107,7 @@ export default class Report_New extends Component {
                         <li>
                             <span className={styles.label}>执行标准：</span>
                             <div className={styles.content}>
-                                <span>{styleImpleStandard || headTitle}</span>
+                                <span>{styleImpleStandard || headTitle || 'GB/T1596-2017'}</span>
                             </div>
                         </li>
                         <li>
@@ -160,7 +160,7 @@ export default class Report_New extends Component {
                     <table className={table}>
                         <thead>
                             <tr>
-                                <th style={{ width: '70%' }}>
+                                <th colSpan={2} style={{ width: '70%' }}>
                                     {headName}
                                 </th>
                                 <th colSpan={standardColumnTitleData.length} style={{ width: '15%' }}>
@@ -179,7 +179,7 @@ export default class Report_New extends Component {
                                 detail.standards &&
                                 detail.standards.map(item => (
                                     <tr>
-                                        <td style={{ whiteSpace: 'nowrap' }}>{item.standardName}</td>
+                                        <td colSpan={2} style={{ whiteSpace: 'nowrap', textAlign: 'center', }}>{item.standardName}</td>
                                         {item.params.map(paramsItem => (
                                             <td className={commonStyles.alignRight}>
                                                 {paramsItem.type === 0 ? '≤' : '≥'}
@@ -192,8 +192,8 @@ export default class Report_New extends Component {
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td>{footName}</td>
-                                <td colSpan={standardColumnTitleData.length + 4}>
+                                <td style={{width: '20%'}}>{footName}</td>
+                                <td colSpan={standardColumnTitleData.length + 5}>
                                     <p>
                                         {startFootContent}
                                         <span className={resultLevelStyle}>{detail.columnTitle}</span>
@@ -203,7 +203,7 @@ export default class Report_New extends Component {
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan="3">
+                                <td colSpan="4">
                                     <Row gutter={16}>
                                         {detail.allowApprover === 1 && (
                                             <Col span={6} offset={2}>

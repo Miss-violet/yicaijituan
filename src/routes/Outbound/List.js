@@ -95,14 +95,6 @@ class List extends Component {
                 </Tooltip>
               )
             )}
-            {
-              // 权限根据租户的 shippingFlag
-              (role === '0' || role === '1') && shippingFlag !== '0' && (
-                <Button className={styles.btn} onClick={() => showModal('shipping')}>
-                  <Icon type="plus" />新增发货单
-                </Button>
-              )
-            }
           </span>
         )}
         <div style={{ marginLeft: '5px', marginTop: '10px' }}>

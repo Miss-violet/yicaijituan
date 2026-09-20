@@ -67,16 +67,6 @@ class TenantManage extends Component {
           }
         },
       },
-      {
-        title: '是否可以新建发货单',
-        dataIndex: 'shippingFlag',
-        render: text =>
-          text === 0 ? (
-            <span className={commonStyles.disableState}>不可新建</span>
-          ) : (
-              <span>可新建</span>
-            ),
-      },
     ];
     let { data } = this.props.tenantManage;
     data = data.map((item, index) => {
@@ -190,24 +180,7 @@ class TenantManage extends Component {
             name: '需要',
           },
         ],
-      }, {
-        key: 7,
-        label: '是否可以新建发货单',
-        name: 'shippingFlag',
-        type: 'radio',
-        required: true,
-        defaultValue: 0,
-        data: [
-          {
-            id: 0,
-            name: '不可以',
-          },
-          {
-            id: 1,
-            name: '可以',
-          },
-        ],
-      },
+      }
     ];
     const tenantProps = {
       columns,

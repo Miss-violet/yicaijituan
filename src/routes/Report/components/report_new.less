@@ -1,6 +1,7 @@
 .row {
   background: #fff;
   display: flex;
+  align-items:stretch;
   height: 100%;
   margin-right: 0 !important;
   padding: 20px;
@@ -25,7 +26,7 @@ ul {
   height: 30px;
   line-height: 30px;
   overflow: hidden;
-  text-align: justify;
+  text-align: right;
 
   &:after {
     content: '';
@@ -44,19 +45,18 @@ ul {
 }
 
 .leftCol {
-  border: 1px solid #000;
-  height: 100%;
-  // margin-top: 5%;
+  border: 2px solid #000;
   position: relative;
   margin-right: 10px;
 
   .deliveryNo {
-    margin-top: 20px;
-    text-align: right;
+    position: absolute;
+    right: 10px;
+    margin-top: 10px;
   }
 
   .productName {
-    font-size: 20px;
+    font-size: 30px;
     margin-top: 3px;
     text-align: center;
   }
@@ -71,13 +71,17 @@ ul {
 
   .label {
     vertical-align: top;
-    width: 30%;
+    font-weight: bold;
+    font-size: 16px;
+    width: 20%;
   }
 
   .content {
     border-bottom: 2px solid #000;
+    font-weight: bold;
+    font-size: 16px;
     text-align: center;
-    width: 60%;
+    width: 70%;
   }
 
   .qrCode {
@@ -86,8 +90,7 @@ ul {
 }
 
 .rightCol {
-  border: 1px solid #000;
-  height: 100%;
+  border: 2px solid #000;
   padding: 0 !important;
 
   .topInfoWrap {
@@ -169,13 +172,16 @@ ul {
 
     th,
     td {
-      border-bottom: 1px solid #000;
+      border-bottom: 2px solid #000;
+      border-right: 2px solid #ccc;
       font-size: 12px;
       width: inherit;
     }
 
     td {
       padding: 7px 5px;
+      font-size: 16px;
+      font-weight: bold;
     }
   }
 
@@ -186,7 +192,7 @@ ul {
   }
 
   .resultLevel_underline {
-    border-bottom: 1px solid #999;
+    border-bottom: 2px solid #999;
   }
 
   p {
@@ -195,14 +201,14 @@ ul {
 }
 
 .companyName {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: bold;
   margin: 10px auto;
   text-align: center;
 
   .logo {
-    max-height: 30px;
-    max-width: 30px;
+    max-height: 40px;
+    max-width: 40px;
     margin-right: 10px;
     vertical-align: -8px;
   }

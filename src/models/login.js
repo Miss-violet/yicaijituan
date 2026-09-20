@@ -2,7 +2,7 @@ import { routerRedux } from 'dva/router';
 import { fakeAccountLogin, fakeAccountLogout } from '../services/api';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
-import { queryCurrent, queryShippingFlag } from '../services/user';
+import { queryCurrent } from '../services/user';
 
 export default {
   namespace: 'login',
@@ -15,15 +15,11 @@ export default {
   effects: {
     *fetchCurrent(_, { call, put }) {
       const userResponse = yield call(queryCurrent);
-      if (userResponse) {
+      if (userResponse?.data) {
         const { data: { tenantCode } } = userResponse
 
-        yield put({
-          type: 'shippingFlag',
-          payload: {
-            tenantCode,
-          },
-        })
+        reloadAuthorized();
+        yield put(routerRedux.push('/'));
       }
       yield put({
         type: 'saveCurrentUser',
@@ -51,19 +47,14 @@ export default {
           payload: userResponse.data,
         });
 
-        if (userResponse) {
-          const { data: { tenantCode } } = userResponse
-          yield put({
-            type: 'shippingFlag',
-            payload: {
-              tenantCode,
-            },
-          })
-        }
+        reloadAuthorized();
+        yield put(routerRedux.push('/'));
       }
     },
     *logout({ payload }, { call, put, select }) {
+      console.info('models login logout');
       const res = yield call(fakeAccountLogout, payload);
+      console.info('logout res', res);
       try {
         // get location pathname
         const urlParams = new URL(window.location.href);
@@ -82,20 +73,6 @@ export default {
         reloadAuthorized();
         yield put(routerRedux.push('/user/login'));
       }
-    },
-    // 查询发货单表示，和 role 一起判断是否展示发货单菜单和发货单相关按钮
-    *shippingFlag({ payload }, { call, put }) {
-      const shippingFlagRes = yield call(queryShippingFlag, payload)
-      const { code, data } = shippingFlagRes
-      if (code === 0) {
-        const { shippingFlag } = data
-        localStorage.setItem('shippingFlag', shippingFlag)
-      }
-      // 查询发货单权限后再跳转到首页
-      // shippingFlag 决定了发货单菜单的显示和新建发货单按钮的显示
-      // 如果把以下代码放在 login 里，会导致先跳转到首页，再拿到 shippingFlag，导致显示不准确
-      reloadAuthorized();
-      yield put(routerRedux.push('/'));
     },
   },
 
@@ -116,7 +93,6 @@ export default {
         localStorage.removeItem('loginName');
         localStorage.removeItem('companyId');
         localStorage.removeItem('tenantCode');
-        localStorage.removeItem('shippingFlag');
       }
       setAuthority(payload.currentAuthority);
       return {

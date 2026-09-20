@@ -9,10 +9,3 @@ export async function queryCurrent() {
     method: 'POST',
   });
 }
-
-export async function queryShippingFlag(params) {
-  return request(`/api/tenant/tenant/${params.tenantCode}`, {
-    method: 'POST',
-    body: params,
-  })
-}

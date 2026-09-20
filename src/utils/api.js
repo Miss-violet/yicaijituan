@@ -7,13 +7,6 @@ module.exports = {
       cars: `/api/delivery/cars`,
       statistics: `/api/delivery/statistics`,
     },
-    shipping: {
-      list: `/api/shipping/list`,
-      create: `/api/shipping/create`,
-      update: `/api/shipping/update`,
-      info: `/api/shipping/info`,
-      del: `/api/shipping/delete`,
-    },
     userManage: {
       create: `/api/user/create`,
       list: `/api/user/list`,

@@ -75,9 +75,6 @@ export const getRouterData = app => {
     '/outbound': {
       component: dynamicWrapper(app, ['outbound'], () => import('../routes/Outbound/Outbound')),
     },
-    '/shipping': {
-      component: dynamicWrapper(app, ['shipping'], () => import('../routes/Shipping')),
-    },
     '/userManage': {
       component: dynamicWrapper(app, ['userManage'], () =>
         import('../routes/UserManage/UserManage')
@@ -113,9 +110,6 @@ export const getRouterData = app => {
     },
     '/report/:id': {
       component: dynamicWrapper(app, ['report'], () => import('../routes/Report/Report')),
-    },
-    '/shippingReport/:id': {
-      component: dynamicWrapper(app, ['shippingReport'], () => import('../routes/ShippingReport')),
     },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),

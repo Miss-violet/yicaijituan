@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { message } from 'antd';
-import ShippingModal from '../Shipping/Modal';
 import OutboundFilter from './Filter';
 import List from './List';
 import EditModal from './Modal';
@@ -12,7 +11,6 @@ class Outbound extends Component {
     super();
     this.state = {
       role: localStorage.getItem('role'), // 当前用户的角色
-      shippingFlag: localStorage.getItem('shippingFlag'),    // 当前用户是否有查看发货单权限
       modalVisible: false,
       disabled: false,
       productDisabled: false /* 只有新增产品时才是 false */,
@@ -24,7 +22,6 @@ class Outbound extends Component {
       selectedDetail: {} /* 选中的单据的详情 */,
       selectedStatus: '' /* 选中的单据的状态 */,
       filterValue: {} /* 查询条件 */,
-      addShippingModalVisible: false /* 新建发货单弹窗是否可见 */,
       scanReportModalVisible: false /* 扫描报告弹窗是否可见 */,
     };
   }
@@ -125,11 +122,6 @@ class Outbound extends Component {
         modalVisible: true,
         type,
       });
-    } else if (type === 'shipping') {
-      // 如果是新增发货单，则不需要查下拉框数据，但是要显示弹窗
-      this.setState({
-        addShippingModalVisible: true,
-      });
     }
   };
 
@@ -144,17 +136,6 @@ class Outbound extends Component {
       selectedRowKeys: [],
       selectedDetail: {},
       selectedRows: {},
-    });
-  };
-
-  /**
-   * 关闭 新建发货单 弹窗
-   *
-   * @memberof Outbound
-   */
-  closeShippingModal = () => {
-    this.setState({
-      addShippingModalVisible: false,
     });
   };
 
@@ -288,8 +269,6 @@ class Outbound extends Component {
       selectedDetail,
       selectedStatus,
       role,
-      shippingFlag,
-      addShippingModalVisible,
     } = this.state;
 
     const { deliveryNo, id: deliveryId } = selectedDetail;
@@ -306,7 +285,6 @@ class Outbound extends Component {
     const showTotal = () => `共${total}条数据`;
     const listProps = {
       role,
-      shippingFlag,
       showModal: this.showModal,
       scanReport: this.scanReport,
       scanReportBtnVisible: !!this.state.selectedRows.styleNum,
@@ -364,15 +342,6 @@ class Outbound extends Component {
       productDisabled: this.state.productDisabled,
       cars,
     };
-    const shippingModalProps = {
-      closeModal: this.closeShippingModal,
-      dispatch: this.props.dispatch,
-      visible: addShippingModalVisible,
-      title: '新建发货单',
-      type: 'add',
-      deliveryNo,
-      deliveryId,
-    };
     const scanReportProps = {
       closeModal: this.closeScanReportModal,
       dispatch: this.props.dispatch,
@@ -386,7 +355,6 @@ class Outbound extends Component {
         <List {...listProps} />
         <ScanReport {...scanReportProps} />
         <EditModal {...modalProps} />
-        <ShippingModal {...shippingModalProps} />
       </div>
     );
   }
