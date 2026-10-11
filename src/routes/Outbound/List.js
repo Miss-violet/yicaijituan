@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Link } from 'dva/router';
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
+import { TECHNO } from '../../utils/constant';
 
 class List extends Component {
   constructor(props) {
@@ -38,7 +39,6 @@ class List extends Component {
       selectedStatus,
       selectedId,
       role,
-      shippingFlag,
     } = this.props;
 
     const btnBar = (
@@ -180,7 +180,7 @@ class List extends Component {
       {
         title: '工艺',
         dataIndex: 'techno',
-        render: text => (text === 0 ? '分选' : ''),
+        render: text => TECHNO[text],
         width: 150,
       },
       {

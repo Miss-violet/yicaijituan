@@ -16,6 +16,7 @@ import { connect } from 'dva';
 import classNames from 'classnames';
 import styles from './outbound.less';
 import commonStyles from '../../assets/style/common.less';
+import { TECHNO_OPTION } from '../../utils/constant';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -312,7 +313,15 @@ class EditModal extends Component {
                   ],
                   initialValue: productId,
                 })(
-                  <Select onChange={handleProductChange} disabled={productDisabled}>
+                  <Select
+                    onChange={handleProductChange}
+                    disabled={productDisabled}
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
                     {productEnabled &&
                       productEnabled.map(item => (
                         <Option key={item.id} value={item.id}>
@@ -443,7 +452,11 @@ class EditModal extends Component {
                   initialValue: techno === 0 ? '0' : '',
                 })(
                   <Select disabled={disabled}>
-                    <Option value="0">分选</Option>
+                    {TECHNO_OPTION.map(option => (
+                      <Option key={option.value} value={option.value}>
+                        {option.label}
+                      </Option>
+                    ))}
                   </Select>
                 )}
               </FormItem>
@@ -1000,8 +1013,8 @@ class EditModal extends Component {
               })(<Input disabled={disabled} />)}
             </FormItem>
           </Col>
-          </Row>
-          <Row gutter={8}>
+        </Row>
+        <Row gutter={8}>
           {allowApprover === 1 && (
             <Col {...formColLayout}>
               <FormItem label="审批员" {...formItemLayout}>

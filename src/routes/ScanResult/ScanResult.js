@@ -23,6 +23,7 @@ class ScanResult extends Component {
           <li>毛重（kg）：{detail && Number(detail.grossWeight).toLocaleString()}</li>
           <li>净重（kg）：{detail && Number(detail.netWeight).toLocaleString()}</li>
           <li>出厂时间：{detail && moment(detail.outTime).format('YYYY年MM月DD日')}</li>
+          <li>出厂批号：{detail && detail.batchNo}</li>
         </ul>
       </div>
     );

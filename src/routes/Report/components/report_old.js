@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './report_old.less';
 import commonStyles from '../../../assets/style/common.less';
+import { TECHNO } from '../../../utils/constant';
 
 @connect(({ report, productManage }) => ({
     detail: report.detail,
@@ -137,7 +138,7 @@ export default class Report_Old extends Component {
                                     </li>
                                     <li>
                                         <span className={styles.label}>工艺：</span>
-                                        <span className={styles.content}>{detail.techno === 0 ? '分选' : ''}</span>
+                                        <span className={styles.content}>{TECHNO[detail.techno] || ''}</span>
                                     </li>
                                     <li>
                                         <span className={styles.label}>运输车号：</span>

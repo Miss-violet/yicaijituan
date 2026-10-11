@@ -6,6 +6,7 @@ import moment from 'moment';
 import logo from '../../../assets/logo.svg';
 import styles from './report_new.less';
 import commonStyles from '../../../assets/style/common.less';
+import { TECHNO } from '../../../utils/constant';
 
 @connect(({ report, productManage }) => ({
     detail: report.detail,
@@ -83,7 +84,7 @@ export default class Report_New extends Component {
                         <li>
                             <span className={styles.label}>工艺：</span>
                             <div className={styles.content}>
-                                <span>{detail.techno === 0 ? '分选' : ''}</span>
+                                <span>{TECHNO[detail.techno] || ''}</span>
                             </div>
                         </li>
                         <li>

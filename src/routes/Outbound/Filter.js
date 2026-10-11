@@ -143,7 +143,13 @@ class OutboundFilter extends Component {
             <Col {...filterFormLayout}>
               <FormItem label="生厂商名称" {...formItemLayout} className={styles.formItem}>
                 {getFieldDecorator('supplierId')(
-                  <Select allowClear>
+                  <Select allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
                     {manufacturerSelectList &&
                       manufacturerSelectList.map(item => (
                         <Option key={item.id} value={item.id}>
@@ -157,7 +163,13 @@ class OutboundFilter extends Component {
             <Col {...filterFormLayout}>
               <FormItem label="产品名称" {...formItemLayout} className={styles.formItem}>
                 {getFieldDecorator('productId')(
-                  <Select allowClear>
+                  <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }>
                     {productSelectList &&
                       productSelectList.map(item => (
                         <Option key={item.id} value={item.id}>
