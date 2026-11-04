@@ -449,7 +449,7 @@ class EditModal extends Component {
                       message: '请选择工艺',
                     },
                   ],
-                  initialValue: techno === 0 ? '0' : '',
+                  initialValue: techno === 0 ? '0' : '1', // 如果 TECHNO_OPTION 超过两个，则这里要修改
                 })(
                   <Select disabled={disabled}>
                     {TECHNO_OPTION.map(option => (
@@ -673,9 +673,11 @@ class EditModal extends Component {
       });
       /* 为空时，不进行后续的校验 - 2026/6/27，客户要求内容可为空 */
       if (
-        standardName !== '强度活性指数（%）' &&
-        standardName !== '强度活性指数(%)' &&
-        (value === '' || value === null)
+        // standardName !== '强度活性指数（%）' &&
+        // standardName !== '强度活性指数(%)' &&
+        // (
+          value === '' || value === null
+        // )
       ) {
         // validateStatus[standardsItem.orderSort - 1] = {
         //   status: 'error',
@@ -689,7 +691,10 @@ class EditModal extends Component {
         //   content: `${standardName}的检验结果不能为空值`,
         //   okText: '知道了',
         // });
-        return false;
+        this.setState({
+          validateStatus: [],
+        });
+        return;
       }
       /**
        *  type===1：大于等于
@@ -1096,11 +1101,8 @@ class EditModal extends Component {
     pointNum = pointNum || standardsItem.params[0].pointNum;
 
     /* 为空时不进行后续的校验 */
-    if (
-      standardName !== '强度活性指数（%）' &&
-      standardName !== '强度活性指数(%)' &&
-      (value === '' || value === null)
-    ) {
+    if (value === '' || value === null) {
+      callback();
       return;
     }
     /* 检验是否为空 2026/6/27，客户要求内容可为空 */
@@ -1223,7 +1225,7 @@ class EditModal extends Component {
                     id: '',
                     standardId: params.find(item => item.columnId === columnTitle).id,
                     standardName: rowTitle,
-                    parameter: String(values[i]) || '',
+                    parameter: values[i]?String(values[i]) :'',
                   });
                 }
               });
@@ -1268,7 +1270,6 @@ class EditModal extends Component {
               return item;
             });
           }
-
           /* 把填写的检验结果值填入，传给后端 */
           for (const i in values) {
             if (Number(i)) {
@@ -1279,15 +1280,13 @@ class EditModal extends Component {
                     id,
                     standardId,
                     standardName,
-                    parameter: String(values[i]) || '',
+                    parameter: values[i]?String(values[i]) :'',
                   };
                 }
                 return standardsItem;
               });
             }
           }
-          console.info('this.props.selectedDetail=>', this.props.selectedDetail)
-          console.info('values=>', values)
           this.props.dispatch({
             type: 'outbound/edit',
             payload: {

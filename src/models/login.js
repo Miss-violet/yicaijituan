@@ -52,9 +52,7 @@ export default {
       }
     },
     *logout({ payload }, { call, put, select }) {
-      console.info('models login logout');
       const res = yield call(fakeAccountLogout, payload);
-      console.info('logout res', res);
       try {
         // get location pathname
         const urlParams = new URL(window.location.href);

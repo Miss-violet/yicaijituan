@@ -175,9 +175,7 @@ class BasicLayout extends React.PureComponent {
     });
   };
   handleMenuClick = event => {
-    console.info('menu click', event);
     if (event.key === 'logout') {
-      console.info('logout');
       this.props.dispatch({
         type: 'login/logout',
         payload: {},

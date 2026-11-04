@@ -34,7 +34,6 @@ export default {
               })
             );
           } else {
-            console.info('in-dispatch')
             dispatch({
               type: 'queryList',
               payload: {
@@ -115,7 +114,6 @@ export default {
     },
     *queryList({ payload }, { call, put }) {
       const queryRes = yield call(outboundList, payload);
-      console.info('queryRes', queryRes);
       const statisticsRes = yield call(statistics, payload);
       if (queryRes.code === 0) {
         yield put({

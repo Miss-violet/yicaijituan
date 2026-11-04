@@ -14,7 +14,6 @@ export default class Report extends Component {
   }
   render() {
     const { detail } = this.props;
-    console.info('report detail', detail);
     return detail.styleNum?<Report_New />:
       <Report_Old />
     ;
