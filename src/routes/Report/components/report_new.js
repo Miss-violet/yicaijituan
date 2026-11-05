@@ -36,7 +36,7 @@ export default class Report_New extends Component {
         });
         return (
             <Row gutter={16} className={styles.row}>
-                <Col span={10} className={styles.leftCol}>
+                <Col span={11} className={styles.leftCol}>
                     <div className={styles.companyName}>
                         <img src={logo} className={styles.logo} />
                         <span>{detail.styleTitleLeft || detail.title || '厦门益材粉煤灰有限责任公司'}</span>
@@ -133,7 +133,7 @@ export default class Report_New extends Component {
                         </li>
                     </ul>
                 </Col>
-                <Col span={14} className={styles.rightCol}>
+                <Col span={13} className={styles.rightCol}>
                     <div>
                         <div className={styles.topInfoWrap}>
                             <div className={styles.topInfoLeftWrap}>

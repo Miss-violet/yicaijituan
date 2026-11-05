@@ -53,13 +53,17 @@ ul {
     font-weight: bold;
     position: absolute;
     right: 10px;
-    margin-top: 10px;
+    margin-top: -18px;
   }
 
   .productName {
     font-size: 30px;
     margin-top: 3px;
     text-align: center;
+    .name {
+      margin-bottom: 16px;
+      margin-top: 29px;
+    }
   }
 
   .leftList {
@@ -91,10 +95,12 @@ ul {
 }
 
 .rightCol {
-  border: 2px solid #000;
+  // border: 2px solid #000;
   padding: 0 !important;
 
   .topInfoWrap {
+    border: 2px solid #000;
+    border-bottom: none;
     display: flex;
     justify-content: space-between;
 
@@ -107,14 +113,14 @@ ul {
     .topInfoRightWrap {
       border-bottom: 2px solid #000;
       border-left: none;
-      height: 163px;
+      height: 143px;
       text-align: center;
       width: 30%;
     }
 
     .No {
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 7px;
       margin-left: 10px;
     }
   }
@@ -125,22 +131,22 @@ ul {
     border-right: none;
     display: flex;
     font-weight: bold;
-    height: 35px;
-    line-height: 35px;
+    height: 30px;
+    line-height: 30px;
 
     .label {
       border-right: 1px solid #000;
-      width: 15%;
+      width: 20%;
       text-align: right;
-      height: 100%;
-      line-height: 35px;
+      height: 30px;
+      line-height: 30px;
     }
 
     .content {
       border-right: 1px solid #000;
-      width: 35%;
+      width: 30%;
       height: 100%;
-      line-height: 35px;
+      line-height: 30px;
       padding: 0 7px;
       &:last-child {
         border-right: none;
@@ -154,7 +160,7 @@ ul {
 
   .name {
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     margin-top: 10px;
     text-align: center;
 
@@ -165,15 +171,16 @@ ul {
 
   .qrCode {
     margin-top: 10px;
-    max-height: 90%;
-    max-width: 90%;
+    max-height: 86%;
+    max-width: 86%;
   }
 
   .table {
     margin: 0 auto 10px;
     width: 100%;
+    border: 2px solid #000;
     border-top: none;
-    border-right: none;
+    // border-right: none;
 
     th,
     td {
@@ -184,9 +191,14 @@ ul {
     }
 
     td {
-      padding: 7px 5px;
-      font-size: 16px;
+      padding: 5px;
+      font-size: 15px;
       font-weight: bold;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right-color: #000;
     }
   }
 
